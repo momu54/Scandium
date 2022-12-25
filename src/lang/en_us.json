@@ -6,5 +6,15 @@
 	"processing": {
 		"title": "Processing",
 		"desc": "This may take some time\nIf there is no response after a long time\nThere may have been an error\nPlease report in the [issue](https://github.com) or to momu54#3937"
+	},
+	"saveallimage": {
+		"error": {
+			"toolarge": "The generated zip is too large."
+		},
+		"title": "Save all image",
+		"desc": "size: {size} MB\nAll images not in jpeg or webp format are converted to webp at quality 82."
+	},
+	"error": {
+		"title": "Error"
 	}
 }

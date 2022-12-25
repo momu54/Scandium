@@ -1,28 +1,24 @@
-import {
-	ApplicationCommandFlags,
-	Embed,
-} from 'https://deno.land/x/discordeno@17.0.1/mod.ts';
-import { CreateCommand } from '../../mod.ts';
-import { Translate } from '../translate.ts';
-import { snowflakeToTimestamp } from '../utils/index.ts';
+import { CreateCommand, client } from '../app.js';
+import { Translate } from '../translate.js';
+import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
 
 await CreateCommand(
 	{
 		name: 'ping',
 		description: 'Get bot ping',
 	},
-	async (_bot, interaction, reply) => {
-		const ping = Date.now() - snowflakeToTimestamp(interaction.id);
-		const embed: Embed = {
+	async (rawinteraction, _defer) => {
+		const interaction = rawinteraction as ChatInputCommandInteraction;
+		const embed: APIEmbed = {
 			title: Translate(interaction, 'ping.title'),
 			description: Translate(interaction, 'ping.desc', {
-				ping: ping.toString(),
+				ping: client.ws.ping.toString(),
 			}),
 		};
 
-		await reply.edit({
+		await interaction.reply({
 			embeds: [embed],
-			flags: ApplicationCommandFlags.Ephemeral,
+			ephemeral: true,
 		});
 	}
 );

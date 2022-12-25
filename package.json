@@ -1,0 +1,33 @@
+{
+	"name": "me",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./dist/app.js",
+	"scripts": {
+		"start": "node ./dist/app.js",
+		"compile": "tsc",
+		"compile:dev": "tsc -w"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/momu54/me.git"
+	},
+	"author": "momu54",
+	"license": "AGPL-3.0-or-later",
+	"bugs": {
+		"url": "https://github.com/momu54/me/issues"
+	},
+	"homepage": "https://github.com/momu54/me#readme",
+	"dependencies": {
+		"discord.js": "^14.7.1",
+		"jszip": "^3.10.1",
+		"lodash": "^4.17.21",
+		"sharp": "^0.31.3"
+	},
+	"devDependencies": {
+		"@types/lodash": "^4.14.191",
+		"@types/sharp": "^0.31.0",
+		"typescript": "^4.9.4"
+	},
+	"type": "module"
+}

@@ -1,8 +1,8 @@
-import zh_tw from '../lang/zh_tw.json' assert { type: 'json' };
-import en_us from '../lang/en_us.json' assert { type: 'json' };
-import { TranslateVariables } from '../typing.ts';
-import { get } from 'https://deno.land/x/lodash_es@v0.0.2/mod.ts';
-import { Interaction } from 'https://deno.land/x/discordeno@17.0.1/mod.ts';
+import zh_tw from './lang/zh_tw.json' assert { type: 'json' };
+import en_us from './lang/en_us.json' assert { type: 'json' };
+import { TranslateVariables } from './typing.js';
+import _ from 'lodash';
+import { Interaction } from 'discord.js';
 
 export function Translate(
 	interaction: Interaction,
@@ -12,10 +12,10 @@ export function Translate(
 	let rawtext: string;
 	switch (interaction.locale) {
 		case 'zh-TW':
-			rawtext = get(zh_tw, key);
+			rawtext = _.get(zh_tw, key);
 			break;
 		default:
-			rawtext = get(en_us, key);
+			rawtext = _.get(en_us, key);
 			break;
 	}
 	if (!variables) return rawtext;
@@ -30,7 +30,6 @@ function ReplaceVariables(text: string, variables: TranslateVariables) {
 		const variableinrawtext = text.slice(firstbracket, lastbracket + 1);
 		const variablename = variableinrawtext.replace('{', '').replace('}', '');
 		text = text.replace(variableinrawtext, variables[variablename]);
-		// console.log(text);
 	}
 	return text;
 }

@@ -1,0 +1,20 @@
+{
+	"ping": {
+		"title": "砰",
+		"desc": "{ping} 毫秒"
+	},
+	"processing": {
+		"title": "處理中...",
+		"desc": "這可能需要一些時間\n如果遲遲沒有回應\n可能是發生了錯誤\n請在 [issue](https://github.com) 或向momu54#3937回報"
+	},
+	"saveallimage": {
+		"error": {
+			"toolarge": "生成的zip太大"
+		},
+		"title": "儲存所有圖片",
+		"desc": "大小: {size} MB\n所以非webp格式的圖片均已被轉成品質為82的webp"
+	},
+	"error": {
+		"title": "錯誤"
+	}
+}
