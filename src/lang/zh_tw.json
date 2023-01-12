@@ -7,7 +7,7 @@
 		"title": "處理中...",
 		"desc": "這可能需要一些時間\n如果遲遲沒有回應\n可能是發生了錯誤\n請在 [issue](https://github.com) 或向momu54#3937回報"
 	},
-	"saveallimage": {
+	"SaveAllImage": {
 		"error": {
 			"toolarge": "生成的zip太大"
 		},

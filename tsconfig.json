@@ -22,7 +22,6 @@
 		"resolveJsonModule": true,
 		"rootDir": "src"
 	},
-
 	"include": ["src/"],
-	"exclude": ["node_modules/**, lang/*"]
+	"exclude": ["node_modules/**", "lang/*", "config/*"]
 }

@@ -24,26 +24,15 @@
                佛主保佑         永無BUG
 */
 
-import { CreateCommand, client } from '../app.js';
-import { Translate } from '../utils/translate.js';
-import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
+import { readFile } from 'fs/promises';
+import { SetConfig } from '../app.js';
 
-await CreateCommand<ChatInputCommandInteraction>(
-	{
-		name: 'ping',
-		description: 'Get bot ping',
-	},
-	async (interaction, _defer) => {
-		const embed: APIEmbed = {
-			title: Translate(interaction, 'ping.title'),
-			description: Translate(interaction, 'ping.desc', {
-				ping: client.ws.ping.toString(),
-			}),
-		};
+const defaultconfig = await readFile('./config/default.json', {
+	encoding: 'utf-8',
+});
 
-		await interaction.reply({
-			embeds: [embed],
-			ephemeral: true,
-		});
-	},
-);
+console.log('[config/info] default config file loaded');
+
+export async function SetDefault(user: string) {
+	SetConfig(user, defaultconfig);
+}

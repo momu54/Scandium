@@ -20,6 +20,7 @@
 	"homepage": "https://github.com/momu54/me#readme",
 	"dependencies": {
 		"discord.js": "^14.7.1",
+		"dotenv": "^16.0.3",
 		"jszip": "^3.10.1",
 		"lodash": "^4.17.21",
 		"sharp": "^0.31.3"
