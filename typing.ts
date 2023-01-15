@@ -53,3 +53,7 @@ export interface Config {
 		};
 	};
 }
+
+export interface Languages {
+	[key: string]: any;
+}

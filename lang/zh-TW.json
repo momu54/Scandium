@@ -1,6 +1,6 @@
 {
 	"ping": {
-		"title": "砰",
+		"title": "乒",
 		"desc": "{ping} 毫秒"
 	},
 	"processing": {
@@ -12,9 +12,17 @@
 			"toolarge": "生成的zip太大"
 		},
 		"title": "儲存所有圖片",
-		"desc": "大小: {size} MB\n所以非webp格式的圖片均已被轉成品質為82的webp"
+		"desc": "大小: {size} MB\n所以非webp格式的圖片均已被轉成品質為82的webp",
+		"settings": {
+			"convert": "轉換"
+		}
 	},
 	"error": {
 		"title": "錯誤"
+	},
+	"settings": {
+		"title": "設定",
+		"desc": "查看和修改設定",
+		"menu": "選擇一個設定以修改..."
 	}
 }

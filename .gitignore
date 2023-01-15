@@ -1,5 +1,5 @@
 node_modules/**
 dist/*
-config/*
+config/user.json
 package-lock.json
 .env

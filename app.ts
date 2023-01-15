@@ -87,12 +87,12 @@ export async function CreateCommand<InteractionType>(
 }
 
 async function LoadCommandFiles() {
-	const files = await readdir('./dist/cmd/');
+	const files = await readdir('./modules/');
 
 	for (const file of files) {
-		if (!file.endsWith('.js')) continue;
-		await import(`./cmd/${file}`);
-		console.log(`[main/info] Success loading file ./src/cmd/${file}`);
+		if (!file.endsWith('.ts')) continue;
+		await import(`./modules/${file}`);
+		console.log(`[main/info] Success loading file ./modules/${file}`);
 	}
 }
 

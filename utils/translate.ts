@@ -24,26 +24,33 @@
                佛主保佑         永無BUG
 */
 
-import zh_tw from '../lang/zh_tw.json' assert { type: 'json' };
-import en_us from '../lang/en_us.json' assert { type: 'json' };
-import { TranslateVariables } from '../typing.js';
+import { Languages, TranslateVariables } from '../typing.js';
 import _ from 'lodash';
 import { Interaction } from 'discord.js';
+import { readdir, readFile } from 'fs/promises';
+const languages: Languages = {};
+
+async function LoadLanguages() {
+	const files = await readdir('./lang/');
+
+	for (const file of files) {
+		if (!file.endsWith('.json')) continue;
+		languages[file.replace('.json', '')] = JSON.parse(
+			await readFile(`./lang/${file}`, {
+				encoding: 'utf8',
+			}),
+		);
+		console.log(`[main/translate] Success loading lang ./modules/${file}`);
+	}
+}
 
 export function Translate(
 	interaction: Interaction,
 	key: string,
 	variables?: TranslateVariables,
 ) {
-	let rawtext: string;
-	switch (interaction.locale) {
-		case 'zh-TW':
-			rawtext = _.get(zh_tw, key);
-			break;
-		default:
-			rawtext = _.get(en_us, key);
-			break;
-	}
+	let rawtext = _.get(languages[interaction.locale], key);
+	rawtext ||= _.get(languages['en-US'], key);
 	if (!variables) return rawtext;
 	return ReplaceVariables(rawtext, variables);
 }
@@ -59,3 +66,5 @@ function ReplaceVariables(text: string, variables: TranslateVariables) {
 	}
 	return text;
 }
+
+await LoadLanguages();

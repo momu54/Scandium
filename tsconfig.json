@@ -16,12 +16,14 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
-		"outDir": "dist",
 		"alwaysStrict": true,
 		"moduleResolution": "NodeNext",
-		"resolveJsonModule": true,
-		"rootDir": "src"
+		"resolveJsonModule": true
 	},
-	"include": ["src/"],
-	"exclude": ["node_modules/**", "lang/*", "config/*"]
+	"include": ["**/*.ts", "*.ts"],
+	"exclude": ["node_modules/**", "lang/*", "config/*"],
+	"ts-node": {
+		// Tell ts-node CLI to install the --loader automatically, explained below
+		"esm": true
+	}
 }
