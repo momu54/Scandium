@@ -33,12 +33,13 @@ import {
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
 import sharp from 'sharp';
-import { Translate } from '../utils/translate.js';
+import { CommandLocalizations, Translate } from '../utils/translate.js';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Save all image',
 		type: ApplicationCommandType.Message,
+		nameLocalizations: CommandLocalizations('SaveAllImage'),
 	},
 	async (interaction, defer) => {
 		await defer();
@@ -72,8 +73,8 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		const zipData = await zip.generateAsync({ type: 'nodebuffer' });
 		if (zipData.byteLength > 8388608) {
 			const errembed: APIEmbed = {
-				title: Translate(interaction, 'error.title'),
-				description: Translate(interaction, 'SaveAllImage.error.toolarge'),
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'SaveAllImage.error.toolarge'),
 			};
 			await interaction.editReply({ embeds: [errembed] });
 			return;
@@ -82,10 +83,10 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			name: `${new Date().toJSON()}.${msg.id}.zip`,
 			attachment: zipData,
 		};
-		const size = (zipData.byteLength * 0.000001).toFixed(2);
+		const size = (zipData.byteLength * 0.000001).toFixed(4);
 		const embed: APIEmbed = {
-			title: Translate(interaction, 'SaveAllImage.title'),
-			description: Translate(interaction, 'SaveAllImage.desc', {
+			title: Translate(interaction.locale, 'SaveAllImage.title'),
+			description: Translate(interaction.locale, 'SaveAllImage.desc', {
 				size: size,
 			}),
 		};

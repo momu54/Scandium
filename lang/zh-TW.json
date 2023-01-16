@@ -24,5 +24,9 @@
 		"title": "設定",
 		"desc": "查看和修改設定",
 		"menu": "選擇一個設定以修改..."
+	},
+	"Screenshot": {
+		"title": "截圖",
+		"desc": "大小: {size} MB\n格式: webp"
 	}
 }

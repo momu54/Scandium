@@ -26,7 +26,7 @@
 
 import { Languages, TranslateVariables } from '../typing.js';
 import _ from 'lodash';
-import { Interaction } from 'discord.js';
+import { LocalizationMap, Locale } from 'discord.js';
 import { readdir, readFile } from 'fs/promises';
 const languages: Languages = {};
 
@@ -45,11 +45,11 @@ async function LoadLanguages() {
 }
 
 export function Translate(
-	interaction: Interaction,
+	locale: Locale,
 	key: string,
 	variables?: TranslateVariables,
-) {
-	let rawtext = _.get(languages[interaction.locale], key);
+): string {
+	let rawtext = _.get(languages[locale], key);
 	rawtext ||= _.get(languages['en-US'], key);
 	if (!variables) return rawtext;
 	return ReplaceVariables(rawtext, variables);
@@ -65,6 +65,17 @@ function ReplaceVariables(text: string, variables: TranslateVariables) {
 		text = text.replace(variableinrawtext, variables[variablename]);
 	}
 	return text;
+}
+
+export function CommandLocalizations(command: string): LocalizationMap {
+	const localizations: LocalizationMap = {};
+	for (const language in languages) {
+		localizations[language as Locale] = Translate(
+			language as Locale,
+			`${command}.title`,
+		).toLowerCase();
+	}
+	return localizations;
 }
 
 await LoadLanguages();

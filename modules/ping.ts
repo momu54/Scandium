@@ -35,8 +35,8 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 	async (interaction, _defer) => {
 		const embed: APIEmbed = {
-			title: Translate(interaction, 'ping.title'),
-			description: Translate(interaction, 'ping.desc', {
+			title: Translate(interaction.locale, 'ping.title'),
+			description: Translate(interaction.locale, 'ping.desc', {
 				ping: client.ws.ping.toString(),
 			}),
 		};

@@ -32,25 +32,29 @@ import {
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
 import { CreateCommand, config } from '../app.js';
-import { Translate } from '../utils/translate.js';
+import { CommandLocalizations, Translate } from '../utils/translate.js';
 
 CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'settings',
 		description: 'Change the settings.',
+		nameLocalizations: CommandLocalizations('settings'),
 	},
 	async (interaction) => {
 		const userconfig = config[interaction.user.id];
 		const embed: APIEmbed = {
-			title: Translate(interaction, 'settings.title'),
-			description: Translate(interaction, 'settings.desc'),
+			title: Translate(interaction.locale, 'settings.title'),
+			description: Translate(interaction.locale, 'settings.desc'),
 			fields: [],
 		};
 		let options: StringSelectMenuOptionBuilder[] = [];
 		for (const moduleconfigkey in userconfig) {
 			const moduleconfig = userconfig[moduleconfigkey];
 			let values = '';
-			const translatedkey = Translate(interaction, `${moduleconfigkey}.title`);
+			const translatedkey = Translate(
+				interaction.locale,
+				`${moduleconfigkey}.title`,
+			);
 			for (const moduleconfigsubkey in moduleconfig) {
 				const usermoduleconfigsubvalue = moduleconfig[moduleconfigsubkey];
 				switch (typeof usermoduleconfigsubvalue) {
@@ -77,7 +81,7 @@ CreateCommand<ChatInputCommandInteraction>(
 		}
 
 		const menu = new StringSelectMenuBuilder()
-			.setPlaceholder(Translate(interaction, 'settings.menu'))
+			.setPlaceholder(Translate(interaction.locale, 'settings.menu'))
 			.setCustomId(
 				JSON.stringify({
 					module: interaction.commandName,

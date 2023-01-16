@@ -31,15 +31,18 @@ import {
 	APIEmbed,
 	ApplicationCommandData,
 	ApplicationCommandType,
+	Partials,
+	IntentsBitField,
 } from 'discord.js';
 import { AnyInteraction, CommandCallback, Commands, Config } from './typing.js';
-import { Translate } from './utils/translate.js';
+import { CommandLocalizations, Translate } from './utils/translate.js';
 import { readdir, readFile, writeFile } from 'fs/promises';
 import 'dotenv/config';
 import { SetDefault } from './utils/defaultconfig.js';
 
 export const client = new Client({
-	intents: [],
+	intents: [IntentsBitField.Flags.Guilds],
+	partials: [Partials.Channel],
 });
 
 const commands: Commands<AnyInteraction> = {};
@@ -66,8 +69,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		}
 		await commands[interaction.commandName].callback(interaction, async () => {
 			const embed: APIEmbed = {
-				title: Translate(interaction, 'processing.title'),
-				description: Translate(interaction, 'processing.desc'),
+				title: Translate(interaction.locale, 'processing.title'),
+				description: Translate(interaction.locale, 'processing.desc'),
 			};
 
 			await interaction.reply({ embeds: [embed] });
@@ -79,6 +82,8 @@ export async function CreateCommand<InteractionType>(
 	command: ApplicationCommandData,
 	callback: CommandCallback<InteractionType>,
 ) {
+	if (!command.nameLocalizations)
+		command.nameLocalizations = CommandLocalizations(command.name);
 	await client.application?.commands.create(command);
 	commands[command.name] = {
 		callback,
@@ -98,7 +103,7 @@ async function LoadCommandFiles() {
 
 LoadCommandFiles();
 
-process.on('SIGINT', async () => {
+process.on('exit', async () => {
 	await writeFile('./config/user.json', JSON.stringify(config));
 	process.exit(0);
 });
@@ -129,5 +134,8 @@ export function SetConfig(
 		config[user] = JSON.parse(moduleorrawvalue);
 	}
 }
+
+process.on('unhandledRejection', console.error);
+process.on('uncaughtException', console.error);
 
 await client.login(process.env.token);

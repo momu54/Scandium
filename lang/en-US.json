@@ -1,6 +1,6 @@
 {
 	"ping": {
-		"title": "Ping!",
+		"title": "Ping",
 		"desc": "{ping} ms"
 	},
 	"processing": {
@@ -24,5 +24,9 @@
 		"title": "Settings",
 		"desc": "View and configure user settings.",
 		"menu": "Choose a configuration to modify..."
+	},
+	"Screenshot": {
+		"title": "Take a screenshot",
+		"desc": "size: {size} MB\nformat: webp"
 	}
 }

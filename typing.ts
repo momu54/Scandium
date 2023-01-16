@@ -1,9 +1,3 @@
-import { ApplicationCommandType } from 'discord.js';
-
-export interface Commands<InteractionType> {
-	[key: string]: Command<InteractionType>;
-}
-
 /*
                        _oo0oo_
                       o8888888o
@@ -30,6 +24,12 @@ export interface Commands<InteractionType> {
                佛主保佑         永無BUG
 */
 
+import { ApplicationCommandType } from 'discord.js';
+
+export interface Commands<InteractionType> {
+	[key: string]: Command<InteractionType>;
+}
+
 export interface Command<InteractionType> {
 	callback: CommandCallback<InteractionType>;
 	type: ApplicationCommandType;
@@ -38,22 +38,16 @@ export interface Command<InteractionType> {
 export type CommandCallback<InteractionType> = (
 	interaction: InteractionType,
 	defer: () => Promise<void>,
-) => Promise<void>;
+) => Promise<any>;
 
-export interface TranslateVariables {
-	[key: string]: string;
-}
+export type TranslateVariables = StringObject<string>;
 
 export type AnyInteraction = any;
 
-export interface Config {
-	[key: string]: {
-		[key: string]: {
-			[key: string]: boolean | number;
-		};
-	};
-}
+export type Config = StringObject<StringObject<StringObject<boolean | number>>>;
 
-export interface Languages {
-	[key: string]: any;
+export type Languages = StringObject<any>;
+
+export interface StringObject<ValueType> {
+	[key: string]: ValueType;
 }
