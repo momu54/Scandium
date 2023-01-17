@@ -12,7 +12,7 @@
 			"toolarge": "生成的zip太大"
 		},
 		"title": "儲存所有圖片",
-		"desc": "大小: {size} MB\n所以非webp格式的圖片均已被轉成品質為82的webp",
+		"desc": "**大小**: {size} MB\n所以非webp格式的圖片均已被轉成品質為82的webp",
 		"settings": {
 			"convert": "轉換"
 		}
@@ -27,6 +27,6 @@
 	},
 	"Screenshot": {
 		"title": "截圖",
-		"desc": "大小: {size} MB\n格式: webp"
+		"desc": "**大小**: {size} MB\n**格式**: webp"
 	}
 }

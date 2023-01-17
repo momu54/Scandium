@@ -81,17 +81,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 export async function CreateCommand<InteractionType>(
 	command: ApplicationCommandData,
 	callback: CommandCallback<InteractionType>,
+	guild?: string,
 ) {
-	if (!command.nameLocalizations)
-		command.nameLocalizations = CommandLocalizations(command.name);
-	await client.application?.commands.create(command);
+	if (!guild) command.nameLocalizations ||= CommandLocalizations(command.name);
+	await client.application?.commands.create(command, guild);
 	commands[command.name] = {
 		callback,
 		type: command.type || ApplicationCommandType.ChatInput,
 	};
 }
 
-async function LoadCommandFiles() {
+async function LoadModules() {
 	const files = await readdir('./modules/');
 
 	for (const file of files) {
@@ -101,7 +101,7 @@ async function LoadCommandFiles() {
 	}
 }
 
-LoadCommandFiles();
+LoadModules();
 
 process.on('exit', async () => {
 	await writeFile('./config/user.json', JSON.stringify(config));
