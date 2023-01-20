@@ -33,6 +33,6 @@ const defaultconfig = await readFile('./config/default.json', {
 
 console.log('[config/info] default config file loaded');
 
-export async function SetDefault(user: string) {
+export function SetDefault(user: string) {
 	SetConfig(user, defaultconfig);
 }

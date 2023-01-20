@@ -24,18 +24,18 @@
                佛主保佑         永無BUG
 */
 
-import { ApplicationCommandType } from 'discord.js';
+import { ApplicationCommandType, CommandInteraction } from 'discord.js';
 
-export interface Commands<InteractionType> {
+export interface Commands<InteractionType extends CommandInteraction> {
 	[key: string]: Command<InteractionType>;
 }
 
-export interface Command<InteractionType> {
+export interface Command<InteractionType extends CommandInteraction> {
 	callback: CommandCallback<InteractionType>;
 	type: ApplicationCommandType;
 }
 
-export type CommandCallback<InteractionType> = (
+export type CommandCallback<InteractionType extends CommandInteraction> = (
 	interaction: InteractionType,
 	defer: () => Promise<void>,
 ) => Promise<any>;

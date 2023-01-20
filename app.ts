@@ -33,6 +33,7 @@ import {
 	ApplicationCommandType,
 	Partials,
 	IntentsBitField,
+	CommandInteraction,
 } from 'discord.js';
 import { AnyInteraction, CommandCallback, Commands, Config } from './typing.js';
 import { CommandLocalizations, Translate } from './utils/translate.js';
@@ -78,13 +79,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
-export async function CreateCommand<InteractionType>(
+export async function CreateCommand<InteractionType extends CommandInteraction>(
 	command: ApplicationCommandData,
+	isadmincommand: boolean = false,
 	callback: CommandCallback<InteractionType>,
-	guild?: string,
 ) {
-	if (!guild) command.nameLocalizations ||= CommandLocalizations(command.name);
-	await client.application?.commands.create(command, guild);
+	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
+	await client.application?.commands.create(command, process.env.supportguild);
 	commands[command.name] = {
 		callback,
 		type: command.type || ApplicationCommandType.ChatInput,
