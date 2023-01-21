@@ -4,15 +4,15 @@
 		"desc": "{ping} ms"
 	},
 	"processing": {
-		"title": "Processing",
-		"desc": "This may take some time\nIf there is no response after a long time\nThere may have been an error\nPlease report in the [issue](https://github.com) or to momu54#3937"
+		"title": "Processing...",
+		"desc": "This may take some time\nIf there is no response after a long period of time\nAn error may have occurred\nPlease report in the [issue](https://github.com) or to momu54#3937"
 	},
 	"SaveAllImage": {
 		"error": {
 			"toolarge": "The generated zip is too large."
 		},
-		"title": "Save all image",
-		"desc": "**size**: {size} MB\nAll images not in jpeg or webp format are converted to webp at quality 82.",
+		"title": "Save all images",
+		"desc": "**size**: {size} MB\nAll images not in JPEG or WebP format are converted to WebP at quality 82.",
 		"settings": {
 			"convert": "convert"
 		}
@@ -27,6 +27,6 @@
 	},
 	"Screenshot": {
 		"title": "Take a screenshot",
-		"desc": "**size**: {size} MB\n**format**: webp"
+		"desc": "**size**: {size} MB\n**format**: WebP"
 	}
 }
