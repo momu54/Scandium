@@ -5,13 +5,13 @@
 	},
 	"processing": {
 		"title": "Processing...",
-		"desc": "This may take some time\nIf there is no response after a long time\nThere may have been an error\nPlease report in the [issue](https://github.com) or to momu54#3937"
+		"desc": "This may take some time\nIf there is no response after a long period of time\nAn error may have occurred\nPlease report in the [issue](https://github.com) or to momu54#3937"
 	},
 	"SaveAllImage": {
 		"error": {
 			"toolarge": "The generated zip is too large."
 		},
-		"title": "Save all image",
+		"title": "Save all images",
 		"desc": "**size**: {size} MB\nAll images not in JPEG or WebP format are converted to WebP at quality 82.",
 		"settings": {
 			"convert": "convert"
