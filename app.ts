@@ -74,7 +74,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				description: Translate(interaction.locale, 'processing.desc'),
 			};
 
-			await interaction.reply({ embeds: [embed] });
+			await interaction.reply({ embeds: [embed], ephemeral: true });
 		});
 	}
 });
