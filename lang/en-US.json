@@ -32,5 +32,12 @@
 		"settings": {
 			"format": "format"
 		}
+	},
+	"anime": {
+		"title": "Anime",
+		"menu": "Choose an anime... {range}",
+		"footer": "Data from: https://ani.gamer.com.tw/\nSince the information comes from the Taiwan animation website, the content is in traditional Chinese.",
+		"SingleAnimeDesc": "Name: {name}\nUpdate At: {date}",
+		"play": "Play"
 	}
 }
