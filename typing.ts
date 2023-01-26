@@ -24,25 +24,30 @@
                佛主保佑         永無BUG
 */
 
-import { ApplicationCommandType, CommandInteraction } from 'discord.js';
+import {
+	ApplicationCommandType,
+	CommandInteraction,
+	MessageComponentInteraction,
+} from 'discord.js';
 
-export interface Commands<InteractionType extends CommandInteraction> {
-	[key: string]: Command<InteractionType>;
+export interface InteractionCallBackDatas<
+	InteractionType extends CommandInteraction | MessageComponentInteraction,
+> {
+	[key: string]: InteractionCallbackData<InteractionType>;
 }
 
-export interface Command<InteractionType extends CommandInteraction> {
-	callback: CommandCallback<InteractionType>;
-	type: ApplicationCommandType;
+export interface InteractionCallbackData<
+	InteractionType extends CommandInteraction | MessageComponentInteraction,
+> {
+	callback: InteractionCallback<InteractionType>;
+	type?: ApplicationCommandType;
 }
 
-export type CommandCallback<InteractionType extends CommandInteraction> = (
-	interaction: InteractionType,
-	defer: () => Promise<void>,
-) => Promise<any>;
+export type InteractionCallback<
+	InteractionType extends CommandInteraction | MessageComponentInteraction,
+> = (interaction: InteractionType, defer: () => Promise<void>) => Promise<any>;
 
 export type TranslateVariables = StringObject<string>;
-
-export type AnyInteraction = any;
 
 export type Config = StringObject<StringObject<StringObject<boolean | number>>>;
 

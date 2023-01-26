@@ -34,8 +34,9 @@ import {
 	Partials,
 	IntentsBitField,
 	CommandInteraction,
+	MessageComponentInteraction,
 } from 'discord.js';
-import { AnyInteraction, CommandCallback, Commands } from './typing.js';
+import { InteractionCallback, InteractionCallBackDatas } from './typing.js';
 import { CommandLocalizations, Translate } from './utils/translate.js';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
@@ -45,7 +46,8 @@ export const client = new Client({
 	partials: [Partials.Channel],
 });
 
-const commands: Commands<AnyInteraction> = {};
+const commands: InteractionCallBackDatas<CommandInteraction> = {};
+const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 
 client.on(Events.ClientReady, () => {
 	console.log('[main/info] Ready!');
@@ -62,30 +64,55 @@ client.on(Events.Debug, (debugmsg) => {
 client.on(Events.Error, console.log);
 
 client.on(Events.InteractionCreate, async (interaction) => {
-	if (interaction.type == InteractionType.ApplicationCommand) {
-		if (!(await CheckUser(interaction.user.id))) await AddUser(interaction.user.id);
-		console.log(`[main/info] command executed(${interaction.commandName})`);
-		await commands[interaction.commandName].callback(interaction, async () => {
-			const embed: APIEmbed = {
-				title: Translate(interaction.locale, 'processing.title'),
-				description: Translate(interaction.locale, 'processing.desc'),
-			};
+	switch (interaction.type) {
+		case InteractionType.ApplicationCommand:
+			if (!(await CheckUser(interaction.user.id)))
+				await AddUser(interaction.user.id);
+			console.log(`[main/info] command executed(${interaction.commandName})`);
+			await commands[interaction.commandName].callback(interaction, async () => {
+				const embed: APIEmbed = {
+					title: Translate(interaction.locale, 'processing.title'),
+					description: Translate(interaction.locale, 'processing.desc'),
+				};
 
-			await interaction.reply({ embeds: [embed], ephemeral: true });
-		});
+				await interaction.reply({ embeds: [embed], ephemeral: true });
+			});
+			break;
+		case InteractionType.MessageComponent:
+			if (!(await CheckUser(interaction.user.id)))
+				await AddUser(interaction.user.id);
+			const module = JSON.parse(interaction.customId).module;
+			console.log(`[main/info] Component emitted(${module})`);
+			await componenthandlers[module].callback(interaction, async () => {
+				const embed: APIEmbed = {
+					title: Translate(interaction.locale, 'processing.title'),
+					description: Translate(interaction.locale, 'processing.desc'),
+				};
+
+				await interaction.reply({ embeds: [embed], ephemeral: true });
+			});
+			break;
 	}
 });
 
 export async function CreateCommand<InteractionType extends CommandInteraction>(
 	command: ApplicationCommandData,
-	callback: CommandCallback<InteractionType>,
+	callback: InteractionCallback<InteractionType>,
 	isadmincommand: boolean = false,
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
 	await client.application?.commands.create(command, process.env.supportguild);
 	commands[command.name] = {
-		callback,
+		callback: callback as InteractionCallback<CommandInteraction>,
 		type: command.type || ApplicationCommandType.ChatInput,
+	};
+}
+
+export function CreateComponentHandler<
+	InteractionType extends MessageComponentInteraction,
+>(module: string, callback: InteractionCallback<InteractionType>) {
+	componenthandlers[module] = {
+		callback: callback as InteractionCallback<MessageComponentInteraction>,
 	};
 }
 

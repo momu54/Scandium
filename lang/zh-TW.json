@@ -32,5 +32,12 @@
 		"settings": {
 			"format": "格式"
 		}
+	},
+	"anime": {
+		"title": "動畫",
+		"menu": "選擇一個動畫... {range}",
+		"footer": "資料來源: https://ani.gamer.com.tw/\n由於資料來自台灣動畫網站, 資料內容均為繁體中文",
+		"SingleAnimeDesc": "名稱: {name}\n最新更新時間: {date}",
+		"play": "播放"
 	}
 }

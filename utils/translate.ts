@@ -73,7 +73,7 @@ export function CommandLocalizations(command: string): LocalizationMap {
 		localizations[language as Locale] = Translate(
 			language as Locale,
 			`${command}.title`,
-		).toLowerCase();
+		)?.toLowerCase();
 	}
 	return localizations;
 }
