@@ -42,7 +42,7 @@ import { readdir } from 'fs/promises';
 import 'dotenv/config';
 
 export const client = new Client({
-	intents: [IntentsBitField.Flags.Guilds],
+	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages],
 	partials: [Partials.Channel],
 });
 
@@ -54,12 +54,7 @@ client.on(Events.ClientReady, () => {
 	console.log(`[main/info] Logined with ${client.user!.tag} (${client.user!.id})`);
 });
 
-client.on(Events.Debug, (debugmsg) => {
-	if (debugmsg.includes('Clearing the heartbeat interval.')) {
-		process.exit(0);
-	}
-	console.log(`[discord.js/info] ${debugmsg}`);
-});
+client.on(Events.Debug, (debugmsg) => console.log(`[discord.js/info] ${debugmsg}`));
 
 client.on(Events.Error, console.log);
 
