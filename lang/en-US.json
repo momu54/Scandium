@@ -27,6 +27,10 @@
 	},
 	"Screenshot": {
 		"title": "Take a screenshot",
-		"desc": "**size**: {size} MB\n**format**: WebP"
+		"desc": "**size**: {size} MB\n**format**: WebP",
+		"footer": "💡 Tip: You can set image format in the settings",
+		"settings": {
+			"format": "format"
+		}
 	}
 }
