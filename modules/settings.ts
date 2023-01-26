@@ -31,53 +31,54 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
-import { CreateCommand, config } from '../app.js';
+import { CreateCommand } from '../app.js';
+import { GetConfigs } from '../utils/database.js';
 import { CommandLocalizations, Translate } from '../utils/translate.js';
 
-CreateCommand<ChatInputCommandInteraction>(
+await CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'settings',
 		description: 'Change the settings.',
 		nameLocalizations: CommandLocalizations('settings'),
 	},
 	async (interaction) => {
-		const userconfig = config[interaction.user.id];
+		const userconfig = await GetConfigs(interaction.user.id);
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'settings.title'),
 			description: Translate(interaction.locale, 'settings.desc'),
 			fields: [],
 		};
 		let options: StringSelectMenuOptionBuilder[] = [];
-		for (const moduleconfigkey in userconfig) {
-			const moduleconfig = userconfig[moduleconfigkey];
-			let values = '';
-			const translatedkey = Translate(
-				interaction.locale,
-				`${moduleconfigkey}.title`,
-			);
-			for (const moduleconfigsubkey in moduleconfig) {
-				const usermoduleconfigsubvalue = moduleconfig[moduleconfigsubkey];
-				switch (typeof usermoduleconfigsubvalue) {
-					case 'number':
-						values += `${moduleconfigsubkey} - ${usermoduleconfigsubvalue.toString()}`;
-						break;
-
-					case 'boolean':
-						values += `${moduleconfigsubkey} - ${
-							usermoduleconfigsubvalue ? '✅' : '❌'
-						}`;
-						break;
-				}
+		const keys = Object.keys(userconfig!).filter((key) => key != 'user');
+		console.log(keys);
+		const modules = [...new Set(keys.map((key) => key.split('_')[0]))];
+		console.log(modules);
+		for (const module of modules) {
+			const thismodulekeys = keys.filter((key) => key.includes(module));
+			let value = '';
+			for (let index = 0; index < thismodulekeys.length; index++) {
+				const key = thismodulekeys[index];
+				value += `${Translate(
+					interaction.locale,
+					`${module}.settings.${key.split('_')[1]}`,
+				)} = ${userconfig![key]}`;
 			}
 			embed.fields?.push({
-				name: translatedkey,
-				value: values,
+				name: Translate(interaction.locale, `${module}.title`),
+				value: value,
 			});
+			console.log(options.filter((option) => option.data.value != module));
+			console.log(
+				modules.map((module) =>
+					new StringSelectMenuOptionBuilder().setLabel(module).setValue(module),
+				),
+			);
 			options.push(
 				new StringSelectMenuOptionBuilder()
-					.setValue(moduleconfigkey)
-					.setLabel(translatedkey),
+					.setLabel(Translate(interaction.locale, `${module}.title`))
+					.setValue(module),
 			);
+			console.log(options);
 		}
 
 		const menu = new StringSelectMenuBuilder()

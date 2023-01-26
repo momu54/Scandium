@@ -1,3 +1,29 @@
+/*
+                       _oo0oo_
+                      o8888888o
+                      88" . "88
+                      (| -_- |)
+                      0\  =  /0
+                    ___/`---'\___
+                  .' \\|     | '.
+                 / \\|||  :  ||| \
+                / _||||| -:- |||||- \
+               |   | \\\  -  / |   |
+               | \_|  ''\---/''  |_/ |
+               \  .-\__  '-'  ___/-. /
+             ___'. .'  /--.--\  `. .'___
+          ."" '<  `.___\_<|>_/___.' >' "".
+         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+         \  \ `_.   \_ __\ /__ _/   .-` /  /
+     =====`-.____`.___ \_____/___.-`___.-'=====
+                       `=---='
+
+
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+               佛主保佑         永無BUG
+*/
+
 import {
 	APIEmbed,
 	ApplicationCommandType,
@@ -54,6 +80,9 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			}),
 			image: {
 				url: 'attachment://message.webp',
+			},
+			footer: {
+				text: Translate(interaction.locale, 'Screenshot.footer'),
 			},
 		};
 		await interaction.editReply({ files: [attachment], embeds: [embed] });
