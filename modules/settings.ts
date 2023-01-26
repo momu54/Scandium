@@ -67,18 +67,11 @@ await CreateCommand<ChatInputCommandInteraction>(
 				name: Translate(interaction.locale, `${module}.title`),
 				value: value,
 			});
-			console.log(options.filter((option) => option.data.value != module));
-			console.log(
-				modules.map((module) =>
-					new StringSelectMenuOptionBuilder().setLabel(module).setValue(module),
-				),
-			);
 			options.push(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(Translate(interaction.locale, `${module}.title`))
 					.setValue(module),
 			);
-			console.log(options);
 		}
 
 		const menu = new StringSelectMenuBuilder()
