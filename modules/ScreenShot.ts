@@ -35,6 +35,7 @@ import { CommandLocalizations, Translate } from '../utils/translate.js';
 import { ExportReturnType } from 'discord-html-transcripts';
 import { GetMessageHtml } from '../utils/getmessagehtml.js';
 import { launch } from 'puppeteer';
+import { GetConfig } from '../utils/database.js';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -64,9 +65,14 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		await page.waitForSelector('.discord-message-inner');
 		await page.waitForNetworkIdle();
 		const messageinhtml = await page.$('.discord-message-inner');
+		const format = await GetConfig<string>(
+			interaction.user.id,
+			'Screenshot',
+			'format',
+		);
 		const img = (await messageinhtml!.screenshot({
 			quality: 100,
-			type: 'webp',
+			type: format as 'png' | 'webp' | 'jpeg',
 			encoding: 'binary',
 		})) as Buffer;
 
@@ -77,6 +83,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			title: Translate(interaction.locale, 'Screenshot.title'),
 			description: Translate(interaction.locale, 'Screenshot.desc', {
 				size: (img.byteLength * 0.000001).toFixed(4),
+				format: format,
 			}),
 			image: {
 				url: 'attachment://message.webp',

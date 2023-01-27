@@ -34,6 +34,7 @@ import {
 } from 'discord.js';
 import sharp from 'sharp';
 import { CommandLocalizations, Translate } from '../utils/translate.js';
+import { GetConfig } from '../utils/database.js';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -54,7 +55,10 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			const isntwebporjpeg =
 				Attachment.contentType != 'image/webp' &&
 				Attachment.contentType != 'image/jpeg';
-			if (isntwebporjpeg) {
+			if (
+				isntwebporjpeg &&
+				(await GetConfig(interaction.user.id, 'SavaAllImage', 'convert'))
+			) {
 				resimage = await sharp(resimage, { animated: true })
 					.webp({
 						quality: 82,
@@ -89,6 +93,9 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			description: Translate(interaction.locale, 'SaveAllImage.desc', {
 				size: size,
 			}),
+			footer: {
+				text: Translate(interaction.locale, 'SaveAllImage.footer'),
+			},
 		};
 		await interaction.editReply({ embeds: [embed], files: [zipAttachment] });
 	},
