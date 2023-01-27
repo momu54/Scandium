@@ -1,3 +1,4 @@
 {
-	"exec": "ts-node"
+	"exec": "ts-node",
+	"ignore": ["lang/*.json", "nodemon.json"]
 }
