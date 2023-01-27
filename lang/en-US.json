@@ -15,7 +15,8 @@
 		"desc": "**size**: {size} MB\nAll images not in JPEG or WebP format are converted to WebP at quality 82.",
 		"settings": {
 			"convert": "convert"
-		}
+		},
+		"footer": "💡 Tip: You can disable image converting in the settings"
 	},
 	"error": {
 		"title": "Error"
@@ -27,7 +28,7 @@
 	},
 	"Screenshot": {
 		"title": "Take a screenshot",
-		"desc": "**size**: {size} MB\n**format**: WebP",
+		"desc": "**size**: {size} MB\n**format**: {format}",
 		"footer": "💡 Tip: You can set image format in the settings",
 		"settings": {
 			"format": "format"
