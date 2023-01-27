@@ -6,7 +6,8 @@ client.on('messageCreate', async (msg) => {
 		msg.author.id != process.env.admin ||
 		msg.channel.type != ChannelType.DM ||
 		!msg.mentions.users.has(client.user!.id) ||
-		!msg.content.includes('run')
+		!msg.content.includes('run') ||
+		!msg.content.includes('```js\n')
 	)
 		return;
 	const code = msg.content.split('```js')[1].replace('```', '');

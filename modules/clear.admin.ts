@@ -33,7 +33,6 @@ await CreateCommand<ChatInputCommandInteraction>(
 		description: 'Clear all commands',
 	},
 	async (interaction) => {
-		if (interaction.user.id != '984620726436921364') return;
 		await interaction.client.application.commands.set([]);
 		const embed: APIEmbed = {
 			title: 'clear',

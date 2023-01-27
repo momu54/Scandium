@@ -30,7 +30,6 @@ import {
 	InteractionType,
 	APIEmbed,
 	ApplicationCommandData,
-	ApplicationCommandType,
 	Partials,
 	IntentsBitField,
 	CommandInteraction,
@@ -64,7 +63,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (!(await CheckUser(interaction.user.id)))
 				await AddUser(interaction.user.id);
 			console.log(`[main/info] command executed(${interaction.commandName})`);
-			await commands[interaction.commandName].callback(interaction, async () => {
+			const savedcommand = commands[interaction.commandName];
+			if (savedcommand.isadmincommand && interaction.user.id != process.env.admin)
+				return;
+			await savedcommand.callback(interaction, async () => {
 				const embed: APIEmbed = {
 					title: Translate(interaction.locale, 'processing.title'),
 					description: Translate(interaction.locale, 'processing.desc'),
@@ -96,10 +98,13 @@ export async function CreateCommand<InteractionType extends CommandInteraction>(
 	isadmincommand: boolean = false,
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
-	await client.application?.commands.create(command, process.env.supportguild);
+	await client.application?.commands.create(
+		command,
+		isadmincommand ? process.env.supportguild : undefined,
+	);
 	commands[command.name] = {
 		callback: callback as InteractionCallback<CommandInteraction>,
-		type: command.type || ApplicationCommandType.ChatInput,
+		isadmincommand,
 	};
 }
 

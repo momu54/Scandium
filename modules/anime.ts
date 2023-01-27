@@ -88,7 +88,7 @@ function GetAnimeInRange(
 		.filter((_, index) => min < index && index < max)
 		.map((anime) =>
 			new StringSelectMenuOptionBuilder()
-				.setLabel(anime.name)
+				.setLabel(anime.name.slice(0, 25))
 				.setValue(
 					`${anime.date};${anime.name};${anime.thumbnail.replace(
 						'https://p2.bahamut.com.tw/',
