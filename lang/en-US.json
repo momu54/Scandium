@@ -40,5 +40,15 @@
 		"footer": "Data from: https://ani.gamer.com.tw/\nSince the information comes from the Taiwan animation website, the content is in traditional Chinese.",
 		"SingleAnimeDesc": "Name: {name}\nUpdate At: {date}",
 		"play": "Play"
+	},
+	"info": {
+		"title": "Info",
+		"memory": {
+			"name": "Memory usage"
+		},
+		"uptime": {
+			"name": "Uptime",
+			"value": "{hour} Hours {minute} Minutes {second} Seconds"
+		}
 	}
 }
