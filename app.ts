@@ -45,7 +45,7 @@ export const client = new Client({
 	partials: [Partials.Channel],
 });
 
-const commands: InteractionCallBackDatas<CommandInteraction> = {};
+export const commands: InteractionCallBackDatas<CommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 
 client.on(Events.ClientReady, () => {
@@ -105,6 +105,7 @@ export async function CreateCommand<InteractionType extends CommandInteraction>(
 	commands[command.name] = {
 		callback: callback as InteractionCallback<CommandInteraction>,
 		isadmincommand,
+		data: command,
 	};
 }
 

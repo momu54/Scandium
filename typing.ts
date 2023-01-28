@@ -24,7 +24,11 @@
                佛主保佑         永無BUG
 */
 
-import { CommandInteraction, MessageComponentInteraction } from 'discord.js';
+import {
+	ApplicationCommandData,
+	CommandInteraction,
+	MessageComponentInteraction,
+} from 'discord.js';
 
 export interface InteractionCallBackDatas<
 	InteractionType extends CommandInteraction | MessageComponentInteraction,
@@ -37,6 +41,7 @@ export interface InteractionCallbackData<
 > {
 	callback: InteractionCallback<InteractionType>;
 	isadmincommand?: boolean;
+	data?: ApplicationCommandData;
 }
 
 export type InteractionCallback<

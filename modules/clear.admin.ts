@@ -24,8 +24,12 @@
                佛主保佑         永無BUG
 */
 
-import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand } from '../app.js';
+import {
+	APIEmbed,
+	ApplicationCommandData,
+	ChatInputCommandInteraction,
+} from 'discord.js';
+import { CreateCommand, commands } from '../app.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -33,7 +37,12 @@ await CreateCommand<ChatInputCommandInteraction>(
 		description: 'Clear all commands',
 	},
 	async (interaction) => {
-		await interaction.client.application.commands.set([]);
+		const apicommands: ApplicationCommandData[] = [];
+		for (const commandkey in commands) {
+			const command = commands[commandkey];
+			apicommands.push(command.data!);
+		}
+		await interaction.client.application.commands.set(apicommands);
 		const embed: APIEmbed = {
 			title: 'clear',
 			description: 'Clear all commands',
