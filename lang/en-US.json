@@ -4,7 +4,7 @@
 		"desc": "{ping} ms"
 	},
 	"processing": {
-		"title": "Processing...",
+		"title": "<a:Loading:1055809489686773821> Processing...",
 		"desc": "This may take some time\nIf there is no response after a long period of time\nAn error may have occurred\nPlease report in the [issue](https://github.com) or to momu54#3937"
 	},
 	"SaveAllImage": {
