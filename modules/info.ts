@@ -29,7 +29,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				},
 				{
 					name: Translate(interaction.locale, 'info.os.name'),
-					value: `${process.platform}\n${version} | ${process.arch}\n${release}`,
+					value: `${process.platform}\n${version}\n${release} | ${process.arch}`,
 				},
 				{
 					name: Translate(interaction.locale, 'info.memory.name'),
