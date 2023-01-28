@@ -43,6 +43,9 @@
 	},
 	"info": {
 		"title": "Info",
+		"os": {
+			"name": "Operating system"
+		},
 		"memory": {
 			"name": "Memory usage"
 		},
