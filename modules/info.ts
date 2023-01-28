@@ -17,7 +17,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 			fields: [
 				{
 					name: Translate(interaction.locale, 'info.memory.name'),
-					value: `${process.memoryUsage().rss * 0.000001} MB`,
+					value: `${Math.floor(process.memoryUsage().rss * 0.000001)} MB`,
 				},
 				{
 					name: Translate(interaction.locale, 'info.uptime.name'),
