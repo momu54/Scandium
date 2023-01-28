@@ -1,6 +1,8 @@
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
 import { CreateCommand } from '../app.js';
 import { Translate } from '../utils/translate.js';
+import { release, version } from 'os';
+import packagejson from '../package.json' assert { type: 'json' };
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -15,6 +17,20 @@ await CreateCommand<ChatInputCommandInteraction>(
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'info.title'),
 			fields: [
+				{
+					name: 'Node.js',
+					value: process.version,
+					inline: true,
+				},
+				{
+					name: 'Discord.js',
+					value: packagejson.dependencies['discord.js'],
+					inline: true,
+				},
+				{
+					name: Translate(interaction.locale, 'info.os.name'),
+					value: `${version}(${release}) | ${process.arch}`,
+				},
 				{
 					name: Translate(interaction.locale, 'info.memory.name'),
 					value: `${Math.floor(process.memoryUsage().rss * 0.000001)} MB`,
