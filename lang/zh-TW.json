@@ -40,5 +40,15 @@
 		"footer": "資料來源: https://ani.gamer.com.tw/\n由於資料來自台灣動畫網站, 資料內容均為繁體中文",
 		"SingleAnimeDesc": "名稱: {name}\n最新更新時間: {date}",
 		"play": "播放"
+	},
+	"info": {
+		"title": "資訊",
+		"memory": {
+			"name": "記憶體使用率"
+		},
+		"uptime": {
+			"name": "正常運行時間",
+			"value": "{hour} 小時 {minute} 分鐘 {second} 秒"
+		}
 	}
 }
