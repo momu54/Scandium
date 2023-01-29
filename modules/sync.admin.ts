@@ -37,8 +37,8 @@ await CreateCommand<ChatInputCommandInteraction>(
 			Object.values(commands).map((command) => command.data!),
 		);
 		const embed: APIEmbed = {
-			title: 'clear',
-			description: 'Clear all commands',
+			title: 'Sync',
+			description: 'Commands synced',
 			color: 0x00ff00,
 		};
 		await interaction.reply({ embeds: [embed], ephemeral: true });
