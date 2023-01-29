@@ -33,13 +33,12 @@ import {
 } from 'discord.js';
 import { CreateCommand } from '../app.js';
 import { GetConfigs } from '../utils/database.js';
-import { CommandLocalizations, Translate } from '../utils/translate.js';
+import { Translate } from '../utils/translate.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'settings',
 		description: 'Change the settings.',
-		nameLocalizations: CommandLocalizations('settings'),
 	},
 	async (interaction) => {
 		const userconfig = await GetConfigs(interaction.user.id);

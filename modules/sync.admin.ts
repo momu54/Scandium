@@ -24,25 +24,18 @@
                佛主保佑         永無BUG
 */
 
-import {
-	APIEmbed,
-	ApplicationCommandData,
-	ChatInputCommandInteraction,
-} from 'discord.js';
+import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
 import { CreateCommand, commands } from '../app.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
-		name: 'clear',
-		description: 'Clear all commands',
+		name: 'sync',
+		description: 'Sync all commands',
 	},
 	async (interaction) => {
-		const apicommands: ApplicationCommandData[] = [];
-		for (const commandkey in commands) {
-			const command = commands[commandkey];
-			apicommands.push(command.data!);
-		}
-		await interaction.client.application.commands.set(apicommands);
+		await interaction.client.application.commands.set(
+			Object.values(commands).map((command) => command.data!),
+		);
 		const embed: APIEmbed = {
 			title: 'clear',
 			description: 'Clear all commands',

@@ -98,10 +98,6 @@ export async function CreateCommand<InteractionType extends CommandInteraction>(
 	isadmincommand: boolean = false,
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
-	await client.application?.commands.create(
-		command,
-		isadmincommand ? process.env.supportguild : undefined,
-	);
 	commands[command.name] = {
 		callback: callback as InteractionCallback<CommandInteraction>,
 		isadmincommand,
