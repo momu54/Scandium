@@ -25,7 +25,7 @@
 */
 
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand, commands } from '../app.js';
+import { CreateCommand, client, commands } from '../app.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -45,3 +45,5 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 	true,
 );
+
+await client.application?.commands.create(commands.sync.data!);
