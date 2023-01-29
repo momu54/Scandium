@@ -33,8 +33,17 @@ await CreateCommand<ChatInputCommandInteraction>(
 		description: 'Sync all commands',
 	},
 	async (interaction) => {
+		const commandsvalue = Object.values(commands);
 		await interaction.client.application.commands.set(
-			Object.values(commands).map((command) => command.data!),
+			commandsvalue
+				.filter((command) => !command.isadmincommand)
+				.map((command) => command.data!),
+		);
+		await interaction.client.application.commands.set(
+			commandsvalue
+				.filter((command) => command.isadmincommand)
+				.map((command) => command.data!),
+			process.env.supportguild!,
 		);
 		const embed: APIEmbed = {
 			title: 'Sync',
