@@ -1,8 +1,4 @@
 {
-	"ping": {
-		"title": "乒",
-		"desc": "{ping} 毫秒"
-	},
 	"processing": {
 		"title": "<a:Loading:1055809489686773821> 處理中...",
 		"desc": "這可能需要一些時間\n如果遲遲沒有回應\n可能是發生了錯誤\n請在 [issue](https://github.com) 或向momu54#3937回報"
@@ -52,6 +48,10 @@
 		"uptime": {
 			"name": "正常運行時間",
 			"value": "{hour} 小時 {minute} 分鐘 {second} 秒"
+		},
+		"GatewayPing": {
+			"name": "網關延遲",
+			"value": "{ping} 毫秒"
 		}
 	},
 	"global": {
