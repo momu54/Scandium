@@ -1,8 +1,4 @@
 {
-	"ping": {
-		"title": "Ping",
-		"desc": "{ping} ms"
-	},
 	"processing": {
 		"title": "<a:Loading:1055809489686773821> Processing...",
 		"desc": "This may take some time\nIf there is no response after a long period of time\nAn error may have occurred\nPlease report in the [issue](https://github.com) or to momu54#3937"
@@ -52,6 +48,16 @@
 		"uptime": {
 			"name": "Uptime",
 			"value": "{hour} Hours {minute} Minutes {second} Seconds"
+		},
+		"GatewayPing": {
+			"name": "Gateway ping",
+			"value": "{ping} ms"
+		}
+	},
+	"global": {
+		"title": "Global",
+		"settings": {
+			"color": "color"
 		}
 	}
 }
