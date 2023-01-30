@@ -52,6 +52,12 @@
 		"GatewayPing": {
 			"name": "Gateway ping",
 			"value": "{ping} ms"
+		},
+		"links": {
+			"name": "Links"
+		},
+		"developers": {
+			"name": "Developers"
 		}
 	},
 	"global": {
