@@ -29,6 +29,12 @@ await CreateCommand<ChatInputCommandInteraction>(
 					inline: true,
 				},
 				{
+					name: Translate(interaction.locale, 'info.GatewayPing.name'),
+					value: Translate(interaction.locale, 'info.GatewayPing.value', {
+						ping: interaction.client.ws.ping.toString(),
+					}),
+				},
+				{
 					name: Translate(interaction.locale, 'info.os.name'),
 					value: `${process.platform}\n${version}\n${release} | ${process.arch}`,
 				},
