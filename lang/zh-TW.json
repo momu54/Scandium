@@ -52,12 +52,6 @@
 		"GatewayPing": {
 			"name": "網關延遲",
 			"value": "{ping} 毫秒"
-		},
-		"links": {
-			"name": "連結"
-		},
-		"developers": {
-			"name": "開發者"
 		}
 	},
 	"global": {
