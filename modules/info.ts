@@ -51,14 +51,14 @@ await CreateCommand<ChatInputCommandInteraction>(
 					}),
 				},
 				{
-					name: 'Links',
+					name: Translate(interaction.locale, 'info.links.name'),
 					value:
 						'[Github](https://github.com/momu54/me) | ' +
 						'[Crowdin](https://crowdin.com/project/me-bot) | ' +
 						'[???](https://www.youtube.com/watch?v=dQw4w9WgXcQ)',
 				},
 				{
-					name: 'Developer',
+					name: Translate(interaction.locale, 'info.developers.name'),
 					value: '[momu54](https://momu54.cf/)',
 				},
 			],
