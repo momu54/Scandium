@@ -235,7 +235,10 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			fields: [
 				{
 					name: Translate(interaction.locale, `${data!.settingmodule}.title`),
-					value: `${data!.key}**:** ${value}`,
+					value: `${Translate(
+						interaction.locale,
+						`${data!.settingmodule}.settings.${data!.key}`,
+					)}**:** ${value}`,
 				},
 			],
 			color: await GetColor(interaction.user.id),

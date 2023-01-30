@@ -71,7 +71,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			'format',
 		);
 		const img = (await messageinhtml!.screenshot({
-			quality: 100,
+			quality: format != 'png' ? 100 : undefined,
 			type: format as 'png' | 'webp' | 'jpeg',
 			encoding: 'binary',
 		})) as Buffer;
