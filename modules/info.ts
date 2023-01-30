@@ -3,6 +3,7 @@ import { CreateCommand } from '../app.js';
 import { Translate } from '../utils/translate.js';
 import { release, version } from 'os';
 import packagejson from '../package.json' assert { type: 'json' };
+import { GetColor } from '../utils/database.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -55,6 +56,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 					value: '[momu54](https://momu54.cf/)',
 				},
 			],
+			color: await GetColor(interaction.user.id),
 		};
 
 		await interaction.reply({ embeds: [embed] });

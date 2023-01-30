@@ -32,7 +32,8 @@ await CreateCommand<ChatInputCommandInteraction>(
 		name: 'sync',
 		description: 'Sync all commands',
 	},
-	async (interaction) => {
+	async (interaction, defer) => {
+		await defer();
 		const commandsvalue = Object.values(commands);
 		await interaction.client.application.commands.set(
 			commandsvalue
@@ -50,7 +51,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 			description: 'Commands synced',
 			color: 0x00ff00,
 		};
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		await interaction.editReply({ embeds: [embed] });
 	},
 	true,
 );

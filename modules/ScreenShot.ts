@@ -35,7 +35,7 @@ import { CommandLocalizations, Translate } from '../utils/translate.js';
 import { ExportReturnType } from 'discord-html-transcripts';
 import { GetMessageHtml } from '../utils/getmessagehtml.js';
 import { launch } from 'puppeteer';
-import { GetConfig } from '../utils/database.js';
+import { GetColor, GetConfig } from '../utils/database.js';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -91,6 +91,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			footer: {
 				text: Translate(interaction.locale, 'Screenshot.footer'),
 			},
+			color: await GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ files: [attachment], embeds: [embed] });
 	},

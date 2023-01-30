@@ -11,6 +11,7 @@ import {
 import { CreateCommand, CreateComponentHandler } from '../app.js';
 import { ParseAnime } from '../utils/animeparser.js';
 import { Translate } from '../utils/translate.js';
+import { GetColor } from '../utils/database.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -32,6 +33,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 			footer: {
 				text: Translate(interaction.locale, 'anime.footer'),
 			},
+			color: await GetColor(interaction.user.id),
 		};
 
 		embed.description = animedata
@@ -66,7 +68,6 @@ await CreateCommand<ChatInputCommandInteraction>(
 				.setCustomId(GetCustomId(1))
 				.setOptions(GetAnimeInRange(animedata, 50, 25)),
 		);
-
 		await interaction.reply({
 			embeds: [embed],
 			components: [row, row2],
@@ -113,6 +114,7 @@ CreateComponentHandler<StringSelectMenuInteraction>('anime', async (interaction)
 		footer: {
 			text: Translate(interaction.locale, 'anime.footer'),
 		},
+		color: await GetColor(interaction.user.id),
 	};
 
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(

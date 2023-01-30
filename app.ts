@@ -23,7 +23,7 @@
 
                佛主保佑         永無BUG
 */
-import { CheckUser, AddUser } from './utils/database.js';
+import { CheckUser, AddUser, GetColor } from './utils/database.js';
 import {
 	Client,
 	Events,
@@ -34,8 +34,9 @@ import {
 	IntentsBitField,
 	CommandInteraction,
 	MessageComponentInteraction,
+	ModalSubmitInteraction,
 } from 'discord.js';
-import { InteractionCallback, InteractionCallBackDatas } from './typing.js';
+import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.js';
 import { CommandLocalizations, Translate } from './utils/translate.js';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
@@ -47,6 +48,7 @@ export const client = new Client({
 
 export const commands: InteractionCallBackDatas<CommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
+const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
 
 client.on(Events.ClientReady, () => {
 	console.log('[main/info] Ready!');
@@ -58,6 +60,14 @@ client.on(Events.Debug, (debugmsg) => console.log(`[discord.js/info] ${debugmsg}
 client.on(Events.Error, console.log);
 
 client.on(Events.InteractionCreate, async (interaction) => {
+	const embed: APIEmbed = {
+		title: Translate(interaction.locale, 'processing.title'),
+		description: Translate(interaction.locale, 'processing.desc'),
+		color: await GetColor(interaction.user.id),
+	};
+
+	let data: StringObject<any>;
+
 	switch (interaction.type) {
 		case InteractionType.ApplicationCommand:
 			if (!(await CheckUser(interaction.user.id)))
@@ -67,27 +77,34 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (savedcommand.isadmincommand && interaction.user.id != process.env.admin)
 				return;
 			await savedcommand.callback(interaction, async () => {
-				const embed: APIEmbed = {
-					title: Translate(interaction.locale, 'processing.title'),
-					description: Translate(interaction.locale, 'processing.desc'),
-				};
-
 				await interaction.reply({ embeds: [embed], ephemeral: true });
 			});
 			break;
 		case InteractionType.MessageComponent:
 			if (!(await CheckUser(interaction.user.id)))
 				await AddUser(interaction.user.id);
-			const module = JSON.parse(interaction.customId).module;
-			console.log(`[main/info] Component emitted(${module})`);
-			await componenthandlers[module].callback(interaction, async () => {
-				const embed: APIEmbed = {
-					title: Translate(interaction.locale, 'processing.title'),
-					description: Translate(interaction.locale, 'processing.desc'),
-				};
-
-				await interaction.reply({ embeds: [embed], ephemeral: true });
-			});
+			data = JSON.parse(interaction.customId);
+			console.log(`[main/info] Component emitted(${data.module})`);
+			await componenthandlers[data.module].callback(
+				interaction,
+				async () => {
+					await interaction.update({ embeds: [embed] });
+				},
+				data,
+			);
+			break;
+		case InteractionType.ModalSubmit:
+			if (!(await CheckUser(interaction.user.id)))
+				await AddUser(interaction.user.id);
+			data = JSON.parse(interaction.customId);
+			console.log(`[main/info] Modal submitted(${data.module})`);
+			await modalhandlers[data.module].callback(
+				interaction,
+				async () => {
+					await interaction.reply({ embeds: [embed] });
+				},
+				data,
+			);
 			break;
 	}
 });
@@ -110,6 +127,15 @@ export function CreateComponentHandler<
 >(module: string, callback: InteractionCallback<InteractionType>) {
 	componenthandlers[module] = {
 		callback: callback as InteractionCallback<MessageComponentInteraction>,
+	};
+}
+
+export function CreateModalHandler<InteractionType extends ModalSubmitInteraction>(
+	module: string,
+	callback: InteractionCallback<InteractionType>,
+) {
+	modalhandlers[module] = {
+		callback: callback as InteractionCallback<ModalSubmitInteraction>,
 	};
 }
 

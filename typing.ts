@@ -28,16 +28,23 @@ import {
 	ApplicationCommandData,
 	CommandInteraction,
 	MessageComponentInteraction,
+	ModalSubmitInteraction,
 } from 'discord.js';
 
 export interface InteractionCallBackDatas<
-	InteractionType extends CommandInteraction | MessageComponentInteraction,
+	InteractionType extends
+		| CommandInteraction
+		| MessageComponentInteraction
+		| ModalSubmitInteraction,
 > {
 	[key: string]: InteractionCallbackData<InteractionType>;
 }
 
 export interface InteractionCallbackData<
-	InteractionType extends CommandInteraction | MessageComponentInteraction,
+	InteractionType extends
+		| CommandInteraction
+		| MessageComponentInteraction
+		| ModalSubmitInteraction,
 > {
 	callback: InteractionCallback<InteractionType>;
 	isadmincommand?: boolean;
@@ -45,8 +52,15 @@ export interface InteractionCallbackData<
 }
 
 export type InteractionCallback<
-	InteractionType extends CommandInteraction | MessageComponentInteraction,
-> = (interaction: InteractionType, defer: () => Promise<void>) => Promise<any>;
+	InteractionType extends
+		| CommandInteraction
+		| MessageComponentInteraction
+		| ModalSubmitInteraction,
+> = (
+	interaction: InteractionType,
+	defer: () => Promise<void>,
+	data?: StringObject<string>,
+) => Promise<any>;
 
 export type TranslateVariables = StringObject<string>;
 

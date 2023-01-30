@@ -74,3 +74,10 @@ export async function GetConfigs(user: string) {
 		SQL`SELECT * FROM config WHERE user = ${user}`,
 	)!;
 }
+
+export async function GetColor(user: string) {
+	return parseInt(
+		await (await GetConfig<string>(user, 'global', 'color')).replace('#', ''),
+		16,
+	);
+}

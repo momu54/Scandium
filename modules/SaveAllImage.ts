@@ -34,7 +34,7 @@ import {
 } from 'discord.js';
 import sharp from 'sharp';
 import { CommandLocalizations, Translate } from '../utils/translate.js';
-import { GetConfig } from '../utils/database.js';
+import { GetColor, GetConfig } from '../utils/database.js';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -96,6 +96,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			footer: {
 				text: Translate(interaction.locale, 'SaveAllImage.footer'),
 			},
+			color: await GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ embeds: [embed], files: [zipAttachment] });
 	},
