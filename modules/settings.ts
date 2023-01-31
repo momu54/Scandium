@@ -41,9 +41,9 @@ import { GetColor, GetConfigs, SetConfig } from '../utils/database.js';
 import { Translate } from '../utils/translate.js';
 import { StringObject } from '../typing.js';
 
-const allowedvalue: StringObject<StringObject<string[]>> = {
+const allowedvalue: StringObject<StringObject<string[] | undefined>> = {
 	SaveAllImage: {
-		convert: ['0', '1'],
+		convert: ['0', '1', 'true', 'false'],
 	},
 	Screenshot: {
 		format: ['png', 'jpeg', 'webp'],
@@ -62,18 +62,26 @@ await CreateCommand<ChatInputCommandInteraction>(
 			description: Translate(interaction.locale, 'settings.desc'),
 			fields: [],
 			color: await GetColor(interaction.user.id),
+			footer: {
+				text: Translate(interaction.locale, 'settings.footer'),
+			},
 		};
 		let options: StringSelectMenuOptionBuilder[] = [];
 		for (const module of modules) {
 			const thismodulekeys = keys.filter((key) => key.includes(module));
 			const value = thismodulekeys
-				.map(
-					(key) =>
-						`${Translate(
-							interaction.locale,
-							`${module}.settings.${key.split('_')[1]}`,
-						)}**:** ${userconfig![key]}`,
-				)
+				.map((key) => {
+					let value: string | number | boolean = userconfig![key];
+					const valuekey = key.split('_')[1];
+					const allowedlist = allowedvalue[module]?.[valuekey];
+					if (allowedlist?.includes('true') && allowedlist?.includes('false')) {
+						value = userconfig![key] === 1;
+					}
+					return `${Translate(
+						interaction.locale,
+						`${module}.settings.${valuekey}`,
+					)}**:** ${value}`;
+				})
 				.join('\n');
 			embed.fields?.push({
 				name: Translate(interaction.locale, `${module}.title`),
@@ -104,22 +112,25 @@ await CreateCommand<ChatInputCommandInteraction>(
 CreateComponentHandler<StringSelectMenuInteraction>(
 	'settings',
 	async (interaction, _, data) => {
+		const module = interaction.values[0];
+		const { userconfig, keys } = await GetParsedConfigs(interaction.user.id);
+		const thismodulekeys = keys.filter((key) => key.includes(module));
+		const value = thismodulekeys
+			.map((key) => {
+				let value: string | number | boolean = userconfig![key];
+				const valuekey = key.split('_')[1];
+				const allowedlist = allowedvalue[module]?.[valuekey];
+				if (allowedlist?.includes('true') && allowedlist?.includes('false')) {
+					value = userconfig![key] === 1;
+				}
+				return `${Translate(
+					interaction.locale,
+					`${module}.settings.${valuekey}`,
+				)}**:** ${value}`;
+			})
+			.join('\n');
 		switch (data?.action) {
 			case 'keys':
-				const module = interaction.values[0];
-				const { userconfig, keys } = await GetParsedConfigs(interaction.user.id);
-
-				const thismodulekeys = keys.filter((key) => key.includes(module));
-				const value = thismodulekeys
-					.map(
-						(key) =>
-							`${Translate(
-								interaction.locale,
-								`${module}.settings.${key.split('_')[1]}`,
-							)}**:** ${userconfig![key]}`,
-					)
-					.join('\n');
-
 				const embed: APIEmbed = {
 					title: Translate(interaction.locale, 'settings.title'),
 					description: Translate(interaction.locale, 'settings.desc'),
@@ -130,6 +141,9 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 						},
 					],
 					color: await GetColor(interaction.user.id),
+					footer: {
+						text: Translate(interaction.locale, 'settings.footer'),
+					},
 				};
 
 				const options = thismodulekeys.map((key) => {
@@ -162,6 +176,9 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 
 			case 'set':
 				const key = interaction.values[0];
+
+				const allowedlist = allowedvalue[data.settingmodule]?.[key];
+
 				const modal = new ModalBuilder()
 					.setTitle('Settings')
 					.setCustomId(
@@ -181,7 +198,9 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 									)} => ${Translate(
 										interaction.locale,
 										`${data.settingmodule}.settings.${key}`,
-									)}`,
+									)}${
+										allowedlist ? ` (${allowedlist.join(', ')})` : ''
+									}`,
 								)
 								.setCustomId(
 									JSON.stringify({
@@ -189,7 +208,18 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 									}),
 								)
 								.setStyle(TextInputStyle.Short)
-								.setRequired(true),
+								.setRequired(true)
+								.setValue(
+									allowedlist?.includes('true') &&
+										allowedlist.includes('false')
+										? userconfig![`${data.settingmodule}_${key}`] ===
+										  1
+											? 'true'
+											: 'false'
+										: userconfig![
+												`${data.settingmodule}_${key}`
+										  ].toString(),
+								),
 						),
 					);
 
@@ -213,7 +243,7 @@ async function GetParsedConfigs(user: string) {
 CreateModalHandler<ModalMessageModalSubmitInteraction>(
 	'settings',
 	async (interaction, _, data) => {
-		const value = interaction.fields.getTextInputValue(
+		let value: string = interaction.fields.getTextInputValue(
 			JSON.stringify({
 				module: 'settings',
 			}),
@@ -222,12 +252,10 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			if (!CheckColor(value)) return;
 		}
 		if (allowedvalue[data!.settingmodule]?.[data!.key]) {
-			if (!allowedvalue[data!.settingmodule][data!.key].includes(value)) {
+			if (!allowedvalue[data!.settingmodule][data!.key]?.includes(value)) {
 				return;
 			}
 		}
-
-		await SetConfig(interaction.user.id, data!.settingmodule, data!.key, value);
 
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'settings.title'),
@@ -242,7 +270,17 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 				},
 			],
 			color: await GetColor(interaction.user.id),
+			footer: {
+				text: Translate(interaction.locale, 'settings.footer'),
+			},
 		};
+
+		await SetConfig(
+			interaction.user.id,
+			data!.settingmodule,
+			data!.key,
+			value === 'true',
+		);
 
 		await interaction.update({ embeds: [embed], components: [] });
 	},
