@@ -37,13 +37,13 @@ import {
 	TextInputStyle,
 } from 'discord.js';
 import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.js';
-import { GetColor, GetConfigs, SetConfig } from '../utils/database.js';
+import { GetColor, GetConfigs, SetConfig, allowedtype } from '../utils/database.js';
 import { Translate } from '../utils/translate.js';
 import { StringObject } from '../typing.js';
 
-const allowedvalue: StringObject<StringObject<string[] | undefined>> = {
+const allowedvalue: StringObject<StringObject<Readonly<string[]> | undefined>> = {
 	SaveAllImage: {
-		convert: ['0', '1', 'true', 'false'],
+		convert: allowedtype.boolean,
 	},
 	Screenshot: {
 		format: ['png', 'jpeg', 'webp'],
@@ -251,11 +251,14 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 		if (data!.settingmodule == 'global' && data!.key == 'color') {
 			if (!CheckColor(value)) return;
 		}
+
 		if (allowedvalue[data!.settingmodule]?.[data!.key]) {
 			if (!allowedvalue[data!.settingmodule][data!.key]?.includes(value)) {
 				return;
 			}
 		}
+
+		const allowedlist = allowedvalue[data!.settingmodule]?.[data!.key];
 
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'settings.title'),
@@ -279,7 +282,9 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			interaction.user.id,
 			data!.settingmodule,
 			data!.key,
-			value === 'true',
+			allowedlist?.includes('true') && allowedlist?.includes('false')
+				? value == 'true'
+				: value,
 		);
 
 		await interaction.update({ embeds: [embed], components: [] });

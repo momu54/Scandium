@@ -81,3 +81,7 @@ export async function GetColor(user: string) {
 		16,
 	);
 }
+
+export const allowedtype = {
+	boolean: ['true', 'false'],
+} as const;
