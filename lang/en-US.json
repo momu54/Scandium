@@ -20,7 +20,8 @@
 	"settings": {
 		"title": "Settings",
 		"desc": "View and configure user settings.",
-		"menu": "Choose a configuration to modify..."
+		"menu": "Choose a configuration to modify...",
+		"footer": "💡 Hint: Inputs that do not fit the format will be rejected"
 	},
 	"Screenshot": {
 		"title": "Take a screenshot",
