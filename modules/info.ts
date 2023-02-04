@@ -1,8 +1,8 @@
-import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
+import { APIEmbed, ChatInputCommandInteraction, codeBlock } from 'discord.js';
 import { CreateCommand } from '../app.js';
 import { Translate } from '../utils/translate.js';
 import { release, version } from 'os';
-import packagejson from '../package.json' assert { type: 'json' };
+import PackageJson from '../package.json' assert { type: 'json' };
 import { GetColor } from '../utils/database.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
@@ -25,7 +25,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				},
 				{
 					name: 'Discord.js',
-					value: packagejson.dependencies['discord.js'],
+					value: PackageJson.dependencies['discord.js'],
 					inline: true,
 				},
 				{
@@ -33,6 +33,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 					value: Translate(interaction.locale, 'info.GatewayPing.value', {
 						ping: interaction.client.ws.ping.toString(),
 					}),
+					inline: true,
 				},
 				{
 					name: Translate(interaction.locale, 'info.os.name'),
@@ -41,6 +42,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				{
 					name: Translate(interaction.locale, 'info.memory.name'),
 					value: `${Math.floor(process.memoryUsage().rss * 0.000001)} MB`,
+					inline: true,
 				},
 				{
 					name: Translate(interaction.locale, 'info.uptime.name'),
@@ -49,17 +51,21 @@ await CreateCommand<ChatInputCommandInteraction>(
 						minute: minute.toString(),
 						second: second.toString(),
 					}),
+					inline: true,
 				},
 				{
 					name: Translate(interaction.locale, 'info.links.name'),
-					value:
-						'[Github](https://github.com/momu54/me) | ' +
-						'[Crowdin](https://crowdin.com/project/me-bot) | ' +
-						'[???](https://www.youtube.com/watch?v=dQw4w9WgXcQ)',
+					value: '[Github](https://github.com/momu54/me) | [Crowdin](https://crowdin.com/project/me-bot) | [???](https://www.youtube.com/watch?v=dQw4w9WgXcQ)',
+					inline: true,
 				},
 				{
 					name: Translate(interaction.locale, 'info.developers.name'),
 					value: '[momu54](https://momu54.cf/)',
+					inline: true,
+				},
+				{
+					name: Translate(interaction.locale, 'info.acknowledgements.name'),
+					value: codeBlock(Object.keys(PackageJson.dependencies).join('\n')),
 				},
 			],
 			color: await GetColor(interaction.user.id),

@@ -119,8 +119,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			.map((key) => {
 				let value: string | number | boolean = userconfig![key];
 				const valuekey = key.split('_')[1];
-				const allowedlist = allowedvalue[module]?.[valuekey];
-				if (allowedlist?.includes('true') && allowedlist?.includes('false')) {
+				if (IsBooleanType({}, module, valuekey)) {
 					value = userconfig![key] === 1;
 				}
 				return `${Translate(
@@ -210,8 +209,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								.setStyle(TextInputStyle.Short)
 								.setRequired(true)
 								.setValue(
-									allowedlist?.includes('true') &&
-										allowedlist.includes('false')
+									IsBooleanType(data!, undefined, key)
 										? userconfig![`${data.settingmodule}_${key}`] ===
 										  1
 											? 'true'
@@ -258,8 +256,6 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			}
 		}
 
-		const allowedlist = allowedvalue[data!.settingmodule]?.[data!.key];
-
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'settings.title'),
 			description: Translate(interaction.locale, 'settings.desc'),
@@ -282,9 +278,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			interaction.user.id,
 			data!.settingmodule,
 			data!.key,
-			allowedlist?.includes('true') && allowedlist?.includes('false')
-				? value == 'true'
-				: value,
+			IsBooleanType(data!) ? value == 'true' : value,
 		);
 
 		await interaction.update({ embeds: [embed], components: [] });
@@ -292,5 +286,15 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 );
 
 function CheckColor(color: string) {
-	return color.startsWith('#') && !isNaN(parseInt(color.replace('#', ''), 16));
+	return (
+		color.length == 7 &&
+		color.startsWith('#') &&
+		!isNaN(parseInt(color.replace('#', ''), 16))
+	);
+}
+
+function IsBooleanType(data: StringObject<string>, module?: string, key?: string) {
+	const dataallowedvalue =
+		allowedvalue[module ? module : data.settingmodule]?.[key ? key : data.key];
+	return !!dataallowedvalue?.includes('true') && dataallowedvalue?.includes('false');
 }

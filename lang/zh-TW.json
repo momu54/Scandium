@@ -59,6 +59,9 @@
 		},
 		"developers": {
 			"name": "開發者"
+		},
+		"acknowledgements": {
+			"name": "特別感謝"
 		}
 	},
 	"global": {
