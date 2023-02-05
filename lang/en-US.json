@@ -59,6 +59,9 @@
 		},
 		"developers": {
 			"name": "Developers"
+		},
+		"acknowledgements": {
+			"name": "Acknowledgements"
 		}
 	},
 	"global": {
