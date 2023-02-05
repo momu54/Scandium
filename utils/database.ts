@@ -77,7 +77,7 @@ export async function GetConfigs(user: string) {
 
 export async function GetColor(user: string) {
 	return parseInt(
-		await (await GetConfig<string>(user, 'global', 'color')).replace('#', ''),
+		(await GetConfig<string>(user, 'global', 'color')).replace('#', ''),
 		16,
 	);
 }

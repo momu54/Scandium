@@ -55,10 +55,12 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			const isntwebporjpeg =
 				Attachment.contentType != 'image/webp' &&
 				Attachment.contentType != 'image/jpeg';
-			if (
-				isntwebporjpeg &&
-				(await GetConfig(interaction.user.id, 'SavaAllImage', 'convert'))
-			) {
+			const convert = await GetConfig(
+				interaction.user.id,
+				'SaveAllImage',
+				'convert',
+			);
+			if (isntwebporjpeg && convert) {
 				resimage = await sharp(resimage, { animated: true })
 					.webp({
 						quality: 82,
@@ -66,9 +68,10 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 					.toBuffer();
 			}
 			const spiltedfilename = Attachment.name?.split('.');
-			const filename = isntwebporjpeg
-				? Attachment.name?.replaceAll(spiltedfilename?.pop()!, 'webp')
-				: Attachment.name;
+			const filename =
+				isntwebporjpeg && convert
+					? Attachment.name?.replaceAll(spiltedfilename?.pop()!, 'webp')
+					: Attachment.name;
 			zip.file(`${index + 1}.${filename}`, resimage, {
 				binary: true,
 				compression: 'DEFLATE',
