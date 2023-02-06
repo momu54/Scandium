@@ -33,9 +33,12 @@
 	},
 	"anime": {
 		"title": "Anime",
-		"menu": "Choose an anime... {range}",
+		"menu": {
+			"anime": "Choose an anime... {range}",
+			"episodes": "Choose an episode..."
+		},
 		"footer": "Data from: https://ani.gamer.com.tw/\nSince the information comes from the Taiwan animation website, the content is in traditional Chinese.",
-		"SingleAnimeDesc": "Name: {name}\nUpdate At: {date}",
+		"SingleAnimeDesc": "**Name**: {name}\n**Last update**: {date}\n**Type**: {type}\n**Director/Supervision**: {staffs}\n**Taiwan agent**: {agent}\n**Studio**: {studio}",
 		"play": "Play"
 	},
 	"info": {
