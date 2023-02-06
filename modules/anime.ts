@@ -140,7 +140,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				const rows = [
 					new ActionRowBuilder<ButtonBuilder>().addComponents(
 						new ButtonBuilder()
-							.setLabel(Translate(interaction.locale, 'anime.play'))
+							.setLabel(Translate(interaction.locale, 'anime.PlayLatest'))
 							.setURL(url)
 							.setStyle(ButtonStyle.Link),
 					),
