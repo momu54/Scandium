@@ -71,3 +71,21 @@ export type Languages = StringObject<any>;
 export interface StringObject<ValueType> {
 	[key: string]: ValueType;
 }
+
+export interface Anime {
+	episodes: string[];
+	staffs: string;
+	rating: string;
+	type: string;
+	agent: string;
+	studio: string;
+}
+
+interface OneOfAnimes {
+	date: string;
+	name: string;
+	thumbnail: string;
+	url: string;
+}
+
+export type Animes = OneOfAnimes[];

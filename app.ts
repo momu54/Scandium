@@ -77,7 +77,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (savedcommand.isadmincommand && interaction.user.id != process.env.admin)
 				return;
 			await savedcommand.callback(interaction, async () => {
-				await interaction.reply({ embeds: [embed], ephemeral: true });
+				await interaction.reply({ embeds: [embed] });
 			});
 			break;
 		case InteractionType.MessageComponent:

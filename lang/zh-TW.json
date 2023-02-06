@@ -33,9 +33,12 @@
 	},
 	"anime": {
 		"title": "動畫",
-		"menu": "選擇一個動畫... {range}",
+		"menu": {
+			"anime": "選擇一個動畫... {range}",
+			"episodes": "選擇一集..."
+		},
 		"footer": "資料來源: https://ani.gamer.com.tw/\n由於資料來自台灣動畫網站, 資料內容均為繁體中文",
-		"SingleAnimeDesc": "名稱: {name}\n最新更新時間: {date}",
+		"SingleAnimeDesc": "**名稱**: {name}\n**最新更新時間**: {date}\n**類型**: {type}\n**導演/監督**: {staffs}\n**台灣代理**: {agent}\n**製作**: {studio}",
 		"play": "播放"
 	},
 	"info": {
