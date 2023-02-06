@@ -88,7 +88,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			await componenthandlers[data.module].callback(
 				interaction,
 				async () => {
-					await interaction.update({ embeds: [embed] });
+					await interaction.update({ embeds: [embed], components: [] });
 				},
 				data,
 			);
@@ -101,7 +101,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			await modalhandlers[data.module].callback(
 				interaction,
 				async () => {
-					await interaction.reply({ embeds: [embed] });
+					await interaction.reply({ embeds: [embed], components: [] });
 				},
 				data,
 			);
