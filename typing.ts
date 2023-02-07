@@ -86,6 +86,7 @@ interface OneOfAnimes {
 	name: string;
 	thumbnail: string;
 	url: string;
+	agelimit: boolean;
 }
 
 export type Animes = OneOfAnimes[];

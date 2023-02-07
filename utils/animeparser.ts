@@ -1,13 +1,12 @@
 import { JSDOM } from 'jsdom';
-import { Anime } from '../typing.js';
+import { Anime, Animes } from '../typing.js';
 
-export function ParseAnimes(html: string) {
+export function ParseAnimes(html: string): Animes {
 	const { document: doc } = new JSDOM(html).window;
 	const animeblocks = [...doc.querySelectorAll('.newanime-date-area')].filter(
 		(_, index) => index < 50,
 	);
-	const parsedanimes = [];
-	for (const animeblock of animeblocks) {
+	const parsedanimes = animeblocks.map((animeblock) => {
 		const date = (animeblock.querySelector(
 			'.anime-date-info',
 		) as HTMLSpanElement)!.innerHTML
@@ -15,27 +14,22 @@ export function ParseAnimes(html: string) {
 			.split(' ')[0]
 			.trim();
 		const name = (
-			animeblock.querySelector(
-				'.anime-content-block > .anime-block > .anime-card-block > .anime-name-block > .anime-name > :first-child',
-			) as HTMLParagraphElement
+			animeblock.querySelector('.anime-name > :first-child') as HTMLParagraphElement
 		).innerHTML;
 		const thumbnail = (
-			animeblock.querySelector(
-				'.anime-content-block > .anime-block > .anime-card-block > .anime-pic-block > .anime-blocker > img',
-			) as HTMLImageElement
+			animeblock.querySelector('.anime-blocker > img') as HTMLImageElement
 		).dataset.src!;
-		const url = (
-			animeblock.querySelector(
-				'.anime-content-block > .anime-block > .anime-card-block',
-			) as HTMLLinkElement
-		).href;
-		parsedanimes.push({
+		const url = (animeblock.querySelector('.anime-card-block') as HTMLLinkElement)
+			.href;
+		const agelimit = !!animeblock.querySelector('.anime-label-block > .color-R18');
+		return {
 			date,
 			name,
 			thumbnail,
 			url,
-		});
-	}
+			agelimit,
+		};
+	});
 	return parsedanimes;
 }
 

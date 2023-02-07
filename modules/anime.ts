@@ -4,6 +4,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	ChatInputCommandInteraction,
+	Interaction,
 	StringSelectMenuBuilder,
 	StringSelectMenuInteraction,
 	StringSelectMenuOptionBuilder,
@@ -40,7 +41,14 @@ await CreateCommand<ChatInputCommandInteraction>(
 		};
 
 		embed.description = animedata
-			.map((anime, index) => `> ${index + 1}. ${anime.name}`)
+			.map(
+				(anime, index) =>
+					`> **${index + 1}**. ${anime.name} ${
+						anime.agelimit
+							? `\`${Translate(interaction.locale, 'anime.AgeLimit')}\``
+							: ''
+					}`,
+			)
 			.join('\n');
 
 		function GetCustomId(index: number) {
@@ -59,7 +67,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 					}),
 				)
 				.setCustomId(GetCustomId(0))
-				.addOptions(GetAnimeInRange(animedata, 25)),
+				.addOptions(GetAnimeInRange(animedata, interaction, 25)),
 		);
 
 		const row2 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
@@ -70,7 +78,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 					}),
 				)
 				.setCustomId(GetCustomId(1))
-				.setOptions(GetAnimeInRange(animedata, 50, 25)),
+				.setOptions(GetAnimeInRange(animedata, interaction, 50, 25)),
 		);
 		await interaction.editReply({
 			embeds: [embed],
@@ -79,12 +87,23 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 );
 
-function GetAnimeInRange(animedata: Animes, max: number, min: number = -1) {
+function GetAnimeInRange(
+	animedata: Animes,
+	interaction: Interaction,
+	max: number,
+	min: number = -1,
+) {
 	return animedata
 		.filter((_, index) => min < index && index < max)
 		.map((anime) =>
 			new StringSelectMenuOptionBuilder()
-				.setLabel(anime.name.slice(0, 25))
+				.setLabel(
+					`${anime.name.slice(0, 92)}${anime.name.length > 92 ? '...' : ''} ${
+						anime.agelimit
+							? `${Translate(interaction.locale, 'anime.AgeLimit')}`
+							: ''
+					}`,
+				)
 				.setValue(
 					`${anime.date};${anime.name};${anime.thumbnail.replace(
 						'https://p2.bahamut.com.tw/',
