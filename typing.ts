@@ -74,15 +74,17 @@ export interface StringObject<ValueType> {
 
 export interface Anime {
 	episodes: string[];
-	staffs: string;
 	rating: string;
 	type: string;
 	agent: string;
 	studio: string;
+	director: string;
+	supervisor: string;
+	date: string;
+	description: string;
 }
 
 interface OneOfAnimes {
-	date: string;
 	name: string;
 	thumbnail: string;
 	url: string;

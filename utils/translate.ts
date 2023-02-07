@@ -27,7 +27,7 @@
 import { Languages, TranslateVariables } from '../typing.js';
 import _ from 'lodash';
 import { LocalizationMap, Locale } from 'discord.js';
-import { readdir, readFile } from 'fs/promises';
+import { readdir } from 'fs/promises';
 const languages: Languages = {};
 
 async function LoadLanguages() {
@@ -35,11 +35,13 @@ async function LoadLanguages() {
 
 	for (const file of files) {
 		if (!file.endsWith('.json')) continue;
-		languages[file.replace('.json', '')] = JSON.parse(
-			await readFile(`./lang/${file}`, {
-				encoding: 'utf8',
-			}),
-		);
+		languages[file.replace('.json', '')] = (
+			await import(`../lang/${file}`, {
+				assert: {
+					type: 'json',
+				},
+			})
+		).default;
 		console.log(`[main/translate] Success loading lang ./modules/${file}`);
 	}
 }

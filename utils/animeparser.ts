@@ -7,12 +7,6 @@ export function ParseAnimes(html: string): Animes {
 		(_, index) => index < 50,
 	);
 	const parsedanimes = animeblocks.map((animeblock) => {
-		const date = (animeblock.querySelector(
-			'.anime-date-info',
-		) as HTMLSpanElement)!.innerHTML
-			.split('</svg>')[1]
-			.split(' ')[0]
-			.trim();
 		const name = (
 			animeblock.querySelector('.anime-name > :first-child') as HTMLParagraphElement
 		).innerHTML;
@@ -23,7 +17,6 @@ export function ParseAnimes(html: string): Animes {
 			.href;
 		const agelimit = !!animeblock.querySelector('.anime-label-block > .color-R18');
 		return {
-			date,
 			name,
 			thumbnail,
 			url,
@@ -37,17 +30,30 @@ export function ParseAnime(html: string) {
 	const { document: doc } = new JSDOM(html).window;
 
 	const episodes = [...doc.querySelectorAll('.season > ul a')] as HTMLLinkElement[];
-	const rating = (doc.querySelector('.rating > img') as HTMLImageElement).src;
+	const rating = (doc.querySelector('.rating > img') as HTMLImageElement).src
+		.replace('gif', 'png')
+		.replace('acg', 'anime');
 	const [type, , staffs, agent, studio] = [
 		...doc.querySelectorAll('.data_type > li'),
 	].map((infomation) => infomation.innerHTML.split('</span>')[1].trim());
+	const [director, supervisor] = staffs.split('、');
+	const date = (
+		doc.querySelector('.anime_info_detail > p') as HTMLParagraphElement
+	).textContent!.split('：')[1];
+	const description = (doc.querySelector('.data_intro > p') as HTMLParagraphElement)
+		.textContent!.trim()
+		.split('\n')[0];
+
 	const parsedanimes: Anime = {
 		episodes: episodes.map((episode) => episode.href.replace('?sn=', '')),
 		rating,
-		staffs,
 		agent,
 		studio,
 		type,
+		director,
+		supervisor: supervisor || director,
+		date,
+		description,
 	};
 	return parsedanimes;
 }

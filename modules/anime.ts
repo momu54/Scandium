@@ -22,7 +22,6 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 	async (interaction, defer) => {
 		await defer();
-
 		const res = await fetch('https://ani.gamer.com.tw/', {
 			headers: {
 				'User-Agent':
@@ -105,7 +104,7 @@ function GetAnimeInRange(
 					}`,
 				)
 				.setValue(
-					`${anime.date};${anime.name};${anime.thumbnail.replace(
+					`${anime.name};${anime.thumbnail.replace(
 						'https://p2.bahamut.com.tw/',
 						'',
 					)};${anime.url.replace('animeVideo.php?sn=', '')}`,
@@ -118,7 +117,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 	async (interaction, defer, data) => {
 		switch (data!.action) {
 			case 'anime':
-				const [date, name, thumbnailpath, sn] = interaction.values[0].split(';');
+				const [name, thumbnailpath, sn] = interaction.values[0].split(';');
 
 				await defer();
 
@@ -131,19 +130,68 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				});
 
 				const html = Buffer.from(await res.arrayBuffer()).toString('utf-8');
-				const { studio, agent, staffs, type, rating, episodes } =
-					ParseAnime(html);
+				const {
+					studio,
+					agent,
+					type,
+					rating,
+					episodes,
+					director,
+					supervisor,
+					date,
+					description,
+				} = ParseAnime(html);
 
 				const embed: APIEmbed = {
-					title: Translate(interaction.locale, 'anime.title'),
-					description: Translate(interaction.locale, 'anime.SingleAnimeDesc', {
-						name,
-						date,
-						studio,
-						agent,
-						staffs,
-						type,
-					}),
+					title: name,
+					description,
+					fields: [
+						{
+							name: Translate(
+								interaction.locale,
+								'anime.infomations.LastUpdate',
+							),
+							value: date,
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'anime.infomations.type'),
+							value: type,
+							inline: true,
+						},
+						{
+							name: Translate(
+								interaction.locale,
+								'anime.infomations.director',
+							),
+							value: director,
+							inline: true,
+						},
+						{
+							name: Translate(
+								interaction.locale,
+								'anime.infomations.supervisor',
+							),
+							value: supervisor,
+							inline: true,
+						},
+						{
+							name: Translate(
+								interaction.locale,
+								'anime.infomations.agent',
+							),
+							value: agent,
+							inline: true,
+						},
+						{
+							name: Translate(
+								interaction.locale,
+								'anime.infomations.studio',
+							),
+							value: studio,
+							inline: true,
+						},
+					],
 					image: {
 						url: `https://p2.bahamut.com.tw/${thumbnailpath}`,
 					},
@@ -190,13 +238,23 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			case 'episode':
 				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder()
-						.setLabel(Translate(interaction.locale, 'anime.play'))
+						.setLabel(
+							Translate(interaction.locale, 'anime.play', {
+								episode: (
+									interaction.component.options.findIndex(
+										(option) => option.value == interaction.values[0],
+									) + 1
+								).toString(),
+							}),
+						)
 						.setStyle(ButtonStyle.Link)
 						.setURL(
 							`https://ani.gamer.com.tw/animeVideo.php?sn=${interaction.values[0]}`,
 						),
 				);
-				await interaction.update({ embeds: [], components: [row] });
+				await interaction.update({
+					components: [row, interaction.message.components[1]],
+				});
 				break;
 		}
 	},

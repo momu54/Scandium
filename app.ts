@@ -57,7 +57,7 @@ client.on(Events.ClientReady, () => {
 
 client.on(Events.Debug, (debugmsg) => console.log(`[discord.js/info] ${debugmsg}`));
 
-client.on(Events.Error, console.log);
+client.on(Events.Error, console.error);
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	const embed: APIEmbed = {
@@ -65,7 +65,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		description: Translate(interaction.locale, 'processing.desc'),
 		color: await GetColor(interaction.user.id),
 	};
-
 	let data: StringObject<any>;
 
 	switch (interaction.type) {
