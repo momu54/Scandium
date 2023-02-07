@@ -39,7 +39,15 @@
 		},
 		"footer": "資料來源: https://ani.gamer.com.tw/\n由於資料來自台灣動畫網站, 資料內容均為繁體中文",
 		"SingleAnimeDesc": "**名稱**: {name}\n**最新更新時間**: {date}\n**類型**: {type}\n**導演/監督**: {staffs}\n**台灣代理**: {agent}\n**製作**: {studio}",
-		"play": "播放",
+		"infomations": {
+			"LastUpdate": "最新更新時間",
+			"type": "類型",
+			"director": "導演",
+			"supervisor": "監督",
+			"agent": "台灣代理",
+			"studio": "製作"
+		},
+		"play": "播放第 {episode} 集",
 		"PlayLatest": "播放最新一集",
 		"AgeLimit": "年齡限制"
 	},
