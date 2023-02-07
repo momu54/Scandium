@@ -39,8 +39,17 @@
 		},
 		"footer": "Data from: https://ani.gamer.com.tw/\nSince the information comes from the Taiwan animation website, the content is in traditional Chinese.",
 		"SingleAnimeDesc": "**Name**: {name}\n**Last update**: {date}\n**Type**: {type}\n**Director/Supervision**: {staffs}\n**Taiwan agent**: {agent}\n**Studio**: {studio}",
-		"play": "Play",
-		"PlayLatest": "Play latest"
+		"infomations": {
+			"LastUpdate": "Last update",
+			"type": "Type",
+			"director": "Director",
+			"supervisor": "Supervisor",
+			"agent": "Taiwan agent",
+			"studio": "Studio"
+		},
+		"play": "Play episode {episode}",
+		"PlayLatest": "Play latest",
+		"AgeLimit": "Age limit"
 	},
 	"info": {
 		"title": "Info",
