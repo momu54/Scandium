@@ -6,7 +6,7 @@ export function ParseAnimes(html: string): Animes {
 	const animeblocks = [...doc.querySelectorAll('.newanime-date-area')].filter(
 		(_, index) => index < 50,
 	);
-	const parsedanimes = animeblocks.map((animeblock) => {
+	const parsedanimes: Animes = animeblocks.map((animeblock) => {
 		const name = (
 			animeblock.querySelector('.anime-name > :first-child') as HTMLParagraphElement
 		).innerHTML;
@@ -26,7 +26,7 @@ export function ParseAnimes(html: string): Animes {
 	return parsedanimes;
 }
 
-export function ParseAnime(html: string) {
+export function ParseAnime(html: string): Anime {
 	const { document: doc } = new JSDOM(html).window;
 
 	const episodes = [...doc.querySelectorAll('.season > ul a')] as HTMLLinkElement[];
@@ -55,5 +55,29 @@ export function ParseAnime(html: string) {
 		date,
 		description,
 	};
+	return parsedanimes;
+}
+
+export function ParseSearchResults(html: string): Animes {
+	const { document: doc } = new JSDOM(html).window;
+
+	const animeblocks = [...doc.querySelectorAll('.theme-list-main')].filter(
+		(_, index) => index < 50,
+	);
+	if (animeblocks.length == 0) return [];
+	const parsedanimes: Animes = animeblocks.map((animeblock) => {
+		const name = (animeblock.querySelector('.theme-name') as HTMLParagraphElement)
+			.textContent!;
+		const thumbnail = (animeblock.querySelector('.theme-img') as HTMLImageElement)
+			.dataset.src!;
+		const url = (animeblock as HTMLLinkElement).href;
+		const agelimit = !!animeblock.querySelector('.anime-label-block > .color-R18');
+		return {
+			name,
+			thumbnail,
+			url,
+			agelimit,
+		};
+	});
 	return parsedanimes;
 }

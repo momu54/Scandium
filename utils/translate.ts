@@ -70,11 +70,26 @@ function ReplaceVariables(text: string, variables: TranslateVariables) {
 }
 
 export function CommandLocalizations(command: string): LocalizationMap {
+	return GetAllTranslations(`${command}.title`);
+}
+
+export function SubCommandLocalizations(
+	command: string,
+	subcommand: string,
+): LocalizationMap {
+	return GetAllTranslations(`${command}.subcmd.${subcommand}`);
+}
+
+export function OptionLocalizations(command: string, option: string): LocalizationMap {
+	return GetAllTranslations(`${command}.option.${option}`);
+}
+
+function GetAllTranslations(key: string): LocalizationMap {
 	const localizations: LocalizationMap = {};
 	for (const language in languages) {
 		localizations[language as Locale] = Translate(
 			language as Locale,
-			`${command}.title`,
+			key,
 		)?.toLowerCase();
 	}
 	return localizations;

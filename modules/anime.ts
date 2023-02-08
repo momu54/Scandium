@@ -1,90 +1,176 @@
 import {
+	APIActionRowComponent,
 	APIEmbed,
+	APIMessageActionRowComponent,
 	ActionRowBuilder,
+	ApplicationCommandOptionType,
 	ButtonBuilder,
 	ButtonStyle,
 	ChatInputCommandInteraction,
 	Interaction,
+	InteractionReplyOptions,
+	JSONEncodable,
+	MessagePayload,
 	StringSelectMenuBuilder,
 	StringSelectMenuInteraction,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
 import { CreateCommand, CreateComponentHandler } from '../app.js';
-import { ParseAnime, ParseAnimes } from '../utils/animeparser.js';
-import { Translate } from '../utils/translate.js';
+import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.js';
+import {
+	OptionLocalizations,
+	SubCommandLocalizations,
+	Translate,
+} from '../utils/translate.js';
 import { GetColor } from '../utils/database.js';
-import { Animes } from '../typing.js';
+import { AnimeListType, Animes } from '../typing.js';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'anime',
 		description: 'Get anime data from https://ani.gamer.com.tw',
+		options: [
+			{
+				name: 'recent',
+				nameLocalizations: SubCommandLocalizations('anime', 'recent'),
+				description: 'Get recent anime data from https://ani.gamer.com.tw',
+				type: ApplicationCommandOptionType.Subcommand,
+			},
+			{
+				name: 'search',
+				nameLocalizations: SubCommandLocalizations('anime', 'search'),
+				description: 'Search anime data from https://ani.gamer.com.tw',
+				type: ApplicationCommandOptionType.Subcommand,
+				options: [
+					{
+						name: 'keyword',
+						nameLocalizations: OptionLocalizations('anime', 'keyword'),
+						description: 'Keyword to search',
+						type: ApplicationCommandOptionType.String,
+					},
+				],
+			},
+		],
 	},
 	async (interaction, defer) => {
-		await defer();
-		const res = await fetch('https://ani.gamer.com.tw/', {
-			headers: {
-				'User-Agent':
-					'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-			},
-		});
-		const html = Buffer.from(await res.arrayBuffer()).toString('utf-8');
-		const animedata = ParseAnimes(html);
-		const embed: APIEmbed = {
-			title: Translate(interaction.locale, 'anime.title'),
-			description: '',
-			footer: {
-				text: Translate(interaction.locale, 'anime.footer'),
-			},
-			color: await GetColor(interaction.user.id),
-		};
-
-		embed.description = animedata
-			.map(
-				(anime, index) =>
-					`> **${index + 1}**. ${anime.name} ${
-						anime.agelimit
-							? `\`${Translate(interaction.locale, 'anime.AgeLimit')}\``
-							: ''
-					}`,
-			)
-			.join('\n');
-
-		function GetCustomId(index: number) {
-			return JSON.stringify({
-				module: interaction.commandName,
-				action: 'anime',
-				index: index,
-			});
+		switch (interaction.options.getSubcommand()) {
+			case 'recent':
+				await RecentCommandHandler(interaction, defer);
+				break;
+			case 'search':
+				await SearchCommandHandler(interaction, defer);
+				break;
 		}
+	},
+);
 
-		const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-			new StringSelectMenuBuilder()
-				.setPlaceholder(
-					Translate(interaction.locale, 'anime.menu.anime', {
-						range: '(1~25)',
-					}),
-				)
-				.setCustomId(GetCustomId(0))
-				.addOptions(GetAnimeInRange(animedata, interaction, 25)),
-		);
+async function RecentCommandHandler(
+	interaction: ChatInputCommandInteraction,
+	defer: () => Promise<void>,
+) {
+	await defer();
+	const response = await GetAnimeListResponse(
+		'https://ani.gamer.com.tw/',
+		interaction,
+		AnimeListType.Recent,
+	);
 
+	await interaction.editReply(response);
+}
+
+async function SearchCommandHandler(
+	interaction: ChatInputCommandInteraction,
+	defer: () => Promise<void>,
+) {
+	await defer();
+	const keyword = await interaction.options.getString('keyword');
+	const response = await GetAnimeListResponse(
+		`https://ani.gamer.com.tw/search.php?keyword=${keyword}`,
+		interaction,
+		AnimeListType.Search,
+	);
+
+	await interaction.editReply(response);
+}
+
+async function GetAnimeListResponse(
+	url: string,
+	interaction: ChatInputCommandInteraction,
+	mode: AnimeListType,
+): Promise<InteractionReplyOptions | MessagePayload> {
+	const res = await fetch(url, {
+		headers: {
+			'User-Agent':
+				'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+		},
+	});
+	const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
+	const animedata =
+		mode == AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
+	const embed: APIEmbed = {
+		title: Translate(interaction.locale, 'anime.title'),
+		description: '',
+		footer: {
+			text: Translate(interaction.locale, 'anime.footer'),
+		},
+		color: await GetColor(interaction.user.id),
+	};
+
+	embed.description = animedata
+		.map(
+			(anime, index) =>
+				`> **${index + 1}**. ${anime.name} ${
+					anime.agelimit
+						? `\`${Translate(interaction.locale, 'anime.AgeLimit')}\``
+						: ''
+				}`,
+		)
+		.join('\n');
+
+	function GetCustomId(index: number) {
+		return JSON.stringify({
+			module: interaction.commandName,
+			action: 'anime',
+			index: index,
+		});
+	}
+
+	const interactioresponse: {
+		embeds: APIEmbed[];
+		components: JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>[];
+	} = {
+		embeds: [embed],
+		components: [],
+	};
+	const needtwomenu = animedata.length > 25;
+
+	const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+		new StringSelectMenuBuilder()
+			.setPlaceholder(
+				Translate(interaction.locale, 'anime.menu.anime', {
+					range: `(1~${needtwomenu ? '25' : animedata.length})`,
+				}),
+			)
+			.setCustomId(GetCustomId(0))
+			.addOptions(GetAnimeInRange(animedata, interaction, 25)),
+	);
+	interactioresponse.components.push(row);
+
+	if (needtwomenu) {
 		const row2 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 			new StringSelectMenuBuilder()
 				.setPlaceholder(
 					Translate(interaction.locale, 'anime.menu.anime', {
-						range: '(26~50)',
+						range: `(26~${animedata.length})`,
 					}),
 				)
 				.setCustomId(GetCustomId(1))
 				.setOptions(GetAnimeInRange(animedata, interaction, 50, 25)),
 		);
-		await interaction.editReply({
-			embeds: [embed],
-			components: [row, row2],
-		});
-	},
-);
+		interactioresponse.components.push(row2);
+	}
+	return interactioresponse;
+}
 
 function GetAnimeInRange(
 	animedata: Animes,
@@ -129,7 +215,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					},
 				});
 
-				const html = Buffer.from(await res.arrayBuffer()).toString('utf-8');
+				const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
 				const {
 					studio,
 					agent,

@@ -91,4 +91,9 @@ interface OneOfAnimes {
 	agelimit: boolean;
 }
 
+export enum AnimeListType {
+	Recent,
+	Search,
+}
+
 export type Animes = OneOfAnimes[];
