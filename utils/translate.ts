@@ -77,11 +77,11 @@ export function SubCommandLocalizations(
 	command: string,
 	subcommand: string,
 ): LocalizationMap {
-	return GetAllTranslations(`${command}.subcmd.${subcommand}`);
+	return GetAllTranslations(`${command}.subcmds.${subcommand}`);
 }
 
 export function OptionLocalizations(command: string, option: string): LocalizationMap {
-	return GetAllTranslations(`${command}.option.${option}`);
+	return GetAllTranslations(`${command}.options.${option}`);
 }
 
 function GetAllTranslations(key: string): LocalizationMap {
