@@ -26,7 +26,7 @@
 	"Screenshot": {
 		"title": "Take a screenshot",
 		"desc": "**size**: {size} MB\n**format**: {format}",
-		"footer": "💡 Tip: You can set image format in the settings",
+		"footer": "💡 Hint: You can set image format in the settings",
 		"settings": {
 			"format": "format"
 		}
@@ -49,7 +49,14 @@
 		},
 		"play": "Play episode {episode}",
 		"PlayLatest": "Play latest",
-		"AgeLimit": "Age limit"
+		"AgeLimit": "Age limit",
+		"subcmds": {
+			"recent": "recent",
+			"search": "search"
+		},
+		"options": {
+			"keyword": "keyword"
+		}
 	},
 	"info": {
 		"title": "Info",
