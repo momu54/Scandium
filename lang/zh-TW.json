@@ -50,7 +50,7 @@
 		"play": "播放第 {episode} 集",
 		"PlayLatest": "播放最新一集",
 		"AgeLimit": "年齡限制",
-		"subcmd": {
+		"subcmds": {
 			"recent": "最近",
 			"search": "搜尋"
 		},
