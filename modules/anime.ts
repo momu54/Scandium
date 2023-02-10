@@ -193,7 +193,9 @@ function GetAnimeInRange(
 					`${anime.name};${anime.thumbnail.replace(
 						'https://p2.bahamut.com.tw/',
 						'',
-					)};${anime.url.replace('animeVideo.php?sn=', '')}`,
+					)};${anime.url.split('sn=')[1]};${anime.url.includes(
+						'animeRef.php',
+					)}`,
 				),
 		);
 }
@@ -203,11 +205,14 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 	async (interaction, defer, data) => {
 		switch (data!.action) {
 			case 'anime':
-				const [name, thumbnailpath, sn] = interaction.values[0].split(';');
+				const [name, thumbnailpath, sn, issearch] =
+					interaction.values[0].split(';');
 
 				await defer();
 
-				const url = `https://ani.gamer.com.tw/animeVideo.php?sn=${sn}`;
+				const url = `https://ani.gamer.com.tw/${
+					issearch ? 'animeRef.php' : 'animeVideo.php'
+				}?sn=${sn}`;
 				const res = await fetch(url, {
 					headers: {
 						'User-Agent':

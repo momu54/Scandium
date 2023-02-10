@@ -61,16 +61,18 @@ export function ParseAnime(html: string): Anime {
 export function ParseSearchResults(html: string): Animes {
 	const { document: doc } = new JSDOM(html).window;
 
-	const animeblocks = [...doc.querySelectorAll('.theme-list-main')].filter(
-		(_, index) => index < 50,
-	);
+	const animeblocks = [
+		...doc.querySelectorAll<HTMLLinkElement>('.theme-list-main'),
+	].filter((_, index) => index < 50);
 	if (animeblocks.length == 0) return [];
 	const parsedanimes: Animes = animeblocks.map((animeblock) => {
-		const name = (animeblock.querySelector('.theme-name') as HTMLParagraphElement)
-			.textContent!;
-		const thumbnail = (animeblock.querySelector('.theme-img') as HTMLImageElement)
-			.dataset.src!;
-		const url = (animeblock as HTMLLinkElement).href;
+		const name =
+			animeblock.querySelector<HTMLParagraphElement>('.theme-name')!.textContent!;
+		const thumbnail =
+			animeblock.querySelector<HTMLImageElement>('.theme-img')!.dataset.src!;
+		//@ts-ignore
+		console.log(animeblock.querySelector('.theme-img').dataset);
+		const url = animeblock.href;
 		const agelimit = !!animeblock.querySelector('.anime-label-block > .color-R18');
 		return {
 			name,
