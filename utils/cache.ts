@@ -9,7 +9,7 @@ export class CacheStorer<CacheType> {
 	private async StartTimer() {
 		await setTimeout(this.alivetime);
 		this.alive = false;
-		delete this.data;
+		delete this.cachedata;
 	}
 
 	set data(data: CacheType | undefined) {

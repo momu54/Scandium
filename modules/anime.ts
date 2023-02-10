@@ -120,7 +120,6 @@ async function GetAnimeListResponse(
 		}
 	} else {
 		animedata = recentcache.data!;
-		console.log('used cache');
 	}
 
 	const embed: APIEmbed = {
