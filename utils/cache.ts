@@ -8,23 +8,15 @@ export class CacheStorer<CacheType> {
 	private async StartTimer() {
 		await setTimeout(this.alivetime);
 		this.alive = false;
-		delete this.cachedata;
-	}
-
-	set data(data: CacheType | undefined) {
-		this.cachedata = data;
-	}
-
-	get data() {
-		return this.cachedata;
+		delete this.data;
 	}
 
 	private alivetime: number;
-	private cachedata?: CacheType;
+	data?: CacheType;
 	alive: boolean = false;
 
 	public Update(data: CacheType) {
-		this.cachedata = data;
+		this.data = data;
 		this.alive = true;
 		this.StartTimer();
 	}
