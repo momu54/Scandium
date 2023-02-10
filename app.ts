@@ -50,9 +50,10 @@ export const commands: InteractionCallBackDatas<CommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
 
-client.on(Events.ClientReady, () => {
+client.on(Events.ClientReady, async () => {
 	console.log('[main/info] Ready!');
 	console.log(`[main/info] Logined with ${client.user!.tag} (${client.user!.id})`);
+	await LoadModules()
 });
 
 client.on(Events.Debug, (debugmsg) => console.log(`[discord.js/info] ${debugmsg}`));
@@ -147,8 +148,6 @@ async function LoadModules() {
 		console.log(`[main/info] Success loading file ./modules/${file}`);
 	}
 }
-
-LoadModules();
 
 process.on('unhandledRejection', console.error);
 process.on('uncaughtException', console.error);
