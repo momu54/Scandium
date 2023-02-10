@@ -211,7 +211,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				await defer();
 
 				const url = `https://ani.gamer.com.tw/${
-					issearch ? 'animeRef.php' : 'animeVideo.php'
+					issearch == 'true' ? 'animeRef.php' : 'animeVideo.php'
 				}?sn=${sn}`;
 				const res = await fetch(url, {
 					headers: {
