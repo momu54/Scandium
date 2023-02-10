@@ -24,6 +24,9 @@ import {
 } from '../utils/translate.js';
 import { GetColor } from '../utils/database.js';
 import { AnimeListType, Animes } from '../typing.js';
+import { CacheStorer } from '../utils/cache.js';
+
+const recentcache = new CacheStorer<Animes>(216000000);
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -98,15 +101,28 @@ async function GetAnimeListResponse(
 	interaction: ChatInputCommandInteraction,
 	mode: AnimeListType,
 ): Promise<InteractionReplyOptions | MessagePayload> {
-	const res = await fetch(url, {
-		headers: {
-			'User-Agent':
-				'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
-		},
-	});
-	const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
-	const animedata =
-		mode == AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
+	let animedata;
+	if (
+		(mode == AnimeListType.Recent && !recentcache.alive) ||
+		mode == AnimeListType.Search
+	) {
+		const res = await fetch(url, {
+			headers: {
+				'User-Agent':
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
+			},
+		});
+		const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
+		animedata =
+			mode == AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
+		if (mode == AnimeListType.Recent) {
+			recentcache.Update(animedata);
+		}
+	} else {
+		animedata = recentcache.data!;
+		console.log('used cache');
+	}
+
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'anime.title'),
 		description: '',

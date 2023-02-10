@@ -70,8 +70,6 @@ export function ParseSearchResults(html: string): Animes {
 			animeblock.querySelector<HTMLParagraphElement>('.theme-name')!.textContent!;
 		const thumbnail =
 			animeblock.querySelector<HTMLImageElement>('.theme-img')!.dataset.src!;
-		//@ts-ignore
-		console.log(animeblock.querySelector('.theme-img').dataset);
 		const url = animeblock.href;
 		const agelimit = !!animeblock.querySelector('.anime-label-block > .color-R18');
 		return {
