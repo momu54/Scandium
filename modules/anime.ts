@@ -50,6 +50,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 						nameLocalizations: OptionLocalizations('anime', 'keyword'),
 						description: 'Keyword to search',
 						type: ApplicationCommandOptionType.String,
+						required: true,
 					},
 				],
 			},
