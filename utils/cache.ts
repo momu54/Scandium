@@ -3,7 +3,6 @@ import { setTimeout } from 'timers/promises';
 export class CacheStorer<CacheType> {
 	constructor(alivetime: number) {
 		this.alivetime = alivetime;
-		this.StartTimer();
 	}
 
 	private async StartTimer() {
