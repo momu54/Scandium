@@ -82,11 +82,11 @@ export interface Anime {
 	supervisor: string;
 	date: string;
 	description: string;
+	thumbnail: string;
 }
 
 interface OneOfAnimes {
 	name: string;
-	thumbnail: string;
 	url: string;
 	agelimit: boolean;
 }

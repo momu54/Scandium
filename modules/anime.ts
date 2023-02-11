@@ -206,10 +206,7 @@ function GetAnimeInRange(
 					}`,
 				)
 				.setValue(
-					`${anime.name};${anime.thumbnail.replace(
-						'https://p2.bahamut.com.tw/',
-						'',
-					)};${anime.url.split('sn=')[1]};${anime.url.includes(
+					`${anime.name};${anime.url.split('sn=')[1]};${anime.url.includes(
 						'animeRef.php',
 					)}`,
 				),
@@ -221,8 +218,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 	async (interaction, defer, data) => {
 		switch (data!.action) {
 			case 'anime':
-				const [name, thumbnailpath, sn, issearch] =
-					interaction.values[0].split(';');
+				const [name, sn, issearch] = interaction.values[0].split(';');
 
 				await defer();
 
@@ -247,6 +243,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					supervisor,
 					date,
 					description,
+					thumbnail,
 				} = ParseAnime(html);
 
 				const embed: APIEmbed = {
@@ -300,7 +297,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 						},
 					],
 					image: {
-						url: `https://p2.bahamut.com.tw/${thumbnailpath}`,
+						url: thumbnail,
 					},
 					footer: {
 						text: Translate(interaction.locale, 'anime.footer'),

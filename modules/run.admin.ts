@@ -1,19 +1,36 @@
 import { ChannelType, codeBlock } from 'discord.js';
 import { client } from '../app.js';
+import { AsyncFunction } from '../utils/function.js';
 
 client.on('messageCreate', async (msg) => {
 	if (
 		msg.author.id != process.env.admin ||
 		msg.channel.type != ChannelType.DM ||
-		!msg.mentions.users.has(client.user!.id) ||
-		!msg.content.includes('run') ||
+		!msg.content.startsWith('run') ||
 		!msg.content.includes('```js\n')
 	)
 		return;
+	const isasync = msg.content.includes('async');
 	const code = msg.content.split('```js')[1].replace('```', '');
-	const codefn = new Function('msg', code);
+	const codefn = isasync ? AsyncFunction('msg', code) : new Function('msg', code);
 	try {
-		codefn(msg);
+		const execres = isasync ? await codefn() : codefn();
+		let result: string;
+		if (execres) {
+			switch (typeof execres) {
+				case 'object':
+					result = codeBlock('js', JSON.stringify(execres));
+					break;
+				case 'string':
+					result = codeBlock(execres);
+					break;
+				default:
+					result = execres.toString();
+			}
+		} else {
+			result = 'No result';
+		}
+		await msg.reply({ content: result });
 	} catch (err) {
 		await msg.reply({ content: codeBlock('js', (err as Error).stack!) });
 	}
