@@ -1,3 +1,10 @@
+/*
+    Copyleft 2022~2023
+    Licensed under AGPL 3.0 License
+    
+    * https://github.com/momu54/me/
+*/
+
 import { ChannelType, codeBlock } from 'discord.js';
 import { client } from '../app.js';
 import { AsyncFunction } from '../utils/function.js';
