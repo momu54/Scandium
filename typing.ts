@@ -83,6 +83,7 @@ export interface Anime {
 	date: string;
 	description: string;
 	thumbnail: string;
+	name: string;
 }
 
 interface OneOfAnimes {
@@ -97,3 +98,8 @@ export enum AnimeListType {
 }
 
 export type Animes = OneOfAnimes[];
+
+export interface AnimeMenuData {
+	sn: string;
+	issearch: boolean;
+}

@@ -46,6 +46,9 @@ export function ParseAnime(html: string): Anime {
 	const thumbnail = doc.querySelector<HTMLMetaElement>(
 		'[property="og:image"]',
 	)!.content;
+	const name = doc
+		.querySelector<HTMLMetaElement>('.anime_name > h1')!
+		.textContent!.replace(/\s\[[^\]]\]/, '');
 
 	const parsedanimes: Anime = {
 		episodes: episodes.map((episode) => episode.href.replace('?sn=', '')),
@@ -58,6 +61,7 @@ export function ParseAnime(html: string): Anime {
 		date,
 		description,
 		thumbnail,
+		name,
 	};
 	return parsedanimes;
 }

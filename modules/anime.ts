@@ -23,7 +23,7 @@ import {
 	Translate,
 } from '../utils/translate.js';
 import { GetColor } from '../utils/database.js';
-import { AnimeListType, Animes } from '../typing.js';
+import { AnimeListType, AnimeMenuData, Animes } from '../typing.js';
 import { CacheStorer } from '../utils/cache.js';
 
 const recentcache = new CacheStorer<Animes>(216000000);
@@ -87,7 +87,7 @@ async function SearchCommandHandler(
 	defer: () => Promise<void>,
 ) {
 	await defer();
-	const keyword = await interaction.options.getString('keyword');
+	const keyword = interaction.options.getString('keyword')!;
 	const response = await GetAnimeListResponse(
 		`https://ani.gamer.com.tw/search.php?keyword=${keyword}`,
 		interaction,
@@ -103,10 +103,7 @@ async function GetAnimeListResponse(
 	mode: AnimeListType,
 ): Promise<InteractionReplyOptions | MessagePayload> {
 	let animedata;
-	if (
-		(mode == AnimeListType.Recent && !recentcache.alive) ||
-		mode == AnimeListType.Search
-	) {
+	if (!recentcache.alive || mode == AnimeListType.Search) {
 		const res = await fetch(url, {
 			headers: {
 				'User-Agent':
@@ -199,16 +196,17 @@ function GetAnimeInRange(
 		.map((anime) =>
 			new StringSelectMenuOptionBuilder()
 				.setLabel(
-					`${anime.name.slice(0, 92)}${anime.name.length > 92 ? '...' : ''} ${
+					`${anime.name} ${
 						anime.agelimit
 							? `${Translate(interaction.locale, 'anime.AgeLimit')}`
 							: ''
 					}`,
 				)
 				.setValue(
-					`${anime.name};${anime.url.split('sn=')[1]};${anime.url.includes(
-						'animeRef.php',
-					)}`,
+					JSON.stringify({
+						sn: anime.url.split('sn=')[1],
+						issearch: anime.url.includes('animeRef.php'),
+					}),
 				),
 		);
 }
@@ -218,12 +216,14 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 	async (interaction, defer, data) => {
 		switch (data!.action) {
 			case 'anime':
-				const [name, sn, issearch] = interaction.values[0].split(';');
+				const { sn, issearch } = JSON.parse(
+					interaction.values[0],
+				) as AnimeMenuData;
 
 				await defer();
 
 				const url = `https://ani.gamer.com.tw/${
-					issearch == 'true' ? 'animeRef.php' : 'animeVideo.php'
+					issearch ? 'animeRef.php' : 'animeVideo.php'
 				}?sn=${sn}`;
 				const res = await fetch(url, {
 					headers: {
@@ -244,6 +244,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					date,
 					description,
 					thumbnail,
+					name,
 				} = ParseAnime(html);
 
 				const embed: APIEmbed = {
