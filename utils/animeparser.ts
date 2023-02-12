@@ -43,9 +43,9 @@ export function ParseAnime(html: string): Anime {
 		.querySelector<HTMLParagraphElement>('.data_intro > p')!
 		.textContent!.trim()
 		.split('\n')[0];
-	const thumbnail = doc.querySelector<HTMLMetaElement>(
-		'[property="og:image"]',
-	)!.content;
+	const thumbnail = doc
+		.querySelector<HTMLScriptElement>('body > script:last-child')!
+		.innerHTML.split("'")[1];
 	const name = doc
 		.querySelector<HTMLMetaElement>('.anime_name > h1')!
 		.textContent!.replace(/\s\[[^\]]\]/, '');
