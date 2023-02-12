@@ -4,3 +4,4 @@ config/user.json
 package-lock.json
 .env
 data/*
+.vscode
