@@ -1,7 +1,7 @@
 CREATE TABLE config (
     SaveAllImage_convert BOOLEAN DEFAULT 1,
     ScreenShot_format TEXT DEFAULT "webp",
-    global_colot TEXT DEFAULT "#ffffff"
+    global_color TEXT DEFAULT "#ffffff"
 );
 
 CREATE TABLE AnimeTodo (
