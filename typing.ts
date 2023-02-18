@@ -66,10 +66,16 @@ export interface Anime {
 	name: string;
 }
 
-interface OneOfAnimes {
+interface BaseAnime {
 	name: string;
 	url: string;
 	agelimit: boolean;
+}
+
+export type BaseAnimes = BaseAnime[];
+
+interface OneOfAnimes extends BaseAnime {
+	type: AnimesType.Normal;
 }
 
 export enum AnimeListType {
@@ -77,9 +83,36 @@ export enum AnimeListType {
 	Search,
 }
 
+export enum AnimesType {
+	Normal,
+	Todo,
+}
+
 export type Animes = OneOfAnimes[];
 
 export interface AnimeMenuData {
 	sn: string;
 	issearch: boolean;
+	istodo: boolean;
+	episode: string;
+}
+
+export interface TodoAnime {
+	user: string;
+	sn: string;
+	name: string;
+	episode: string;
+}
+
+export interface AnimeFromTodo extends BaseAnime {
+	episode: string;
+	type: AnimesType.Todo;
+}
+
+export type AnimesFromTodo = AnimeFromTodo[];
+
+export function IsTodoAnime(
+	animedata: Animes | AnimesFromTodo,
+): animedata is AnimesFromTodo {
+	return animedata[0].type == AnimesType.Todo;
 }

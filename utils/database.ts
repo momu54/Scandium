@@ -6,11 +6,11 @@
 
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import { StringObject } from '../typing.js';
+import { AnimesFromTodo, AnimesType, StringObject, TodoAnime } from '../typing.js';
 import SQL from 'sql-template-strings';
 
-const config = await open({
-	filename: './data/config.db',
+const database = await open({
+	filename: './data.db',
 	driver: sqlite3.Database,
 });
 
@@ -19,7 +19,7 @@ export async function GetConfig<ConfigType extends number | string>(
 	module: string,
 	key: string,
 ) {
-	const dbres = await config.get<StringObject<ConfigType>>(
+	const dbres = await database.get<StringObject<ConfigType>>(
 		`SELECT ${module}_${key} FROM config WHERE user = $user`,
 		{
 			$user: user,
@@ -35,22 +35,22 @@ export function SetConfig(
 	key: string,
 	value: number | string | boolean,
 ) {
-	return config.run(`UPDATE config SET ${module}_${key}=$value WHERE user = $user`, {
+	return database.run(`UPDATE config SET ${module}_${key}=$value WHERE user = $user`, {
 		$value: value,
 		$user: user,
 	});
 }
 
-export function AddUser(user: string) {
-	return config.run(SQL`INSERT INTO config(user) VALUES (${user})`);
+export function AddConfigUser(user: string) {
+	return database.run(SQL`INSERT INTO config(user) VALUES (${user})`);
 }
 
 export async function CheckUser(user: string) {
-	return !!(await config.get(SQL`SELECT user FROM config WHERE user = ${user}`));
+	return !!(await database.get(SQL`SELECT user FROM config WHERE user = ${user}`));
 }
 
-export async function GetConfigs(user: string) {
-	return config.get<StringObject<number | string>>(
+export function GetConfigs(user: string) {
+	return database.get<StringObject<number | string>>(
 		SQL`SELECT * FROM config WHERE user = ${user}`,
 	)!;
 }
@@ -62,6 +62,44 @@ export async function GetColor(user: string) {
 	);
 }
 
-export const allowedtype = {
+export async function GetAnimeTodoList(user: string): Promise<AnimesFromTodo> {
+	const animes = await database.all<TodoAnime[]>(
+		SQL`SELECT * FROM AnimeTodo WHERE user = ${user}`,
+	);
+
+	return animes.map((anime) => {
+		const { sn, name, episode } = anime;
+
+		return {
+			name,
+			url: `https://ani.gamer.com.tw/animeVideo.php?sn=${sn}`,
+			agelimit: false,
+			episode,
+			type: AnimesType.Todo,
+		};
+	});
+}
+
+export function AddAnimeTodo(user: string, name: string, sn: string, episode: string) {
+	return database.run(
+		SQL`INSERT INTO AnimeTodo(user, name, sn, episode) VALUES (${user}, ${name}, ${sn}, ${episode})`,
+	);
+}
+
+export function RemoveAnimeTodo(user: string, sn: string) {
+	return database.run(SQL`DELETE FROM AnimeTodo WHERE user = ${user} AND sn = ${sn}`);
+}
+
+export async function CheckAnimeTodo(user: string, sn: string) {
+	return !!(await database.get(
+		SQL`SELECT * FROM AnimeTodo WHERE user = ${user} AND sn = ${sn}`,
+	));
+}
+
+export function ClearAnimeTodo(user: string) {
+	return database.run(SQL`DELETE FROM AnimeTodo WHERE user = ${user}`);
+}
+
+export const ALLOWED_TYPES = {
 	boolean: ['true', 'false'],
 } as const;

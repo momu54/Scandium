@@ -17,13 +17,15 @@ import {
 	TextInputStyle,
 } from 'discord.js';
 import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.js';
-import { GetColor, GetConfigs, SetConfig, allowedtype } from '../utils/database.js';
+import { GetColor, GetConfigs, SetConfig, ALLOWED_TYPES } from '../utils/database.js';
 import { Translate } from '../utils/translate.js';
 import { StringObject } from '../typing.js';
 
-const allowedvalue: StringObject<StringObject<Readonly<string[]> | undefined>> = {
+const ALLOWED_VALUE: Readonly<
+	StringObject<StringObject<Readonly<string[]> | undefined>>
+> = {
 	SaveAllImage: {
-		convert: allowedtype.boolean,
+		convert: ALLOWED_TYPES.boolean,
 	},
 	Screenshot: {
 		format: ['png', 'jpeg', 'webp'],
@@ -53,7 +55,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				.map((key) => {
 					let value: string | number | boolean = userconfig![key];
 					const valuekey = key.split('_')[1];
-					const allowedlist = allowedvalue[module]?.[valuekey];
+					const allowedlist = ALLOWED_VALUE[module]?.[valuekey];
 					if (allowedlist?.includes('true') && allowedlist?.includes('false')) {
 						value = userconfig![key] === 1;
 					}
@@ -156,7 +158,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			case 'set':
 				const key = interaction.values[0];
 
-				const allowedlist = allowedvalue[data.settingmodule]?.[key];
+				const allowedlist = ALLOWED_VALUE[data.settingmodule]?.[key];
 
 				const modal = new ModalBuilder()
 					.setTitle('Settings')
@@ -230,8 +232,8 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			if (!CheckColor(value)) return;
 		}
 
-		if (allowedvalue[data!.settingmodule]?.[data!.key]) {
-			if (!allowedvalue[data!.settingmodule][data!.key]?.includes(value)) {
+		if (ALLOWED_VALUE[data!.settingmodule]?.[data!.key]) {
+			if (!ALLOWED_VALUE[data!.settingmodule][data!.key]?.includes(value)) {
 				return;
 			}
 		}
@@ -274,7 +276,7 @@ function CheckColor(color: string) {
 }
 
 function IsBooleanType(data: StringObject<string>, module?: string, key?: string) {
-	const dataallowedvalue =
-		allowedvalue[module ? module : data.settingmodule]?.[key ? key : data.key];
-	return !!dataallowedvalue?.includes('true') && dataallowedvalue?.includes('false');
+	const dataALLOWED_VALUE =
+		ALLOWED_VALUE[module ? module : data.settingmodule]?.[key ? key : data.key];
+	return !!dataALLOWED_VALUE?.includes('true') && dataALLOWED_VALUE?.includes('false');
 }

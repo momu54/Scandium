@@ -3,5 +3,5 @@ dist/*
 config/user.json
 package-lock.json
 .env
-data/*
+data.db
 .vscode

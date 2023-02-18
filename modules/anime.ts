@@ -11,26 +11,50 @@ import {
 	ActionRowBuilder,
 	ApplicationCommandOptionType,
 	ButtonBuilder,
+	ButtonInteraction,
 	ButtonStyle,
 	ChatInputCommandInteraction,
+	ComponentType,
 	Interaction,
 	InteractionReplyOptions,
 	JSONEncodable,
+	Locale,
 	MessagePayload,
+	ModalBuilder,
+	ModalMessageModalSubmitInteraction,
 	StringSelectMenuBuilder,
 	StringSelectMenuInteraction,
 	StringSelectMenuOptionBuilder,
+	TextInputBuilder,
+	TextInputStyle,
 } from 'discord.js';
-import { CreateCommand, CreateComponentHandler } from '../app.js';
+import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.js';
 import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.js';
 import {
 	OptionLocalizations,
 	SubCommandLocalizations,
 	Translate,
 } from '../utils/translate.js';
-import { GetColor } from '../utils/database.js';
-import { AnimeListType, AnimeMenuData, Animes } from '../typing.js';
+import {
+	AddAnimeTodo,
+	CheckAnimeTodo,
+	ClearAnimeTodo,
+	GetAnimeTodoList,
+	GetColor,
+	RemoveAnimeTodo,
+} from '../utils/database.js';
+import {
+	AnimeFromTodo,
+	AnimeListType,
+	AnimeMenuData,
+	Animes,
+	AnimesFromTodo,
+	AnimesType,
+	BaseAnimes,
+	IsTodoAnime,
+} from '../typing.js';
 import { CacheStorer } from '../utils/cache.js';
+import { ADD_EMOJI, DELETE_EMOJI, PLAY_EMOJI } from '../utils/emoji.js';
 
 const recentcache = new CacheStorer<Animes>(216000000);
 
@@ -60,6 +84,12 @@ await CreateCommand<ChatInputCommandInteraction>(
 					},
 				],
 			},
+			{
+				name: 'todo',
+				nameLocalizations: SubCommandLocalizations('anime', 'todo'),
+				description: 'Get anime todo list',
+				type: ApplicationCommandOptionType.Subcommand,
+			},
 		],
 	},
 	async (interaction, defer) => {
@@ -70,6 +100,9 @@ await CreateCommand<ChatInputCommandInteraction>(
 			case 'search':
 				await SearchCommandHandler(interaction, defer);
 				break;
+			case 'todo':
+				await TodoCommandHandler(interaction);
+				break;
 		}
 	},
 );
@@ -79,7 +112,7 @@ async function RecentCommandHandler(
 	defer: () => Promise<void>,
 ) {
 	await defer();
-	const response = await GetAnimeListResponse(
+	const response = await FetchAndGetAnimeListResponse(
 		'https://ani.gamer.com.tw/',
 		interaction,
 		AnimeListType.Recent,
@@ -94,7 +127,7 @@ async function SearchCommandHandler(
 ) {
 	await defer();
 	const keyword = interaction.options.getString('keyword')!;
-	const response = await GetAnimeListResponse(
+	const response = await FetchAndGetAnimeListResponse(
 		`https://ani.gamer.com.tw/search.php?keyword=${keyword}`,
 		interaction,
 		AnimeListType.Search,
@@ -103,12 +136,12 @@ async function SearchCommandHandler(
 	await interaction.editReply(response);
 }
 
-async function GetAnimeListResponse(
+async function FetchAndGetAnimeListResponse(
 	url: string,
 	interaction: ChatInputCommandInteraction,
 	mode: AnimeListType,
 ): Promise<InteractionReplyOptions | MessagePayload> {
-	let animedata;
+	let animedata: Animes;
 	if (!recentcache.alive || mode == AnimeListType.Search) {
 		const res = await fetch(url, {
 			headers: {
@@ -116,7 +149,7 @@ async function GetAnimeListResponse(
 					'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0',
 			},
 		});
-		const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
+		const html = await res.text();
 		animedata =
 			mode == AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
 		if (mode == AnimeListType.Recent) {
@@ -126,6 +159,21 @@ async function GetAnimeListResponse(
 		animedata = recentcache.data!;
 	}
 
+	return await GetAnimeListResponse(interaction, animedata);
+}
+
+async function GetAnimeListResponse(
+	interaction: Interaction,
+	animedata: Animes,
+): Promise<InteractionReplyOptions | MessagePayload>;
+async function GetAnimeListResponse(
+	interaction: Interaction,
+	animedata: AnimesFromTodo,
+): Promise<InteractionReplyOptions | MessagePayload>;
+async function GetAnimeListResponse(
+	interaction: Interaction,
+	animedata: Animes | AnimesFromTodo,
+): Promise<InteractionReplyOptions | MessagePayload> {
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'anime.title'),
 		description: '',
@@ -134,23 +182,25 @@ async function GetAnimeListResponse(
 		},
 		color: await GetColor(interaction.user.id),
 	};
+	const istodo = IsTodoAnime(animedata);
 
 	embed.description = animedata
 		.map(
 			(anime, index) =>
-				`> **${index + 1}**. ${anime.name} ${
+				`> **${index + 1}**. ${anime.name}${
 					anime.agelimit
-						? `\`${Translate(interaction.locale, 'anime.AgeLimit')}\``
+						? ` \`${Translate(interaction.locale, 'anime.AgeLimit')}\``
 						: ''
-				}`,
+				}${anime.type == AnimesType.Todo ? ` **[${anime.episode}]**` : ''}`,
 		)
 		.join('\n');
 
 	function GetCustomId(index: number) {
 		return JSON.stringify({
-			module: interaction.commandName,
+			module: 'anime',
 			action: 'anime',
 			index: index,
+			istodo,
 		});
 	}
 
@@ -159,7 +209,22 @@ async function GetAnimeListResponse(
 		components: JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>[];
 	} = {
 		embeds: [embed],
-		components: [],
+		components: istodo
+			? [
+					new ActionRowBuilder<ButtonBuilder>().addComponents(
+						new ButtonBuilder()
+							.setLabel(Translate(interaction.locale, 'anime.ClearTodo'))
+							.setEmoji(DELETE_EMOJI)
+							.setStyle(ButtonStyle.Danger)
+							.setCustomId(
+								JSON.stringify({
+									module: 'anime',
+									action: 'ClearTodo',
+								}),
+							),
+					),
+			  ]
+			: [],
 	};
 	const needtwomenu = animedata.length > 25;
 
@@ -171,7 +236,7 @@ async function GetAnimeListResponse(
 				}),
 			)
 			.setCustomId(GetCustomId(0))
-			.addOptions(GetAnimeInRange(animedata, interaction, 25)),
+			.addOptions(GetAnimeInRange(animedata, interaction, 25, istodo)),
 	);
 	interactioresponse.components.push(row);
 
@@ -184,7 +249,7 @@ async function GetAnimeListResponse(
 					}),
 				)
 				.setCustomId(GetCustomId(1))
-				.setOptions(GetAnimeInRange(animedata, interaction, 50, 25)),
+				.setOptions(GetAnimeInRange(animedata, interaction, 50, istodo, 25)),
 		);
 		interactioresponse.components.push(row2);
 	}
@@ -192,9 +257,10 @@ async function GetAnimeListResponse(
 }
 
 function GetAnimeInRange(
-	animedata: Animes,
+	animedata: BaseAnimes,
 	interaction: Interaction,
 	max: number,
+	istodo: boolean,
 	min: number = -1,
 ) {
 	return animedata
@@ -206,23 +272,25 @@ function GetAnimeInRange(
 						anime.agelimit
 							? `${Translate(interaction.locale, 'anime.AgeLimit')}`
 							: ''
-					}`,
+					}${istodo ? ` [${(anime as AnimeFromTodo).episode}]` : ''}`,
 				)
 				.setValue(
 					JSON.stringify({
 						sn: anime.url.split('sn=')[1],
 						issearch: anime.url.includes('animeRef.php'),
+						episode: istodo ? (anime as AnimeFromTodo).episode : '-1',
 					}),
 				),
 		);
 }
 
-CreateComponentHandler<StringSelectMenuInteraction>(
+CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 	'anime',
 	async (interaction, defer, data) => {
 		switch (data!.action) {
-			case 'anime':
-				const { sn, issearch } = JSON.parse(
+			case 'anime': {
+				if (interaction.componentType != ComponentType.StringSelect) return;
+				const { sn, issearch, episode } = JSON.parse(
 					interaction.values[0],
 				) as AnimeMenuData;
 
@@ -238,7 +306,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					},
 				});
 
-				const html = Buffer.from(await res.arrayBuffer()).toString('utf8');
+				const html = await res.text();
 				const {
 					studio,
 					agent,
@@ -315,13 +383,35 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					color: await GetColor(interaction.user.id),
 				};
 
+				const latestsn = episodes.at(-1)!;
+
+				const latestindex = episodes.length.toString();
+				const neededindex = data!.istodo ? episode! : latestindex;
+				const neededsn = data!.istodo ? sn : latestsn;
+
 				const rows = [
-					new ActionRowBuilder<ButtonBuilder>().addComponents(
-						new ButtonBuilder()
-							.setLabel(Translate(interaction.locale, 'anime.PlayLatest'))
-							.setURL(url)
-							.setStyle(ButtonStyle.Link),
-					),
+					new ActionRowBuilder<ButtonBuilder>()
+						.addComponents(
+							new ButtonBuilder()
+								.setLabel(
+									Translate(interaction.locale, 'anime.play', {
+										episode: neededindex,
+									}),
+								)
+								.setURL(
+									`https://ani.gamer.com.tw/animeRef.php?sn=${neededsn}`,
+								)
+								.setStyle(ButtonStyle.Link)
+								.setEmoji(PLAY_EMOJI),
+						)
+						.addComponents(
+							await GetTodoButton(
+								neededindex,
+								interaction.locale,
+								neededsn,
+								interaction.user.id,
+							),
+						),
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 						new StringSelectMenuBuilder()
 							.setPlaceholder(
@@ -345,28 +435,170 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 
 				await interaction.editReply({ embeds: [embed], components: rows });
 				break;
-
+			}
 			case 'episode':
-				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-					new ButtonBuilder()
-						.setLabel(
-							Translate(interaction.locale, 'anime.play', {
-								episode: (
-									interaction.component.options.findIndex(
-										(option) => option.value == interaction.values[0],
-									) + 1
-								).toString(),
-							}),
-						)
-						.setStyle(ButtonStyle.Link)
-						.setURL(
-							`https://ani.gamer.com.tw/animeVideo.php?sn=${interaction.values[0]}`,
+				if (interaction.componentType != ComponentType.StringSelect) return;
+
+				const episode = (
+					interaction.component.options.findIndex(
+						(option) => option.value == interaction.values[0],
+					) + 1
+				).toString();
+
+				const row = new ActionRowBuilder<ButtonBuilder>()
+					.addComponents(
+						new ButtonBuilder()
+							.setLabel(
+								Translate(interaction.locale, 'anime.play', {
+									episode,
+								}),
+							)
+							.setStyle(ButtonStyle.Link)
+							.setURL(
+								`https://ani.gamer.com.tw/animeVideo.php?sn=${interaction.values[0]}`,
+							)
+							.setEmoji(PLAY_EMOJI),
+					)
+					.addComponents(
+						await GetTodoButton(
+							episode,
+							interaction.locale,
+							interaction.values[0],
+							interaction.user.id,
 						),
-				);
+					);
+
 				await interaction.update({
 					components: [row, interaction.message.components[1]],
 				});
 				break;
+
+			case 'todo': {
+				const { sn, episode } = data!;
+
+				if (interaction.componentType != ComponentType.Button) return;
+
+				if (interaction.component.style == ButtonStyle.Primary) {
+					await AddAnimeTodo(
+						interaction.user.id,
+						interaction.message.embeds[0].title!,
+						sn,
+						episode,
+					);
+				} else {
+					await RemoveAnimeTodo(interaction.user.id, sn);
+				}
+
+				const row = new ActionRowBuilder<ButtonBuilder>()
+					.addComponents(
+						new ButtonBuilder(
+							interaction.message.components[0].components[0].data,
+						),
+					)
+					.addComponents(
+						await GetTodoButton(
+							episode,
+							interaction.locale,
+							sn,
+							interaction.user.id,
+						),
+					);
+
+				await interaction.update({
+					components: [row, interaction.message.components[1]],
+				});
+				break;
+			}
+			case 'ClearTodo':
+				const warningtext = Translate(interaction.locale, 'global.warning');
+				const modal = new ModalBuilder()
+					.addComponents(
+						new ActionRowBuilder<TextInputBuilder>().addComponents(
+							new TextInputBuilder()
+								.setCustomId(
+									JSON.stringify({
+										module: 'anime',
+									}),
+								)
+								.setLabel(warningtext)
+								.setStyle(TextInputStyle.Paragraph)
+								.setValue(
+									Translate(
+										interaction.locale,
+										'anime.ClearTodoWarning',
+									),
+								),
+						),
+					)
+					.setTitle(warningtext)
+					.setCustomId(
+						JSON.stringify({
+							module: 'anime',
+							action: 'ClearTodoConfirm',
+						}),
+					);
+
+				await interaction.showModal(modal);
 		}
 	},
 );
+
+async function TodoCommandHandler(interaction: ChatInputCommandInteraction) {
+	const animes = await GetAnimeTodoList(interaction.user.id);
+	const response: MessagePayload | InteractionReplyOptions =
+		animes.length == 0
+			? await GetTodoEmptyResponse(interaction)
+			: await GetAnimeListResponse(interaction, animes);
+	await interaction.reply(response);
+}
+
+async function GetTodoButton(episode: string, locale: Locale, sn: string, user: string) {
+	const button = new ButtonBuilder().setCustomId(
+		JSON.stringify({
+			module: 'anime',
+			action: 'todo',
+			sn: sn,
+			episode: episode,
+		}),
+	);
+	if (await CheckAnimeTodo(user, sn)) {
+		button
+			.setEmoji(DELETE_EMOJI)
+			.setLabel(
+				Translate(locale, 'anime.DeleteTodo', {
+					episode,
+				}),
+			)
+			.setStyle(ButtonStyle.Danger);
+	} else {
+		button
+			.setEmoji(ADD_EMOJI)
+			.setLabel(
+				Translate(locale, 'anime.AddTodo', {
+					episode,
+				}),
+			)
+			.setStyle(ButtonStyle.Primary);
+	}
+	return button;
+}
+
+async function GetTodoEmptyResponse(interaction: Interaction) {
+	return {
+		embeds: [
+			{
+				title: Translate(interaction.locale, 'anime.TodoEmpty'),
+				color: await GetColor(interaction.user.id),
+				footer: {
+					text: Translate(interaction.locale, 'anime.footer'),
+				},
+			},
+		],
+		components: [],
+	};
+}
+
+CreateModalHandler<ModalMessageModalSubmitInteraction>('anime', async (interaction) => {
+	await ClearAnimeTodo(interaction.user.id);
+	await interaction.update(await GetTodoEmptyResponse(interaction));
+});

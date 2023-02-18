@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { CheckUser, AddUser, GetColor } from './utils/database.js';
+import { CheckUser, AddConfigUser, GetColor } from './utils/database.js';
 import {
 	Client,
 	Events,
@@ -49,10 +49,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	};
 	let data: StringObject<any>;
 
+	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
+
 	switch (interaction.type) {
 		case InteractionType.ApplicationCommand:
-			if (!(await CheckUser(interaction.user.id)))
-				await AddUser(interaction.user.id);
 			console.log(`[main/info] command executed(${interaction.commandName})`);
 			const savedcommand = commands[interaction.commandName];
 			if (savedcommand.isadmincommand && interaction.user.id != process.env.admin)
@@ -62,8 +62,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			});
 			break;
 		case InteractionType.MessageComponent:
-			if (!(await CheckUser(interaction.user.id)))
-				await AddUser(interaction.user.id);
 			data = JSON.parse(interaction.customId);
 			console.log(`[main/info] Component emitted(${data.module})`);
 			await componenthandlers[data.module].callback(
@@ -75,8 +73,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			);
 			break;
 		case InteractionType.ModalSubmit:
-			if (!(await CheckUser(interaction.user.id)))
-				await AddUser(interaction.user.id);
 			data = JSON.parse(interaction.customId);
 			console.log(`[main/info] Modal submitted(${data.module})`);
 			await modalhandlers[data.module].callback(
