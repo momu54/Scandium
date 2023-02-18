@@ -48,15 +48,20 @@
 			"studio": "製作"
 		},
 		"play": "播放第 {episode} 集",
-		"PlayLatest": "播放最新一集",
 		"AgeLimit": "年齡限制",
 		"subcmds": {
 			"recent": "最近",
-			"search": "搜尋"
+			"search": "搜尋",
+			"todo": "待辦清單"
 		},
 		"options": {
 			"keyword": "關鍵字"
-		}
+		},
+		"AddTodo": "新增第 {episode} 集到待辦清單",
+		"DeleteTodo": "從待辦清單移除第 {episode} 集",
+		"ClearTodo": "清除待辦清單",
+		"TodoEmpty": "待辦清單為空",
+		"ClearTodoWarning": "待辦清單的內容將會完全消失\"非常久!\""
 	},
 	"info": {
 		"title": "資訊",
@@ -88,6 +93,7 @@
 		"title": "全域",
 		"settings": {
 			"color": "顏色"
-		}
+		},
+		"warning": "警告"
 	}
 }
