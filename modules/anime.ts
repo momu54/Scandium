@@ -93,7 +93,6 @@ await CreateCommand<ChatInputCommandInteraction>(
 		],
 	},
 	async (interaction, defer) => {
-		throw new Error('Test Error');
 		switch (interaction.options.getSubcommand()) {
 			case 'recent':
 				await RecentCommandHandler(interaction, defer);
