@@ -16,11 +16,13 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
+	codeBlock,
 } from 'discord.js';
 import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.js';
 import { CommandLocalizations, Translate } from './utils/translate.js';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
+import { ERROR_EMOJI_STRING, LOADING_EMOJI_STRING } from './utils/emoji.js';
 
 export const client = new Client({
 	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages],
@@ -43,7 +45,10 @@ client.on(Events.Error, console.error);
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	const embed: APIEmbed = {
-		title: Translate(interaction.locale, 'processing.title'),
+		title: `${LOADING_EMOJI_STRING}${Translate(
+			interaction.locale,
+			'processing.title',
+		)}`,
 		description: Translate(interaction.locale, 'processing.desc'),
 		color: await GetColor(interaction.user.id),
 	};
@@ -51,38 +56,65 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
 
-	switch (interaction.type) {
-		case InteractionType.ApplicationCommand:
-			console.log(`[main/info] command executed(${interaction.commandName})`);
-			const savedcommand = commands[interaction.commandName];
-			if (savedcommand.isadmincommand && interaction.user.id != process.env.admin)
-				return;
-			await savedcommand.callback(interaction, async () => {
-				await interaction.reply({ embeds: [embed] });
-			});
-			break;
-		case InteractionType.MessageComponent:
-			data = JSON.parse(interaction.customId);
-			console.log(`[main/info] Component emitted(${data.module})`);
-			await componenthandlers[data.module].callback(
-				interaction,
-				async () => {
-					await interaction.update({ embeds: [embed], components: [] });
+	try {
+		switch (interaction.type) {
+			case InteractionType.ApplicationCommand:
+				console.log(`[main/info] command executed(${interaction.commandName})`);
+				const savedcommand = commands[interaction.commandName];
+				if (
+					savedcommand.isadmincommand &&
+					interaction.user.id != process.env.admin
+				)
+					return;
+				await savedcommand.callback(interaction, async () => {
+					await interaction.reply({ embeds: [embed] });
+				});
+				break;
+			case InteractionType.MessageComponent:
+				data = JSON.parse(interaction.customId);
+				console.log(`[main/info] Component emitted(${data.module})`);
+				await componenthandlers[data.module].callback(
+					interaction,
+					async () => {
+						await interaction.update({ embeds: [embed], components: [] });
+					},
+					data,
+				);
+				break;
+			case InteractionType.ModalSubmit:
+				data = JSON.parse(interaction.customId);
+				console.log(`[main/info] Modal submitted(${data.module})`);
+				await modalhandlers[data.module].callback(
+					interaction,
+					async () => {
+						await interaction.reply({ embeds: [embed], components: [] });
+					},
+					data,
+				);
+				break;
+		}
+	} catch (error) {
+		if (interaction.type == InteractionType.ApplicationCommandAutocomplete) return;
+		const embed: APIEmbed = {
+			title: `${ERROR_EMOJI_STRING}${Translate(interaction.locale, 'error.title')}`,
+			fields: [
+				{
+					name: Translate(interaction.locale, 'error.stack.name'),
+					value: codeBlock('ts', (error as Error).stack!),
 				},
-				data,
-			);
-			break;
-		case InteractionType.ModalSubmit:
-			data = JSON.parse(interaction.customId);
-			console.log(`[main/info] Modal submitted(${data.module})`);
-			await modalhandlers[data.module].callback(
-				interaction,
-				async () => {
-					await interaction.reply({ embeds: [embed], components: [] });
+				{
+					name: Translate(interaction.locale, 'error.report.name'),
+					value: Translate(interaction.locale, 'error.report.value'),
 				},
-				data,
-			);
-			break;
+			],
+			color: await GetColor(interaction.user.id),
+		};
+
+		if (interaction.replied) {
+			await interaction.editReply({ embeds: [embed], components: [], content: '' });
+		} else {
+			await interaction.reply({ embeds: [embed] });
+		}
 	}
 });
 
