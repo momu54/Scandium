@@ -32,6 +32,11 @@ export const LOADING_EMOJI: APIMessageComponentEmoji = {
 	animated: true,
 };
 
+export const QUESTION_EMOJI: APIMessageComponentEmoji = {
+	id: '1076750455016796190',
+	name: 'fluent_question',
+};
+
 function ConvertEmojiToString(emoji: APIMessageComponentEmoji) {
 	return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
 }

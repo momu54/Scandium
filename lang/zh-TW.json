@@ -106,6 +106,7 @@
 		"report": {
 			"name": "我該做什麼",
 			"value": "請在 [issue](https://github.com) 或向momu54#3937回報\n請提供堆棧和命令(如果有的話)"
-		}
+		},
+		"PossibleLocation": "可能的位置"
 	}
 }
