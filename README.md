@@ -5,4 +5,4 @@
 
 This is a simple discord bot.
 
-[![Localization at Crowdin](https://user-images.githubusercontent.com/96234201/220091092-e11afb7f-b649-4ba4-aeab-affe2e255223.png)](https://crowdin.com/project/me-bot)
+[![Localization at Crowdin](https://user-images.githubusercontent.com/96234201/220091601-378a9bcb-288e-451c-a8b7-f630bd155427.png)](https://crowdin.com/project/me-bot)
