@@ -1,7 +1,7 @@
 {
 	"processing": {
-		"title": "<a:Loading:1055809489686773821> Processing...",
-		"desc": "This may take some time\nIf there is no response after a long period of time\nAn error may have occurred\nPlease report in the [issue](https://github.com) or to momu54#3937"
+		"title": "Processing...",
+		"desc": "This may take a few moments"
 	},
 	"SaveAllImage": {
 		"error": {
@@ -13,9 +13,6 @@
 			"convert": "convert"
 		},
 		"footer": "💡 Tip: You can disable image converting in the settings"
-	},
-	"error": {
-		"title": "Error"
 	},
 	"settings": {
 		"title": "Settings",
@@ -94,6 +91,22 @@
 		"settings": {
 			"color": "color"
 		},
-		"warning": "Warning"
+		"warning": "Warning",
+		"error": "Error",
+		"stack": "stack"
+	},
+	"warning": {
+		"title": "Warning"
+	},
+	"error": {
+		"title": "Error",
+		"stack": {
+			"name": "stack"
+		},
+		"report": {
+			"name": "What am I need to do?",
+			"value": "Please report in the [issue](https://github.com) or to momu54#3937.\nPlease give us error stack."
+		},
+		"PossibleLocation": "Possible location"
 	}
 }
