@@ -93,7 +93,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 
 CreateComponentHandler<StringSelectMenuInteraction>(
 	'settings',
-	async (interaction, _, data) => {
+	async (interaction, _, componentdata) => {
 		const module = interaction.values[0];
 		const { userconfig, keys } = await GetParsedConfigs(interaction.user.id);
 		const thismodulekeys = keys.filter((key) => key.includes(module));
@@ -110,7 +110,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				)}**:** ${value}`;
 			})
 			.join('\n');
-		switch (data?.action) {
+		switch (componentdata.action) {
 			case 'keys':
 				const embed: APIEmbed = {
 					title: Translate(interaction.locale, 'settings.title'),
@@ -158,14 +158,14 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			case 'set':
 				const key = interaction.values[0];
 
-				const allowedlist = ALLOWED_VALUE[data.settingmodule]?.[key];
+				const allowedlist = ALLOWED_VALUE[componentdata.settingmodule]?.[key];
 
 				const modal = new ModalBuilder()
 					.setTitle('Settings')
 					.setCustomId(
 						JSON.stringify({
 							module: 'settings',
-							settingmodule: data.settingmodule,
+							settingmodule: componentdata.settingmodule,
 							key,
 						}),
 					)
@@ -175,10 +175,10 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								.setLabel(
 									`${Translate(
 										interaction.locale,
-										`${data.settingmodule}.title`,
+										`${componentdata.settingmodule}.title`,
 									)} => ${Translate(
 										interaction.locale,
-										`${data.settingmodule}.settings.${key}`,
+										`${componentdata.settingmodule}.settings.${key}`,
 									)}${
 										allowedlist ? ` (${allowedlist.join(', ')})` : ''
 									}`,
@@ -191,13 +191,14 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								.setStyle(TextInputStyle.Short)
 								.setRequired(true)
 								.setValue(
-									IsBooleanType(data!, undefined, key)
-										? userconfig![`${data.settingmodule}_${key}`] ===
-										  1
+									IsBooleanType(componentdata, undefined, key)
+										? userconfig![
+												`${componentdata.settingmodule}_${key}`
+										  ] === 1
 											? 'true'
 											: 'false'
 										: userconfig![
-												`${data.settingmodule}_${key}`
+												`${componentdata.settingmodule}_${key}`
 										  ].toString(),
 								),
 						),
@@ -222,18 +223,22 @@ async function GetParsedConfigs(user: string) {
 
 CreateModalHandler<ModalMessageModalSubmitInteraction>(
 	'settings',
-	async (interaction, _, data) => {
+	async (interaction, _, componentdata) => {
 		let value: string = interaction.fields.getTextInputValue(
 			JSON.stringify({
 				module: 'settings',
 			}),
 		);
-		if (data!.settingmodule == 'global' && data!.key == 'color') {
+		if (componentdata.settingmodule == 'global' && componentdata.key == 'color') {
 			if (!CheckColor(value)) return;
 		}
 
-		if (ALLOWED_VALUE[data!.settingmodule]?.[data!.key]) {
-			if (!ALLOWED_VALUE[data!.settingmodule][data!.key]?.includes(value)) {
+		if (ALLOWED_VALUE[componentdata.settingmodule]?.[componentdata.key]) {
+			if (
+				!ALLOWED_VALUE[componentdata.settingmodule][componentdata.key]?.includes(
+					value,
+				)
+			) {
 				return;
 			}
 		}
@@ -243,10 +248,13 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			description: Translate(interaction.locale, 'settings.desc'),
 			fields: [
 				{
-					name: Translate(interaction.locale, `${data!.settingmodule}.title`),
+					name: Translate(
+						interaction.locale,
+						`${componentdata.settingmodule}.title`,
+					),
 					value: `${Translate(
 						interaction.locale,
-						`${data!.settingmodule}.settings.${data!.key}`,
+						`${componentdata.settingmodule}.settings.${componentdata.key}`,
 					)}**:** ${value}`,
 				},
 			],
@@ -258,9 +266,9 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 
 		await SetConfig(
 			interaction.user.id,
-			data!.settingmodule,
-			data!.key,
-			IsBooleanType(data!) ? value == 'true' : value,
+			componentdata.settingmodule,
+			componentdata.key,
+			IsBooleanType(componentdata) ? value == 'true' : value,
 		);
 
 		await interaction.update({ embeds: [embed], components: [] });
@@ -275,8 +283,14 @@ function CheckColor(color: string) {
 	);
 }
 
-function IsBooleanType(data: StringObject<string>, module?: string, key?: string) {
+function IsBooleanType(
+	componentdata: StringObject<string>,
+	module?: string,
+	key?: string,
+) {
 	const dataALLOWED_VALUE =
-		ALLOWED_VALUE[module ? module : data.settingmodule]?.[key ? key : data.key];
+		ALLOWED_VALUE[module ? module : componentdata.settingmodule]?.[
+			key ? key : componentdata.key
+		];
 	return !!dataALLOWED_VALUE?.includes('true') && dataALLOWED_VALUE?.includes('false');
 }

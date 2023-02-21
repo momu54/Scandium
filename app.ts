@@ -59,7 +59,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		description: Translate(interaction.locale, 'processing.desc'),
 		color: await GetColor(interaction.user.id),
 	};
-	let data: StringObject<any>;
+	let data: StringObject<string>;
 
 	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
 
@@ -73,9 +73,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					interaction.user.id != process.env.admin
 				)
 					return;
-				await savedcommand.callback(interaction, async () => {
-					await interaction.reply({ embeds: [embed] });
-				});
+				await savedcommand.callback(
+					interaction,
+					async () => {
+						await interaction.reply({ embeds: [embed] });
+					},
+					null,
+				);
 				break;
 			case InteractionType.MessageComponent:
 				data = JSON.parse(interaction.customId);
@@ -185,12 +189,20 @@ export function CreateModalHandler<InteractionType extends ModalSubmitInteractio
 
 async function LoadModules() {
 	const files = await readdir('./modules/');
+	const importtasks = files.map((file) => {
+		const path = `./modules/${file}`;
+		if (!file.endsWith('.ts')) {
+			console.log(`[main/info] ${path} isn't typescript file, skipped`);
+			return new Promise((resolve) => resolve(null));
+		}
+		return (async () => {
+			console.log(`[main/info] Start loading file ${path}`);
+			await import(path);
+			console.log(`[main/info] Success loading file ${path}`);
+		})();
+	});
 
-	for (const file of files) {
-		if (!file.endsWith('.ts')) continue;
-		await import(`./modules/${file}`);
-		console.log(`[main/info] Success loading file ./modules/${file}`);
-	}
+	await Promise.all(importtasks);
 }
 
 process.on('unhandledRejection', console.error);

@@ -39,7 +39,9 @@ export type InteractionCallback<
 > = (
 	interaction: InteractionType,
 	defer: () => Promise<void>,
-	data?: StringObject<string>,
+	componentdata: InteractionType extends CommandInteraction
+		? null
+		: StringObject<string>,
 ) => Promise<any>;
 
 export type TranslateVariables = StringObject<string>;

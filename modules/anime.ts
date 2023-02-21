@@ -286,8 +286,8 @@ function GetAnimeInRange(
 
 CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 	'anime',
-	async (interaction, defer, data) => {
-		switch (data!.action) {
+	async (interaction, defer, componentdata) => {
+		switch (componentdata.action) {
 			case 'anime': {
 				if (interaction.componentType != ComponentType.StringSelect) return;
 				const { sn, issearch, episode } = JSON.parse(
@@ -386,8 +386,8 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				const latestsn = episodes.at(-1)!;
 
 				const latestindex = episodes.length.toString();
-				const neededindex = data!.istodo ? episode! : latestindex;
-				const neededsn = data!.istodo ? sn : latestsn;
+				const neededindex = componentdata.istodo ? episode! : latestindex;
+				const neededsn = componentdata.istodo ? sn : latestsn;
 
 				const rows = [
 					new ActionRowBuilder<ButtonBuilder>()
@@ -474,7 +474,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				break;
 
 			case 'todo': {
-				const { sn, episode } = data!;
+				const { sn, episode } = componentdata;
 
 				if (interaction.componentType != ComponentType.Button) return;
 
