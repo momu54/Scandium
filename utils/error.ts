@@ -30,7 +30,7 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 
 	const ErrorPos = (error as Error).stack
 		?.split('\n')
-		.find((line) => line.includes('me/modules/'))
+		.find((line) => line.includes('me/modules/') || line.includes('me/utils/'))
 		?.split('me/')
 		?.at(-1)
 		?.split(':');

@@ -35,15 +35,18 @@ export function ParseAnime(html: string): Anime {
 
 	const episodes = [...doc.querySelectorAll<HTMLLinkElement>('.season > ul a')];
 	const rating = doc.querySelector<HTMLImageElement>('.rating > img')!.src;
-	const [type, , staffs, agent, studio] = [
-		...doc.querySelectorAll<HTMLLIElement>('.data_type > li'),
-	].map((infomation) => infomation.innerHTML.split('</span>')[1].trim());
+	const [, staffs, agent, studio] = [
+		...doc.querySelectorAll<HTMLParagraphElement>('.type-list .content'),
+	].map((infomation) => infomation.innerHTML.trim());
 	const [director, supervisor] = staffs.split('、');
+	const type = [...doc.querySelectorAll('.type-list .tag')]
+		.map((tag) => tag.innerHTML.trim())
+		.join('\n');
 	const date = doc
 		.querySelector<HTMLParagraphElement>('.anime_info_detail > p')!
 		.textContent!.split('：')[1];
 	const description = doc
-		.querySelector<HTMLParagraphElement>('.data_intro > p')!
+		.querySelector<HTMLParagraphElement>('.data-intro > p')!
 		.textContent!.trim()
 		.split('\n')[0];
 	const thumbnail = doc

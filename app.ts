@@ -39,7 +39,10 @@ client.on(Events.ClientReady, async () => {
 	await LoadModules();
 });
 
-client.on(Events.Debug, (debugmsg) => console.log(`[discord.js/info] ${debugmsg}`));
+client.on(Events.Debug, (debugmsg) => {
+	if (!debugmsg.includes('Failed to find guild, or unknown type for channel'))
+		console.log(`[discord.js/debug] ${debugmsg}`);
+});
 
 client.on(Events.Error, console.error);
 
