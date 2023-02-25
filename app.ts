@@ -16,20 +16,13 @@ import {
 	CommandInteraction,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
-	codeBlock,
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
 } from 'discord.js';
 import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.js';
 import { CommandLocalizations, Translate } from './utils/translate.js';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
-import {
-	ERROR_EMOJI_STRING,
-	LOADING_EMOJI_STRING,
-	QUESTION_EMOJI,
-} from './utils/emoji.js';
+import { LOADING_EMOJI_STRING } from './utils/emoji.js';
+import { ErrorHandler } from './utils/error.js';
 
 export const client = new Client({
 	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages],
@@ -66,7 +59,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	try {
 		switch (interaction.type) {
 			case InteractionType.ApplicationCommand:
-				console.log(`[main/info] command executed(${interaction.commandName})`);
+				console.log(`[main/info] Command executed(${interaction.commandName})`);
 				const savedcommand = commands[interaction.commandName];
 				if (
 					savedcommand.isadmincommand &&
@@ -105,55 +98,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				break;
 		}
 	} catch (error) {
-		if (interaction.type == InteractionType.ApplicationCommandAutocomplete) return;
-		const embed: APIEmbed = {
-			title: `${ERROR_EMOJI_STRING} ${Translate(
-				interaction.locale,
-				'error.title',
-			)}`,
-			fields: [
-				{
-					name: Translate(interaction.locale, 'error.stack.name'),
-					value: codeBlock('ts', (error as Error).stack!),
-				},
-				{
-					name: Translate(interaction.locale, 'error.report.name'),
-					value: Translate(interaction.locale, 'error.report.value'),
-				},
-			],
-			color: await GetColor(interaction.user.id),
-		};
-
-		const ErrorPos = (error as Error).stack
-			?.split('\n')
-			.find((line) => line.includes('me/modules/'))
-			?.split('me/')
-			?.at(-1)
-			?.split(':');
-		const rows: ActionRowBuilder<ButtonBuilder>[] = [];
-		if (ErrorPos) {
-			rows.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(
-					new ButtonBuilder()
-						.setLabel(Translate(interaction.locale, 'error.PossibleLocation'))
-						.setEmoji(QUESTION_EMOJI)
-						.setStyle(ButtonStyle.Link)
-						.setURL(
-							`https://github.com/momu54/me/blob/main/${ErrorPos[0]}#L${ErrorPos[1]}`,
-						),
-				),
-			);
-		}
-
-		if (interaction.replied) {
-			await interaction.editReply({
-				embeds: [embed],
-				components: rows,
-				content: '',
-			});
-		} else {
-			await interaction.reply({ embeds: [embed], components: rows });
-		}
+		await ErrorHandler(interaction, error as Error);
 	}
 });
 
