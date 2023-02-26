@@ -1,6 +1,6 @@
 CREATE TABLE config (
     SaveAllImage_convert BOOLEAN DEFAULT 1,
-    ScreenShot_format TEXT DEFAULT "webp",
+    Screenhot_format TEXT DEFAULT "webp",
     global_color TEXT DEFAULT "#ffffff",
     user TEXT
 );
