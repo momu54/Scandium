@@ -2,6 +2,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/momu54/me)
 ![License](https://img.shields.io/github/license/momu54/me)
+[![Crowdin](https://badges.crowdin.net/me-bot/localized.svg)](https://crowdin.com/project/me-bot)
 
 This is a simple discord bot.
 
