@@ -4,9 +4,9 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { exec } from 'child_process';
 import { CreateCommand } from '../app.js';
 import { APIEmbed, codeBlock } from 'discord.js';
+import { AsyncExec } from '../utils/exec.js';
 
 await CreateCommand(
 	{
@@ -30,12 +30,3 @@ await CreateCommand(
 	},
 	true,
 );
-
-function AsyncExec(command: string) {
-	return new Promise<string>((resolve, reject) => {
-		exec(command, (err, stdout, stderr) => {
-			if (err) reject(stderr);
-			else resolve(stdout);
-		});
-	});
-}
