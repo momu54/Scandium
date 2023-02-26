@@ -27,6 +27,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		const msg = interaction.targetMessage;
 		const zip = new JSZip();
 		const attachments = Array.from(msg.attachments.values());
+		const convert = await GetConfig(interaction.user.id, 'SaveAllImage', 'convert');
 		for (let index = 0; index < attachments.length; index++) {
 			const Attachment = attachments[index];
 			if (!Attachment.contentType?.startsWith('image')) continue;
@@ -35,11 +36,6 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			const isntwebporjpeg =
 				Attachment.contentType != 'image/webp' &&
 				Attachment.contentType != 'image/jpeg';
-			const convert = await GetConfig(
-				interaction.user.id,
-				'SaveAllImage',
-				'convert',
-			);
 			if (isntwebporjpeg && convert) {
 				resimage = await sharp(resimage, { animated: true })
 					.webp({
@@ -73,9 +69,13 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		const size = (zipData.byteLength * 0.000001).toFixed(4);
 		const embed: APIEmbed = {
 			title: Translate(interaction.locale, 'SaveAllImage.title'),
-			description: Translate(interaction.locale, 'SaveAllImage.desc', {
-				size: size,
-			}),
+			description: convert
+				? Translate(interaction.locale, 'SaveAllImage.desc', {
+						size,
+				  })
+				: Translate(interaction.locale, 'SaveAllImage.DescNoConvert', {
+						size,
+				  }),
 			footer: {
 				text: Translate(interaction.locale, 'SaveAllImage.footer'),
 			},
