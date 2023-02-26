@@ -47,6 +47,7 @@ client.on(Events.Debug, (debugmsg) => {
 client.on(Events.Error, console.error);
 
 client.on(Events.InteractionCreate, async (interaction) => {
+	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
 	const embed: APIEmbed = {
 		title: `${LOADING_EMOJI_STRING} ${Translate(
 			interaction.locale,
@@ -56,8 +57,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		color: await GetColor(interaction.user.id),
 	};
 	let data: StringObject<string>;
-
-	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
 
 	try {
 		switch (interaction.type) {
