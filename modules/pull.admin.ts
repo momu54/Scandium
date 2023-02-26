@@ -13,8 +13,8 @@ await CreateCommand(
 		name: 'pull',
 		description: 'Pull the code from Github',
 	},
-	async (interaction, defer) => {
-		await defer();
+	async (interaction) => {
+		await interaction.deferReply();
 
 		const embed: APIEmbed = {
 			title: 'Pull',

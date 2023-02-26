@@ -41,25 +41,22 @@ await CreateCommand<ChatInputCommandInteraction>(
 			},
 		],
 	},
-	async (interaction, defer) => {
+	async (interaction) => {
 		switch (interaction.options.getSubcommand(true)) {
 			case 'execute':
 				await SQLQueryHandler(interaction);
 				break;
 
 			case 'dot':
-				await SQLDotHandler(interaction, defer);
+				await SQLDotHandler(interaction);
 				break;
 		}
 	},
 	true,
 );
 
-async function SQLDotHandler(
-	interaction: ChatInputCommandInteraction,
-	defer: () => Promise<void>,
-) {
-	await defer();
+async function SQLDotHandler(interaction: ChatInputCommandInteraction) {
+	await interaction.deferReply();
 
 	const embed: APIEmbed = {
 		title: 'SQL',
