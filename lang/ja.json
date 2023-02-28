@@ -1,0 +1,113 @@
+{
+	"processing": {
+		"title": "実行中...",
+		"desc": ""
+	},
+	"SaveAllImage": {
+		"error": {
+			"toolarge": ""
+		},
+		"title": "",
+		"desc": "",
+		"DescNoConvert": "",
+		"settings": {
+			"convert": ""
+		},
+		"footer": ""
+	},
+	"settings": {
+		"title": "",
+		"desc": "",
+		"menu": "",
+		"footer": ""
+	},
+	"Screenshot": {
+		"title": "",
+		"desc": "",
+		"footer": "",
+		"settings": {
+			"format": ""
+		}
+	},
+	"anime": {
+		"title": "",
+		"menu": {
+			"anime": "",
+			"episodes": ""
+		},
+		"footer": "",
+		"SingleAnimeDesc": "",
+		"infomations": {
+			"LastUpdate": "",
+			"type": "",
+			"director": "",
+			"supervisor": "",
+			"agent": "",
+			"studio": ""
+		},
+		"play": "",
+		"AgeLimit": "",
+		"subcmds": {
+			"recent": "",
+			"search": "検索",
+			"todo": ""
+		},
+		"options": {
+			"keyword": ""
+		},
+		"AddTodo": "",
+		"DeleteTodo": "",
+		"ClearTodo": "",
+		"TodoEmpty": "",
+		"ClearTodoWarning": ""
+	},
+	"info": {
+		"title": "情報",
+		"os": {
+			"name": ""
+		},
+		"memory": {
+			"name": ""
+		},
+		"uptime": {
+			"name": "",
+			"value": ""
+		},
+		"GatewayPing": {
+			"name": "",
+			"value": ""
+		},
+		"links": {
+			"name": "URL"
+		},
+		"developers": {
+			"name": "開発者"
+		},
+		"acknowledgements": {
+			"name": ""
+		}
+	},
+	"global": {
+		"title": "",
+		"settings": {
+			"color": ""
+		},
+		"warning": "",
+		"error": "",
+		"stack": ""
+	},
+	"warning": {
+		"title": ""
+	},
+	"error": {
+		"title": "",
+		"stack": {
+			"name": ""
+		},
+		"report": {
+			"name": "",
+			"value": ""
+		},
+		"PossibleLocation": ""
+	}
+}

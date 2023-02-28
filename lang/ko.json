@@ -1,0 +1,113 @@
+{
+	"processing": {
+		"title": "",
+		"desc": ""
+	},
+	"SaveAllImage": {
+		"error": {
+			"toolarge": ""
+		},
+		"title": "",
+		"desc": "",
+		"DescNoConvert": "",
+		"settings": {
+			"convert": ""
+		},
+		"footer": ""
+	},
+	"settings": {
+		"title": "",
+		"desc": "",
+		"menu": "",
+		"footer": ""
+	},
+	"Screenshot": {
+		"title": "",
+		"desc": "",
+		"footer": "",
+		"settings": {
+			"format": ""
+		}
+	},
+	"anime": {
+		"title": "",
+		"menu": {
+			"anime": "",
+			"episodes": ""
+		},
+		"footer": "",
+		"SingleAnimeDesc": "",
+		"infomations": {
+			"LastUpdate": "",
+			"type": "",
+			"director": "",
+			"supervisor": "",
+			"agent": "",
+			"studio": ""
+		},
+		"play": "",
+		"AgeLimit": "",
+		"subcmds": {
+			"recent": "",
+			"search": "",
+			"todo": ""
+		},
+		"options": {
+			"keyword": ""
+		},
+		"AddTodo": "",
+		"DeleteTodo": "",
+		"ClearTodo": "",
+		"TodoEmpty": "",
+		"ClearTodoWarning": ""
+	},
+	"info": {
+		"title": "",
+		"os": {
+			"name": ""
+		},
+		"memory": {
+			"name": ""
+		},
+		"uptime": {
+			"name": "",
+			"value": ""
+		},
+		"GatewayPing": {
+			"name": "",
+			"value": ""
+		},
+		"links": {
+			"name": ""
+		},
+		"developers": {
+			"name": ""
+		},
+		"acknowledgements": {
+			"name": ""
+		}
+	},
+	"global": {
+		"title": "",
+		"settings": {
+			"color": ""
+		},
+		"warning": "",
+		"error": "",
+		"stack": ""
+	},
+	"warning": {
+		"title": ""
+	},
+	"error": {
+		"title": "",
+		"stack": {
+			"name": ""
+		},
+		"report": {
+			"name": "",
+			"value": ""
+		},
+		"PossibleLocation": ""
+	}
+}
