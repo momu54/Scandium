@@ -1,113 +1,113 @@
 {
 	"processing": {
-		"title": "處理中...",
-		"desc": "這可能需要一些時間"
+		"title": "",
+		"desc": ""
 	},
 	"SaveAllImage": {
 		"error": {
-			"toolarge": "生成的zip太大"
+			"toolarge": ""
 		},
-		"title": "儲存所有圖片",
-		"desc": "**大小**: {size} MB\n所有非 JPEG 或 WebP 格式的圖片均已被轉成品質為82的 WebP",
-		"DescNoConvert": "**大小**: {size} MB",
+		"title": "",
+		"desc": "",
+		"DescNoConvert": "",
 		"settings": {
-			"convert": "轉換"
+			"convert": ""
 		},
-		"footer": "💡 提示: 你可以在設定中關閉轉換 WebP 功能"
+		"footer": ""
 	},
 	"settings": {
-		"title": "設定",
-		"desc": "查看和修改設定",
-		"menu": "選擇一個設定以修改...",
-		"footer": "💡 提示: 不符合格式的輸入回直接被拒絕"
+		"title": "",
+		"desc": "",
+		"menu": "",
+		"footer": ""
 	},
 	"Screenshot": {
-		"title": "截圖",
-		"desc": "**大小**: {size} MB\n**格式**: {format}",
-		"footer": "💡 提示: 你可以在設定中更改輸出圖片格式",
+		"title": "",
+		"desc": "",
+		"footer": "",
 		"settings": {
-			"format": "格式"
+			"format": ""
 		}
 	},
 	"anime": {
-		"title": "動畫",
+		"title": "",
 		"menu": {
-			"anime": "選擇一個動畫... {range}",
-			"episodes": "選擇一集..."
+			"anime": "",
+			"episodes": ""
 		},
-		"footer": "資料來源: https://ani.gamer.com.tw/\n由於資料來自台灣動畫網站, 資料內容均為繁體中文",
-		"SingleAnimeDesc": "**名稱**: {name}\n**最新更新時間**: {date}\n**類型**: {type}\n**導演/監督**: {staffs}\n**台灣代理**: {agent}\n**製作**: {studio}",
+		"footer": "",
+		"SingleAnimeDesc": "",
 		"infomations": {
-			"LastUpdate": "最新更新時間",
-			"type": "類型",
-			"director": "導演",
-			"supervisor": "監督",
-			"agent": "台灣代理",
-			"studio": "製作"
+			"LastUpdate": "",
+			"type": "",
+			"director": "",
+			"supervisor": "",
+			"agent": "",
+			"studio": ""
 		},
-		"play": "播放第 {episode} 集",
-		"AgeLimit": "年齡限制",
+		"play": "",
+		"AgeLimit": "",
 		"subcmds": {
-			"recent": "最近",
-			"search": "搜尋",
-			"todo": "待辦清單"
+			"recent": "",
+			"search": "",
+			"todo": ""
 		},
 		"options": {
-			"keyword": "關鍵字"
+			"keyword": ""
 		},
-		"AddTodo": "新增第 {episode} 集到待辦清單",
-		"DeleteTodo": "從待辦清單移除第 {episode} 集",
-		"ClearTodo": "清除待辦清單",
-		"TodoEmpty": "待辦清單為空",
-		"ClearTodoWarning": "待辦清單的內容將會完全消失\"非常久!\""
+		"AddTodo": "",
+		"DeleteTodo": "",
+		"ClearTodo": "",
+		"TodoEmpty": "",
+		"ClearTodoWarning": ""
 	},
 	"info": {
-		"title": "資訊",
+		"title": "",
 		"os": {
-			"name": "作業系統"
+			"name": ""
 		},
 		"memory": {
-			"name": "記憶體使用率"
+			"name": ""
 		},
 		"uptime": {
-			"name": "正常運行時間",
-			"value": "{hour} 小時 {minute} 分鐘 {second} 秒"
+			"name": "",
+			"value": ""
 		},
 		"GatewayPing": {
-			"name": "網關延遲",
-			"value": "{ping} 毫秒"
+			"name": "",
+			"value": ""
 		},
 		"links": {
-			"name": "連結"
+			"name": ""
 		},
 		"developers": {
-			"name": "開發者"
+			"name": ""
 		},
 		"acknowledgements": {
-			"name": "特別感謝"
+			"name": ""
 		}
 	},
 	"global": {
-		"title": "全域",
+		"title": "",
 		"settings": {
-			"color": "顏色"
+			"color": ""
 		},
-		"warning": "警告",
-		"error": "錯誤",
-		"stack": "堆棧"
+		"warning": "",
+		"error": "",
+		"stack": ""
 	},
 	"warning": {
-		"title": "警告"
+		"title": ""
 	},
 	"error": {
-		"title": "錯誤",
+		"title": "",
 		"stack": {
-			"name": "堆棧"
+			"name": ""
 		},
 		"report": {
-			"name": "我該做什麼",
-			"value": "請在 [issue](https://github.com) 或向momu54#3937回報\n請提供堆棧和命令(如果有的話)"
+			"name": "",
+			"value": ""
 		},
-		"PossibleLocation": "可能的位置"
+		"PossibleLocation": ""
 	}
 }
