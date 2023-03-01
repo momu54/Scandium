@@ -48,7 +48,7 @@ export type TranslateVariables = StringObject<string>;
 
 export type Config = StringObject<StringObject<StringObject<boolean | number>>>;
 
-export type Languages = StringObject<any>;
+export type Languages = StringObject<typeof import('./lang/zh-TW.json')>;
 
 export interface StringObject<ValueType> {
 	[key: string]: ValueType;
