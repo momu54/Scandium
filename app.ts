@@ -136,17 +136,15 @@ export function CreateModalHandler<InteractionType extends ModalSubmitInteractio
 
 async function LoadModules() {
 	const files = await readdir('./modules/');
-	const importtasks = files.map((file) => {
+	const importtasks = files.map(async (file) => {
 		const path = `./modules/${file}`;
 		if (!file.endsWith('.ts')) {
 			console.log(`[main/info] ${path} isn't typescript file, skipped`);
-			return new Promise((resolve) => resolve(null));
+			return;
 		}
-		return (async () => {
-			console.log(`[main/info] Start loading file ${path}`);
-			await import(path);
-			console.log(`[main/info] Success loading file ${path}`);
-		})();
+		console.log(`[main/info] Start loading file ${path}`);
+		await import(path);
+		console.log(`[main/info] Success loading file ${path}`);
 	});
 
 	await Promise.all(importtasks);
