@@ -125,7 +125,15 @@ async function LoginHandler(interaction: ButtonInteraction) {
 			code,
 			state: interaction.user.id,
 		});
-		const { token } = authentication;
+		const { token, scopes } = authentication;
+		if (!scopes.includes('repo')) {
+			const errembed: APIEmbed = {
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'github.MissingScope'),
+				color: await GetColor(interaction.user.id),
+			};
+			await interaction.editReply({ embeds: [errembed], components: [] });
+		}
 
 		await SetGithubToken(interaction.user.id, authentication.token);
 		const response = await GetAuthPlayLoad(
