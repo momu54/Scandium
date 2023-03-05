@@ -117,6 +117,6 @@
 		"profile": "Profile",
 		"LoggingIn": "Please click \"login\" and login",
 		"timeout": "Expired",
-		"MissingScope": ""
+		"MissingScope": "Missing needed permission\nPlease retry"
 	}
 }
