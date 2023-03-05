@@ -116,7 +116,6 @@
 		"logout": "登出",
 		"profile": "個人檔案",
 		"LoggingIn": "請點擊登入並完成登入",
-		"timeout": "已過期",
-		"MissingScope": "缺少必要的權限，請重試"
+		"timeout": "已過期"
 	}
 }
