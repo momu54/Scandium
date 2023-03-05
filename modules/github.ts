@@ -206,7 +206,7 @@ async function GetAuthPlayLoad(
 		);
 
 	if (token) {
-		await defer();
+		await defer(true);
 		embed.description = Translate(interaction.locale, 'github.AlreadyAuth');
 
 		const octokit = new Octokit({
