@@ -92,9 +92,7 @@
 		"settings": {
 			"color": "color"
 		},
-		"warning": "Warning",
-		"error": "Error",
-		"stack": "stack"
+		"warning": "Warning"
 	},
 	"warning": {
 		"title": "Warning"
@@ -109,5 +107,15 @@
 			"value": "Please report in the [issue](https://github.com) or to momu54#3937.\nPlease give us error stack."
 		},
 		"PossibleLocation": "Possible location"
+	},
+	"github": {
+		"NotLogedIn": "",
+		"AlreadyAuth": "",
+		"bio": "",
+		"login": "",
+		"logout": "",
+		"profile": "",
+		"LoggingIn": "",
+		"timeout": ""
 	}
 }

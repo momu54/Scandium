@@ -92,9 +92,7 @@
 		"settings": {
 			"color": ""
 		},
-		"warning": "",
-		"error": "",
-		"stack": ""
+		"warning": ""
 	},
 	"warning": {
 		"title": ""
@@ -109,5 +107,15 @@
 			"value": ""
 		},
 		"PossibleLocation": ""
+	},
+	"github": {
+		"NotLogedIn": "",
+		"AlreadyAuth": "",
+		"bio": "",
+		"login": "",
+		"logout": "",
+		"profile": "",
+		"LoggingIn": "",
+		"timeout": ""
 	}
 }
