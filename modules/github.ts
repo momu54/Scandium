@@ -26,6 +26,7 @@ import {
 } from '../utils/database.js';
 import { ADD_PERSON_EMOJI, DELETE_PERSON_EMOJI, PERSON_EMOJI } from '../utils/emoji.js';
 import { OAuthApp } from '@octokit/oauth-app';
+import { createServer } from 'https';
 
 const app = express();
 const html = await readFile('./login/index.html', 'utf8');
@@ -35,6 +36,13 @@ const oauthapp = new OAuthApp({
 	clientId: process.env.clientid!,
 	clientSecret: process.env.clientsecret!,
 });
+const httpsserver = createServer(
+	{
+		key: await readFile('./login/key.pem'),
+		cert: await readFile('./login/cert.pem'),
+	},
+	app,
+);
 
 app.get('/github/', (req, res) => {
 	const { state, code } = req.query;
@@ -56,7 +64,8 @@ app.get('/style.css', (_req, res) => {
 	res.sendFile('./login/style.css', { root: rootdir });
 });
 
-app.listen(Number(process.env.callbackport));
+httpsserver.listen(Number(process.env.callbackport));
+console.log('[github/login] Server started');
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
