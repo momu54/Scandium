@@ -58,6 +58,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			const errembed: APIEmbed = {
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'SaveAllImage.error.toolarge'),
+				color: await GetColor(interaction.user.id),
 			};
 			await interaction.editReply({ embeds: [errembed] });
 			return;

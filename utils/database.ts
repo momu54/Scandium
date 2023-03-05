@@ -100,6 +100,24 @@ export function ClearAnimeTodo(user: string) {
 	return database.run(SQL`DELETE FROM AnimeTodo WHERE user = ${user}`);
 }
 
+export async function GetGithubToken(user: string) {
+	const dbres = await database.get<StringObject<string>>(
+		SQL`SELECT token FROM GithubToken WHERE user = ${user}`,
+	);
+
+	return dbres?.token;
+}
+
+export async function SetGithubToken(user: string, token: string) {
+	return database.run(
+		SQL`INSERT INTO GithubToken(user, token, timestamp) VALUES (${user}, ${token}, ${new Date().toJSON()})`,
+	);
+}
+
+export async function RemoveGithubToken(user: string) {
+	return database.run(SQL`DELETE FROM GithubToken WHERE user = ${user}`);
+}
+
 export const ALLOWED_TYPES = {
 	boolean: ['true', 'false'],
 } as const;

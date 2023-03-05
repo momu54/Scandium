@@ -70,8 +70,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					return;
 				await savedcommand.callback(
 					interaction,
-					async () => {
-						await interaction.reply({ embeds: [embed] });
+					async (ephemeral: boolean = true) => {
+						await interaction.reply({ embeds: [embed], ephemeral });
 					},
 					null,
 				);

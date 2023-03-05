@@ -12,6 +12,7 @@ import { GetColor } from './database.js';
 import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.js';
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
+	console.error(error);
 	if (interaction.type == InteractionType.ApplicationCommandAutocomplete) return;
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,

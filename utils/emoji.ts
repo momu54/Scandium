@@ -37,6 +37,21 @@ export const QUESTION_EMOJI: APIMessageComponentEmoji = {
 	name: 'fluent_question',
 };
 
+export const ADD_PERSON_EMOJI: APIMessageComponentEmoji = {
+	id: '1081509100464115832',
+	name: 'fluent_add_person',
+};
+
+export const DELETE_PERSON_EMOJI: APIMessageComponentEmoji = {
+	id: '1081511181052817460',
+	name: 'fluent_delete_person',
+};
+
+export const PERSON_EMOJI: APIMessageComponentEmoji = {
+	id: '1081515590033879060',
+	name: 'fluent_person',
+};
+
 function ConvertEmojiToString(emoji: APIMessageComponentEmoji) {
 	return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
 }

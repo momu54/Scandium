@@ -92,9 +92,7 @@
 		"settings": {
 			"color": "顏色"
 		},
-		"warning": "警告",
-		"error": "錯誤",
-		"stack": "堆棧"
+		"warning": "警告"
 	},
 	"warning": {
 		"title": "警告"
@@ -109,5 +107,15 @@
 			"value": "請在 [issue](https://github.com) 或向momu54#3937回報\n請提供堆棧和命令(如果有的話)"
 		},
 		"PossibleLocation": "可能的位置"
+	},
+	"github": {
+		"NotLogedIn": "未登入",
+		"AlreadyAuth": "你已經登入了!",
+		"bio": "簡歷",
+		"login": "登入",
+		"logout": "登出",
+		"profile": "個人檔案",
+		"LoggingIn": "請點擊登入並完成登入",
+		"timeout": "已過期"
 	}
 }

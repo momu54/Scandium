@@ -18,7 +18,8 @@
 		"noImplicitReturns": true,
 		"alwaysStrict": true,
 		"moduleResolution": "NodeNext",
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"sourceMap": true
 	},
 	"include": ["**/*.ts", "*.ts"],
 	"exclude": ["node_modules/**", "lang/*", "config/*"],

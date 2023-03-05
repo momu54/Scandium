@@ -11,3 +11,9 @@ CREATE TABLE AnimeTodo (
     an TEXT,
     episode TEXT
 );
+
+CREATE TABLE GithubToken (
+    user TEXT,
+    token TEXT,
+    timestamp TEXT
+);

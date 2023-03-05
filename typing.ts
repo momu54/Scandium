@@ -38,11 +38,13 @@ export type InteractionCallback<
 		| ModalSubmitInteraction,
 > = (
 	interaction: InteractionType,
-	defer: () => Promise<void>,
+	defer: DeferReplyMethod,
 	componentdata: InteractionType extends CommandInteraction
 		? null
 		: StringObject<string>,
 ) => Promise<any>;
+
+export type DeferReplyMethod = (ephemeral?: boolean) => Promise<void>;
 
 export type TranslateVariables = StringObject<string>;
 
@@ -117,4 +119,8 @@ export function IsTodoAnime(
 	animedata: Animes | AnimesFromTodo,
 ): animedata is AnimesFromTodo {
 	return animedata[0].type == AnimesType.Todo;
+}
+
+export interface AuthQueue {
+	[user: string]: (code: string) => void;
 }

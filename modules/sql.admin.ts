@@ -56,7 +56,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 );
 
 async function SQLDotHandler(interaction: ChatInputCommandInteraction) {
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 
 	const embed: APIEmbed = {
 		title: 'SQL',
@@ -83,5 +83,5 @@ async function SQLQueryHandler(interaction: ChatInputCommandInteraction) {
 		description: 'done!',
 	};
 
-	await interaction.reply({ embeds: [embed] });
+	await interaction.reply({ embeds: [embed], ephemeral: true });
 }

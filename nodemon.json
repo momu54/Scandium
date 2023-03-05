@@ -1,5 +1,5 @@
 {
 	"exec": "ts-node",
 	"ignore": ["lang/*.json", "nodemon.json"],
-	"delay": 4000
+	"delay": 2000
 }
