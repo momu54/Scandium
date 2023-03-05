@@ -56,7 +56,7 @@ app.get('/style.css', (_req, res) => {
 	res.sendFile('./login/style.css', { root: rootdir });
 });
 
-app.listen(8080);
+app.listen(Number(process.env.callbackport));
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
