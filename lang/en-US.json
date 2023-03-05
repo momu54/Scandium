@@ -109,13 +109,14 @@
 		"PossibleLocation": "Possible location"
 	},
 	"github": {
-		"NotLogedIn": "",
-		"AlreadyAuth": "",
-		"bio": "",
-		"login": "",
-		"logout": "",
-		"profile": "",
-		"LoggingIn": "",
-		"timeout": ""
+		"NotLogedIn": "Not logged in",
+		"AlreadyAuth": "You're already logged in.",
+		"bio": "Bio",
+		"login": "Login",
+		"logout": "Logout",
+		"profile": "Profile",
+		"LoggingIn": "Please click \"login\" and login",
+		"timeout": "Expired",
+		"MissingScope": ""
 	}
 }
