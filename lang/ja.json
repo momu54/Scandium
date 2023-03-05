@@ -116,6 +116,7 @@
 		"logout": "",
 		"profile": "",
 		"LoggingIn": "",
-		"timeout": ""
+		"timeout": "",
+		"MissingScope": ""
 	}
 }
