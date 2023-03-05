@@ -133,6 +133,7 @@ async function LoginHandler(interaction: ButtonInteraction) {
 				color: await GetColor(interaction.user.id),
 			};
 			await interaction.editReply({ embeds: [errembed], components: [] });
+			return;
 		}
 
 		await SetGithubToken(interaction.user.id, authentication.token);
