@@ -20,7 +20,7 @@ client.on('messageCreate', async (msg) => {
 	const code = msg.content.split('```js')[1].replace('```', '');
 	const codefn = isasync ? AsyncFunction('msg', code) : new Function('msg', code);
 	try {
-		const execres = isasync ? await codefn() : codefn();
+		const execres = isasync ? await codefn(msg) : codefn(msg);
 		let result: string;
 		if (execres) {
 			switch (typeof execres) {
