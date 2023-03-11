@@ -59,7 +59,8 @@
 		"DeleteTodo": "Remove EP. {episode} from the todo list.",
 		"ClearTodo": "Clear the todo list.",
 		"TodoEmpty": "Todo list is empty.",
-		"ClearTodoWarning": "The todo list's anime will lost \"A long time\"."
+		"ClearTodoWarning": "The todo list's anime will lost \"A long time\".",
+		"NotInTaiwan": ""
 	},
 	"info": {
 		"title": "Info",
