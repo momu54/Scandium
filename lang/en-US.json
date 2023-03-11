@@ -93,7 +93,7 @@
 			"color": "color"
 		},
 		"warning": "Warning",
-		"PremissionDenied": ""
+		"PremissionDenied": "You're not allowed to execute this command!"
 	},
 	"warning": {
 		"title": "Warning"
