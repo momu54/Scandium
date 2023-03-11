@@ -93,7 +93,10 @@ await CreateCommand<ChatInputCommandInteraction>(
 		if (token) {
 			await interaction.editReply(response);
 		} else {
-			await interaction.reply(response);
+			await interaction.reply({
+				...response,
+				ephemeral: true,
+			});
 		}
 	}
 );
