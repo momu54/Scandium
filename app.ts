@@ -67,7 +67,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					savedcommand.isadmincommand &&
 					interaction.user.id != process.env.admin
 				)
-					return;
+					{
+						const errembed: APIEmbed = {
+							title: Translate(interaction.locale, 'error.title'),
+							description: Translate(
+								interaction.locale,
+								'global.PremissionDenied'
+							),
+							color: await GetColor(interaction.user.id),
+						};
+						await interaction.reply({ embeds: [errembed], ephemeral: true })
+						return};
 				await savedcommand.callback(
 					interaction,
 					async (ephemeral: boolean = true) => {

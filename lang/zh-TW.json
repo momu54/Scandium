@@ -92,7 +92,8 @@
 		"settings": {
 			"color": "顏色"
 		},
-		"warning": "警告"
+		"warning": "警告",
+		"PremissionDenied": "你沒有權限執行這個指令"
 	},
 	"warning": {
 		"title": "警告"
