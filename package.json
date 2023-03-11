@@ -32,7 +32,6 @@
 		"sql-template-strings": "^2.2.2",
 		"sqlite": "^4.1.2",
 		"sqlite3": "^5.1.4",
-		"ts-node": "^10.9.1",
 		"tsx": "^3.12.3"
 	},
 	"devDependencies": {
