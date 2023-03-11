@@ -60,7 +60,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	try {
 		switch (interaction.type) {
-			case InteractionType.ApplicationCommand:
+			case InteractionType.ApplicationCommand: {
 				console.log(`[main/info] Command executed(${interaction.commandName})`);
 				const savedcommand = commands[interaction.commandName];
 				if (
@@ -86,7 +86,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					null
 				);
 				break;
-			case InteractionType.MessageComponent:
+			}
+			case InteractionType.MessageComponent: {
 				data = JSON.parse(interaction.customId);
 				console.log(`[main/info] Component emitted(${data.module})`);
 				await componenthandlers[data.module].callback(
@@ -97,7 +98,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					data
 				);
 				break;
-			case InteractionType.ModalSubmit:
+			}
+			case InteractionType.ModalSubmit: {
 				data = JSON.parse(interaction.customId);
 				console.log(`[main/info] Modal submitted(${data.module})`);
 				await modalhandlers[data.module].callback(
@@ -108,6 +110,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					data
 				);
 				break;
+			}
 		}
 	} catch (error) {
 		await ErrorHandler(interaction, error as Error);

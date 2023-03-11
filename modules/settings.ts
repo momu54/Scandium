@@ -111,7 +111,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			})
 			.join('\n');
 		switch (componentdata.action) {
-			case 'keys':
+			case 'keys': {
 				const embed: APIEmbed = {
 					title: Translate(interaction.locale, 'settings.title'),
 					description: Translate(interaction.locale, 'settings.desc'),
@@ -154,8 +154,8 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 
 				await interaction.update({ embeds: [embed], components: [row] });
 				break;
-
-			case 'set':
+			}
+			case 'set': {
 				const key = interaction.values[0];
 
 				const allowedlist = ALLOWED_VALUE[componentdata.settingmodule]?.[key];
@@ -206,6 +206,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 
 				await interaction.showModal(modal);
 				break;
+			}
 		}
 	}
 );

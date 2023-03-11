@@ -94,15 +94,18 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 	async (interaction, defer) => {
 		switch (interaction.options.getSubcommand()) {
-			case 'recent':
+			case 'recent': {
 				await RecentCommandHandler(interaction, defer);
 				break;
-			case 'search':
+			}
+			case 'search': {
 				await SearchCommandHandler(interaction, defer);
 				break;
-			case 'todo':
+			}
+			case 'todo': {
 				await TodoCommandHandler(interaction);
 				break;
+			}
 		}
 	}
 );
@@ -436,7 +439,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				await interaction.editReply({ embeds: [embed], components: rows });
 				break;
 			}
-			case 'episode':
+			case 'episode': {
 				if (interaction.componentType !== ComponentType.StringSelect) return;
 
 				const episode = (
@@ -472,6 +475,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 					components: [row, interaction.message.components[1]],
 				});
 				break;
+			}
 
 			case 'todo': {
 				const { sn, episode } = componentdata;
@@ -509,7 +513,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				});
 				break;
 			}
-			case 'ClearTodo':
+			case 'ClearTodo': {
 				const warningtext = Translate(interaction.locale, 'global.warning');
 				const modal = new ModalBuilder()
 					.addComponents(
@@ -539,6 +543,8 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 					);
 
 				await interaction.showModal(modal);
+				break;
+			}
 		}
 	}
 );
