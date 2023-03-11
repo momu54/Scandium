@@ -92,7 +92,8 @@
 		"settings": {
 			"color": "color"
 		},
-		"warning": "Warning"
+		"warning": "Warning",
+		"PremissionDenied": "You're not allowed to execute this command!"
 	},
 	"warning": {
 		"title": "Warning"
