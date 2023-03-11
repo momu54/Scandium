@@ -92,7 +92,8 @@
 		"settings": {
 			"color": ""
 		},
-		"warning": ""
+		"warning": "",
+		"PremissionDenied": ""
 	},
 	"warning": {
 		"title": ""
