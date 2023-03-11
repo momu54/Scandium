@@ -63,7 +63,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			title: Translate(interaction.locale, 'Screenshot.title'),
 			description: Translate(interaction.locale, 'Screenshot.desc', {
 				size: (img.byteLength * 0.000001).toFixed(4),
-				format: format,
+				format,
 			}),
 			image: {
 				url: 'attachment://message.webp',

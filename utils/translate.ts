@@ -66,10 +66,12 @@ export function OptionLocalizations(command: string, option: string): Localizati
 function GetAllTranslations(key: string): LocalizationMap {
 	const localizations: LocalizationMap = {};
 	for (const language in languages) {
-		localizations[language as Locale] = Translate(
-			language as Locale,
-			key
-		)?.toLowerCase();
+		if (languages.hasOwnProperty(language)) {
+			localizations[language as Locale] = Translate(
+				language as Locale,
+				key
+			)?.toLowerCase();
+		}
 	}
 	return localizations;
 }

@@ -119,7 +119,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
-export async function CreateCommand<InteractionType extends CommandInteraction>(
+export function CreateCommand<InteractionType extends CommandInteraction>(
 	command: ApplicationCommandData,
 	callback: InteractionCallback<InteractionType>,
 	isadmincommand: boolean = false

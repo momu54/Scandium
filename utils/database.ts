@@ -108,13 +108,13 @@ export async function GetGithubToken(user: string) {
 	return dbres?.token;
 }
 
-export async function SetGithubToken(user: string, token: string) {
+export function SetGithubToken(user: string, token: string) {
 	return database.run(
 		SQL`INSERT INTO GithubToken(user, token, timestamp) VALUES (${user}, ${token}, ${new Date().toJSON()})`
 	);
 }
 
-export async function RemoveGithubToken(user: string) {
+export function RemoveGithubToken(user: string) {
 	return database.run(SQL`DELETE FROM GithubToken WHERE user = ${user}`);
 }
 

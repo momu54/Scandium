@@ -173,6 +173,7 @@ async function LogoutHandler(interaction: ButtonInteraction, defer: DeferReplyMe
 }
 
 function WaitAuth(uuid: string): Promise<string | null> {
+	// skipcq: JS-0031
 	return new Promise(async (resolve) => {
 		authqueue[uuid] = resolve;
 		await setTimeout(36000000);

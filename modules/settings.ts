@@ -67,7 +67,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				.join('\n');
 			embed.fields?.push({
 				name: Translate(interaction.locale, `${module}.title`),
-				value: value,
+				value,
 			});
 			options.push(
 				new StringSelectMenuOptionBuilder()
@@ -118,7 +118,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 					fields: [
 						{
 							name: Translate(interaction.locale, `${module}.title`),
-							value: value,
+							value,
 						},
 					],
 					color: await GetColor(interaction.user.id),
@@ -207,6 +207,8 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				await interaction.showModal(modal);
 				break;
 			}
+
+			// No Default
 		}
 	}
 );

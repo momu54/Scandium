@@ -204,7 +204,7 @@ async function GetAnimeListResponse(
 		return JSON.stringify({
 			module: 'anime',
 			action: 'anime',
-			index: index,
+			index,
 			istodo,
 		});
 	}
@@ -567,8 +567,8 @@ async function GetTodoButton(episode: string, locale: Locale, sn: string, user: 
 		JSON.stringify({
 			module: 'anime',
 			action: 'todo',
-			sn: sn,
-			episode: episode,
+			sn,
+			episode,
 		})
 	);
 	if (await CheckAnimeTodo(user, sn)) {
