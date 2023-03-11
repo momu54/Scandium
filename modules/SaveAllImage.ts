@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { CreateCommand } from '../app.js';
+import { CreateCommand } from '../app.ts';
 import JSZip from 'jszip';
 import {
 	APIEmbed,
@@ -13,8 +13,8 @@ import {
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
 import sharp from 'sharp';
-import { CommandLocalizations, Translate } from '../utils/translate.js';
-import { GetColor, GetConfig } from '../utils/database.js';
+import { CommandLocalizations, Translate } from '../utils/translate.ts';
+import { GetColor, GetConfig } from '../utils/database.ts';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -83,5 +83,5 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			color: await GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ embeds: [embed], files: [zipAttachment] });
-	},
+	}
 );

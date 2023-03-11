@@ -5,8 +5,8 @@
  */
 
 import { ChannelType, codeBlock } from 'discord.js';
-import { client } from '../app.js';
-import { AsyncFunction } from '../utils/function.js';
+import { client } from '../app.ts';
+import { AsyncFunction } from '../utils/function.ts';
 
 client.on('messageCreate', async (msg) => {
 	if (

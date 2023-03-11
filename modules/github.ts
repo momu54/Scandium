@@ -1,8 +1,6 @@
-import express from 'express';
+import fastify from 'fastify';
 import { readFile } from 'fs/promises';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { CreateCommand, CreateComponentHandler } from '../app.js';
+import { CreateCommand, CreateComponentHandler } from '../app.ts';
 import {
 	APIEmbed,
 	ActionRowBuilder,
@@ -14,57 +12,61 @@ import {
 	ChatInputCommandInteraction,
 	Interaction,
 } from 'discord.js';
-import { AuthQueue, DeferReplyMethod } from '../typing.js';
+import { AuthQueue, DeferReplyMethod } from '../typing.ts';
 import { setTimeout } from 'timers/promises';
-import { Translate } from '../utils/translate.js';
+import { Translate } from '../utils/translate.ts';
 import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import {
 	GetColor,
 	GetGithubToken,
 	SetGithubToken,
 	RemoveGithubToken,
-} from '../utils/database.js';
-import { ADD_PERSON_EMOJI, DELETE_PERSON_EMOJI, PERSON_EMOJI } from '../utils/emoji.js';
+} from '../utils/database.ts';
+import { ADD_PERSON_EMOJI, DELETE_PERSON_EMOJI, PERSON_EMOJI } from '../utils/emoji.ts';
 import { OAuthApp } from '@octokit/oauth-app';
-import { createServer } from 'https';
+import { randomUUID } from 'crypto';
 
-const app = express();
+const app = fastify({
+	http2: true,
+	https: {
+		key: await readFile('./login/key.pem'),
+		cert: await readFile('./login/cert.pem'),
+	},
+});
 const html = await readFile('./login/index.html', 'utf8');
-const rootdir = dirname(fileURLToPath(import.meta.url)).replace('modules', '');
 const authqueue: AuthQueue = {};
 const oauthapp = new OAuthApp({
 	clientId: process.env.clientid!,
 	clientSecret: process.env.clientsecret!,
 });
-const httpsserver = createServer(
-	{
-		key: await readFile('./login/key.pem'),
-		cert: await readFile('./login/cert.pem'),
-	},
-	app,
-);
+const AUTH_SCOPES = ['repo'].join(' ');
 
-app.get('/github/', (req, res) => {
+app.get<{
+	Querystring: {
+		state: string;
+		code: string;
+	};
+}>('/github/:user', (req, reply) => {
 	const { state, code } = req.query;
 	if (!state || !code) {
-		res.sendStatus(400);
-		return;
+		reply.code(400);
+		return 'Bad Request';
 	}
-	res.header('Content-Type', 'text/html');
+	reply.header('Content-Type', 'text/html');
 	const resolve = authqueue[state as string];
-	res.send(
-		html
-			.replace('{user}', `${!!resolve ? state : 'Timeout'}`)
-			.replace('{status}', `${!!resolve ? 'Success' : 'Error'}`),
-	);
 	resolve?.(code as string);
+	return html.replace('{status}', `${!!resolve ? 'Success' : 'Timeout'}`);
 });
 
-app.get('/style.css', (_req, res) => {
-	res.sendFile('./login/style.css', { root: rootdir });
+app.get('/style.css', async (_req, reply) => {
+	reply.header('Content-Type', 'text/css');
+	return await readFile('./login/style.css');
 });
 
-httpsserver.listen(Number(process.env.callbackport));
+await app.listen({
+	port: Number(process.env.callbackport),
+	host: '::',
+});
 console.log('[github/login] Server started');
 
 await CreateCommand<ChatInputCommandInteraction>(
@@ -87,7 +89,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 		} else {
 			await interaction.reply(response);
 		}
-	},
+	}
 );
 
 CreateComponentHandler<ButtonInteraction>('github', async (interaction, defer, data) => {
@@ -107,18 +109,18 @@ async function LoginHandler(interaction: ButtonInteraction) {
 		color: await GetColor(interaction.user.id),
 		description: Translate(interaction.locale, 'github.LoggingIn'),
 	};
+	const uuid = randomUUID();
+	const url = `https://github.com/login/oauth/authorize?client_id=${process.env.clientid}&redirect_uri=${process.env.callbackurl}/${interaction.user.id}&scope=${AUTH_SCOPES}&state=${uuid}`;
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder()
 			.setLabel(Translate(interaction.locale, 'github.login'))
 			.setStyle(ButtonStyle.Link)
 			.setEmoji(ADD_PERSON_EMOJI)
-			.setURL(
-				`https://github.com/login/oauth/authorize?client_id=${process.env.clientid}&redirect_uri=${process.env.callbackurl}&scope=repo&state=${interaction.user.id}`,
-			),
+			.setURL(url)
 	);
 
 	await interaction.update({ embeds: [embed], components: [row] });
-	const code = await WaitAuth(interaction.user.id);
+	const code = await WaitAuth(uuid);
 
 	if (code) {
 		const { authentication } = await oauthapp.createToken({
@@ -140,7 +142,7 @@ async function LoginHandler(interaction: ButtonInteraction) {
 		const response = await GetAuthPlayLoad(
 			interaction,
 			() => Promise.resolve(),
-			token,
+			token
 		);
 		await interaction.editReply(response);
 	} else {
@@ -159,19 +161,19 @@ async function LogoutHandler(interaction: ButtonInteraction, defer: DeferReplyMe
 	await interaction.update(response);
 }
 
-function WaitAuth(user: string): Promise<string | null> {
+function WaitAuth(uuid: string): Promise<string | null> {
 	return new Promise(async (resolve) => {
-		authqueue[user] = resolve;
+		authqueue[uuid] = resolve;
 		await setTimeout(36000000);
 		resolve(null);
-		delete authqueue[user];
+		delete authqueue[uuid];
 	});
 }
 
 async function GetAuthPlayLoad(
 	interaction: Interaction,
 	defer: DeferReplyMethod,
-	token?: string,
+	token?: string
 ): Promise<BaseMessageOptions> {
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'github.NotLogedIn'),
@@ -187,10 +189,10 @@ async function GetAuthPlayLoad(
 					JSON.stringify({
 						module: 'github',
 						action: 'login',
-					}),
+					})
 				)
 				.setDisabled(!!token)
-				.setEmoji(ADD_PERSON_EMOJI),
+				.setEmoji(ADD_PERSON_EMOJI)
 		)
 		.addComponents(
 			new ButtonBuilder()
@@ -200,10 +202,10 @@ async function GetAuthPlayLoad(
 					JSON.stringify({
 						module: 'github',
 						action: 'logout',
-					}),
+					})
 				)
 				.setDisabled(!token)
-				.setEmoji(DELETE_PERSON_EMOJI),
+				.setEmoji(DELETE_PERSON_EMOJI)
 		)
 		.addComponents(
 			new ButtonBuilder()
@@ -211,7 +213,7 @@ async function GetAuthPlayLoad(
 				.setStyle(ButtonStyle.Link)
 				.setEmoji(PERSON_EMOJI)
 				.setURL('https://github.com/momu54/')
-				.setDisabled(!token),
+				.setDisabled(!token)
 		);
 
 	if (token) {

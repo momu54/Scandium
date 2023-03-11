@@ -5,11 +5,11 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction, codeBlock } from 'discord.js';
-import { CreateCommand } from '../app.js';
-import { Translate } from '../utils/translate.js';
+import { CreateCommand } from '../app.ts';
+import { Translate } from '../utils/translate.ts';
 import { release, version } from 'os';
 import PackageJson from '../package.json' assert { type: 'json' };
-import { GetColor } from '../utils/database.js';
+import { GetColor } from '../utils/database.ts';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -78,5 +78,5 @@ await CreateCommand<ChatInputCommandInteraction>(
 		};
 
 		await interaction.reply({ embeds: [embed] });
-	},
+	}
 );

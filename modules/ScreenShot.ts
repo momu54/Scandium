@@ -10,12 +10,12 @@ import {
 	AttachmentBuilder,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { CreateCommand } from '../app.js';
-import { CommandLocalizations, Translate } from '../utils/translate.js';
+import { CreateCommand } from '../app.ts';
+import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { ExportReturnType } from 'discord-html-transcripts';
-import { GetMessageHtml } from '../utils/getmessagehtml.js';
+import { GetMessageHtml } from '../utils/getmessagehtml.ts';
 import { launch } from 'puppeteer';
-import { GetColor, GetConfig } from '../utils/database.js';
+import { GetColor, GetConfig } from '../utils/database.ts';
 
 await CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -28,7 +28,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		const html = await GetMessageHtml(
 			interaction.targetMessage,
 			interaction.channel!,
-			ExportReturnType.String,
+			ExportReturnType.String
 		);
 
 		const browser = await launch({
@@ -48,7 +48,7 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 		const format = await GetConfig<string>(
 			interaction.user.id,
 			'Screenshot',
-			'format',
+			'format'
 		);
 		const img = (await messageinhtml!.screenshot({
 			quality: format != 'png' ? 100 : undefined,
@@ -74,5 +74,5 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			color: await GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ files: [attachment], embeds: [embed] });
-	},
+	}
 );

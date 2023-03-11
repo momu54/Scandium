@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { CheckUser, AddConfigUser, GetColor } from './utils/database.js';
+import { CheckUser, AddConfigUser, GetColor } from './utils/database.ts';
 import {
 	Client,
 	Events,
@@ -17,12 +17,12 @@ import {
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
 } from 'discord.js';
-import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.js';
-import { CommandLocalizations, Translate } from './utils/translate.js';
+import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.ts';
+import { CommandLocalizations, Translate } from './utils/translate.ts';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
-import { LOADING_EMOJI_STRING } from './utils/emoji.js';
-import { ErrorHandler } from './utils/error.js';
+import { LOADING_EMOJI_STRING } from './utils/emoji.ts';
+import { ErrorHandler } from './utils/error.ts';
 
 export const client = new Client({
 	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages],
@@ -51,7 +51,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	const embed: APIEmbed = {
 		title: `${LOADING_EMOJI_STRING} ${Translate(
 			interaction.locale,
-			'processing.title',
+			'processing.title'
 		)}`,
 		description: Translate(interaction.locale, 'processing.desc'),
 		color: await GetColor(interaction.user.id),
@@ -73,7 +73,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					async (ephemeral: boolean = true) => {
 						await interaction.reply({ embeds: [embed], ephemeral });
 					},
-					null,
+					null
 				);
 				break;
 			case InteractionType.MessageComponent:
@@ -84,7 +84,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					async () => {
 						await interaction.update({ embeds: [embed], components: [] });
 					},
-					data,
+					data
 				);
 				break;
 			case InteractionType.ModalSubmit:
@@ -95,7 +95,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					async () => {
 						await interaction.reply({ embeds: [embed], components: [] });
 					},
-					data,
+					data
 				);
 				break;
 		}
@@ -107,7 +107,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 export async function CreateCommand<InteractionType extends CommandInteraction>(
 	command: ApplicationCommandData,
 	callback: InteractionCallback<InteractionType>,
-	isadmincommand: boolean = false,
+	isadmincommand: boolean = false
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
 	commands[command.name] = {
@@ -118,7 +118,7 @@ export async function CreateCommand<InteractionType extends CommandInteraction>(
 }
 
 export function CreateComponentHandler<
-	InteractionType extends MessageComponentInteraction,
+	InteractionType extends MessageComponentInteraction
 >(module: string, callback: InteractionCallback<InteractionType>) {
 	componenthandlers[module] = {
 		callback: callback as InteractionCallback<MessageComponentInteraction>,
@@ -127,7 +127,7 @@ export function CreateComponentHandler<
 
 export function CreateModalHandler<InteractionType extends ModalSubmitInteraction>(
 	module: string,
-	callback: InteractionCallback<InteractionType>,
+	callback: InteractionCallback<InteractionType>
 ) {
 	modalhandlers[module] = {
 		callback: callback as InteractionCallback<ModalSubmitInteraction>,

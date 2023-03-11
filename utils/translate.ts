@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { Languages, TranslateVariables } from '../typing.js';
+import { Languages, TranslateVariables } from '../typing.ts';
 import _ from 'lodash';
 import { LocalizationMap, Locale } from 'discord.js';
 import { readdir } from 'fs/promises';
@@ -29,7 +29,7 @@ async function LoadLanguages() {
 export function Translate(
 	locale: Locale,
 	key: string,
-	variables?: TranslateVariables,
+	variables?: TranslateVariables
 ): string {
 	let rawtext = _.get(languages[locale], key);
 	rawtext ||= _.get(languages['en-US'], key);
@@ -55,7 +55,7 @@ export function CommandLocalizations(command: string): LocalizationMap {
 
 export function SubCommandLocalizations(
 	command: string,
-	subcommand: string,
+	subcommand: string
 ): LocalizationMap {
 	return GetAllTranslations(`${command}.subcmds.${subcommand}`);
 }
@@ -69,7 +69,7 @@ function GetAllTranslations(key: string): LocalizationMap {
 	for (const language in languages) {
 		localizations[language as Locale] = Translate(
 			language as Locale,
-			key,
+			key
 		)?.toLowerCase();
 	}
 	return localizations;

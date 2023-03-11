@@ -15,7 +15,7 @@ export interface InteractionCallBackDatas<
 	InteractionType extends
 		| CommandInteraction
 		| MessageComponentInteraction
-		| ModalSubmitInteraction,
+		| ModalSubmitInteraction
 > {
 	[key: string]: InteractionCallbackData<InteractionType>;
 }
@@ -24,7 +24,7 @@ export interface InteractionCallbackData<
 	InteractionType extends
 		| CommandInteraction
 		| MessageComponentInteraction
-		| ModalSubmitInteraction,
+		| ModalSubmitInteraction
 > {
 	callback: InteractionCallback<InteractionType>;
 	isadmincommand?: boolean;
@@ -35,13 +35,13 @@ export type InteractionCallback<
 	InteractionType extends
 		| CommandInteraction
 		| MessageComponentInteraction
-		| ModalSubmitInteraction,
+		| ModalSubmitInteraction
 > = (
 	interaction: InteractionType,
 	defer: DeferReplyMethod,
 	componentdata: InteractionType extends CommandInteraction
 		? null
-		: StringObject<string>,
+		: StringObject<string>
 ) => Promise<any>;
 
 export type DeferReplyMethod = (ephemeral?: boolean) => Promise<void>;
@@ -116,7 +116,7 @@ export interface AnimeFromTodo extends BaseAnime {
 export type AnimesFromTodo = AnimeFromTodo[];
 
 export function IsTodoAnime(
-	animedata: Animes | AnimesFromTodo,
+	animedata: Animes | AnimesFromTodo
 ): animedata is AnimesFromTodo {
 	return animedata[0].type == AnimesType.Todo;
 }

@@ -47,6 +47,13 @@
         [main/info] Modal submitted(<Modal's module>)
         ```
 
+    3. Your Github token
+
+        1. Why?
+           I need your token to authenticate at Github
+        2. What can this do?
+           EDIT YOUR REPOSITORY AND MORE AT GITHUB
+
 ## Statement
 
 THIS POLICY WILL NOT APPLY TO ANY FORK

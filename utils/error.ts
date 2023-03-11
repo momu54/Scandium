@@ -7,9 +7,9 @@ import {
 	InteractionType,
 	codeBlock,
 } from 'discord.js';
-import { Translate } from './translate.js';
-import { GetColor } from './database.js';
-import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.js';
+import { Translate } from './translate.ts';
+import { GetColor } from './database.ts';
+import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.ts';
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
 	console.error(error);
@@ -44,9 +44,9 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 					.setEmoji(QUESTION_EMOJI)
 					.setStyle(ButtonStyle.Link)
 					.setURL(
-						`https://github.com/momu54/me/blob/main/${ErrorPos[0]}#L${ErrorPos[1]}`,
-					),
-			),
+						`https://github.com/momu54/me/blob/main/${ErrorPos[0]}#L${ErrorPos[1]}`
+					)
+			)
 		);
 	}
 

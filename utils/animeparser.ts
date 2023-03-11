@@ -5,7 +5,7 @@
  */
 
 import { JSDOM } from 'jsdom';
-import { Anime, Animes, AnimesType } from '../typing.js';
+import { Anime, Animes, AnimesType } from '../typing.ts';
 
 export function ParseAnimes(html: string): Animes {
 	const { document: doc } = new JSDOM(html).window;
@@ -14,11 +14,11 @@ export function ParseAnimes(html: string): Animes {
 	].slice(0, 50);
 	const parsedanimes: Animes = animeblocks.map((animeblock) => {
 		const name = animeblock.querySelector<HTMLParagraphElement>(
-			'.anime-name > :first-child',
+			'.anime-name > :first-child'
 		)!.innerHTML;
 		const url = animeblock.querySelector<HTMLLinkElement>('.anime-card-block')!.href;
 		const agelimit = !!animeblock.querySelector<HTMLSpanElement>(
-			'.anime-label-block > .color-R18',
+			'.anime-label-block > .color-R18'
 		);
 		return {
 			name,

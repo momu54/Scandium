@@ -19,7 +19,8 @@
 		"alwaysStrict": true,
 		"moduleResolution": "NodeNext",
 		"resolveJsonModule": true,
-		"sourceMap": true
+		"sourceMap": true,
+		"allowImportingTsExtensions": true
 	},
 	"include": ["**/*.ts", "*.ts"],
 	"exclude": ["node_modules/**", "lang/*", "config/*"],

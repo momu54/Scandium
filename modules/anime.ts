@@ -28,13 +28,13 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.js';
-import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.js';
+import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.ts';
+import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.ts';
 import {
 	OptionLocalizations,
 	SubCommandLocalizations,
 	Translate,
-} from '../utils/translate.js';
+} from '../utils/translate.ts';
 import {
 	AddAnimeTodo,
 	CheckAnimeTodo,
@@ -42,7 +42,7 @@ import {
 	GetAnimeTodoList,
 	GetColor,
 	RemoveAnimeTodo,
-} from '../utils/database.js';
+} from '../utils/database.ts';
 import {
 	AnimeFromTodo,
 	AnimeListType,
@@ -52,9 +52,9 @@ import {
 	AnimesType,
 	BaseAnimes,
 	IsTodoAnime,
-} from '../typing.js';
-import { CacheStorer } from '../utils/cache.js';
-import { ADD_EMOJI, DELETE_EMOJI, PLAY_EMOJI } from '../utils/emoji.js';
+} from '../typing.ts';
+import { CacheStorer } from '../utils/cache.ts';
+import { ADD_EMOJI, DELETE_EMOJI, PLAY_EMOJI } from '../utils/emoji.ts';
 
 const recentcache = new CacheStorer<Animes>(216000000);
 
@@ -104,18 +104,18 @@ await CreateCommand<ChatInputCommandInteraction>(
 				await TodoCommandHandler(interaction);
 				break;
 		}
-	},
+	}
 );
 
 async function RecentCommandHandler(
 	interaction: ChatInputCommandInteraction,
-	defer: () => Promise<void>,
+	defer: () => Promise<void>
 ) {
 	await defer();
 	const response = await FetchAndGetAnimeListResponse(
 		'https://ani.gamer.com.tw/',
 		interaction,
-		AnimeListType.Recent,
+		AnimeListType.Recent
 	);
 
 	await interaction.editReply(response);
@@ -123,14 +123,14 @@ async function RecentCommandHandler(
 
 async function SearchCommandHandler(
 	interaction: ChatInputCommandInteraction,
-	defer: () => Promise<void>,
+	defer: () => Promise<void>
 ) {
 	await defer();
 	const keyword = interaction.options.getString('keyword')!;
 	const response = await FetchAndGetAnimeListResponse(
 		`https://ani.gamer.com.tw/search.php?keyword=${keyword}`,
 		interaction,
-		AnimeListType.Search,
+		AnimeListType.Search
 	);
 
 	await interaction.editReply(response);
@@ -139,7 +139,7 @@ async function SearchCommandHandler(
 async function FetchAndGetAnimeListResponse(
 	url: string,
 	interaction: ChatInputCommandInteraction,
-	mode: AnimeListType,
+	mode: AnimeListType
 ): Promise<InteractionReplyOptions | MessagePayload> {
 	let animedata: Animes;
 	if (!recentcache.alive || mode == AnimeListType.Search) {
@@ -164,15 +164,15 @@ async function FetchAndGetAnimeListResponse(
 
 async function GetAnimeListResponse(
 	interaction: Interaction,
-	animedata: Animes,
+	animedata: Animes
 ): Promise<InteractionReplyOptions | MessagePayload>;
 async function GetAnimeListResponse(
 	interaction: Interaction,
-	animedata: AnimesFromTodo,
+	animedata: AnimesFromTodo
 ): Promise<InteractionReplyOptions | MessagePayload>;
 async function GetAnimeListResponse(
 	interaction: Interaction,
-	animedata: Animes | AnimesFromTodo,
+	animedata: Animes | AnimesFromTodo
 ): Promise<InteractionReplyOptions | MessagePayload> {
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'anime.title'),
@@ -191,7 +191,7 @@ async function GetAnimeListResponse(
 					anime.agelimit
 						? ` \`${Translate(interaction.locale, 'anime.AgeLimit')}\``
 						: ''
-				}${anime.type == AnimesType.Todo ? ` **[${anime.episode}]**` : ''}`,
+				}${anime.type == AnimesType.Todo ? ` **[${anime.episode}]**` : ''}`
 		)
 		.join('\n');
 
@@ -220,8 +220,8 @@ async function GetAnimeListResponse(
 								JSON.stringify({
 									module: 'anime',
 									action: 'ClearTodo',
-								}),
-							),
+								})
+							)
 					),
 			  ]
 			: [],
@@ -233,10 +233,10 @@ async function GetAnimeListResponse(
 			.setPlaceholder(
 				Translate(interaction.locale, 'anime.menu.anime', {
 					range: `(1~${needtwomenu ? '25' : animedata.length})`,
-				}),
+				})
 			)
 			.setCustomId(GetCustomId(0))
-			.addOptions(GetAnimeInRange(animedata, interaction, 25, istodo)),
+			.addOptions(GetAnimeInRange(animedata, interaction, 25, istodo))
 	);
 	interactioresponse.components.push(row);
 
@@ -246,10 +246,10 @@ async function GetAnimeListResponse(
 				.setPlaceholder(
 					Translate(interaction.locale, 'anime.menu.anime', {
 						range: `(26~${animedata.length})`,
-					}),
+					})
 				)
 				.setCustomId(GetCustomId(1))
-				.setOptions(GetAnimeInRange(animedata, interaction, 50, istodo, 25)),
+				.setOptions(GetAnimeInRange(animedata, interaction, 50, istodo, 25))
 		);
 		interactioresponse.components.push(row2);
 	}
@@ -261,7 +261,7 @@ function GetAnimeInRange(
 	interaction: Interaction,
 	max: number,
 	istodo: boolean,
-	min: number = -1,
+	min: number = -1
 ) {
 	return animedata
 		.filter((_, index) => min < index && index < max)
@@ -272,15 +272,15 @@ function GetAnimeInRange(
 						anime.agelimit
 							? `${Translate(interaction.locale, 'anime.AgeLimit')}`
 							: ''
-					}${istodo ? ` [${(anime as AnimeFromTodo).episode}]` : ''}`,
+					}${istodo ? ` [${(anime as AnimeFromTodo).episode}]` : ''}`
 				)
 				.setValue(
 					JSON.stringify({
 						sn: anime.url.split('sn=')[1],
 						issearch: anime.url.includes('animeRef.php'),
 						episode: istodo ? (anime as AnimeFromTodo).episode : '-1',
-					}),
-				),
+					})
+				)
 		);
 }
 
@@ -291,7 +291,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 			case 'anime': {
 				if (interaction.componentType != ComponentType.StringSelect) return;
 				const { sn, issearch, episode } = JSON.parse(
-					interaction.values[0],
+					interaction.values[0]
 				) as AnimeMenuData;
 
 				await defer();
@@ -328,7 +328,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						{
 							name: Translate(
 								interaction.locale,
-								'anime.infomations.LastUpdate',
+								'anime.infomations.LastUpdate'
 							),
 							value: date,
 							inline: true,
@@ -341,7 +341,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						{
 							name: Translate(
 								interaction.locale,
-								'anime.infomations.director',
+								'anime.infomations.director'
 							),
 							value: director,
 							inline: true,
@@ -349,7 +349,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						{
 							name: Translate(
 								interaction.locale,
-								'anime.infomations.supervisor',
+								'anime.infomations.supervisor'
 							),
 							value: supervisor,
 							inline: true,
@@ -357,7 +357,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						{
 							name: Translate(
 								interaction.locale,
-								'anime.infomations.agent',
+								'anime.infomations.agent'
 							),
 							value: agent,
 							inline: true,
@@ -365,7 +365,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						{
 							name: Translate(
 								interaction.locale,
-								'anime.infomations.studio',
+								'anime.infomations.studio'
 							),
 							value: studio,
 							inline: true,
@@ -396,40 +396,40 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 								.setLabel(
 									Translate(interaction.locale, 'anime.play', {
 										episode: neededindex,
-									}),
+									})
 								)
 								.setURL(
-									`https://ani.gamer.com.tw/animeRef.php?sn=${neededsn}`,
+									`https://ani.gamer.com.tw/animeRef.php?sn=${neededsn}`
 								)
 								.setStyle(ButtonStyle.Link)
-								.setEmoji(PLAY_EMOJI),
+								.setEmoji(PLAY_EMOJI)
 						)
 						.addComponents(
 							await GetTodoButton(
 								neededindex,
 								interaction.locale,
 								neededsn,
-								interaction.user.id,
-							),
+								interaction.user.id
+							)
 						),
 					new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 						new StringSelectMenuBuilder()
 							.setPlaceholder(
-								Translate(interaction.locale, 'anime.menu.episodes'),
+								Translate(interaction.locale, 'anime.menu.episodes')
 							)
 							.setCustomId(
 								JSON.stringify({
 									module: 'anime',
 									action: 'episode',
-								}),
+								})
 							)
 							.addOptions(
 								episodes.map((episode, index) =>
 									new StringSelectMenuOptionBuilder()
 										.setLabel((index + 1).toString())
-										.setValue(episode),
-								),
-							),
+										.setValue(episode)
+								)
+							)
 					),
 				];
 
@@ -441,7 +441,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 
 				const episode = (
 					interaction.component.options.findIndex(
-						(option) => option.value == interaction.values[0],
+						(option) => option.value == interaction.values[0]
 					) + 1
 				).toString();
 
@@ -451,21 +451,21 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 							.setLabel(
 								Translate(interaction.locale, 'anime.play', {
 									episode,
-								}),
+								})
 							)
 							.setStyle(ButtonStyle.Link)
 							.setURL(
-								`https://ani.gamer.com.tw/animeVideo.php?sn=${interaction.values[0]}`,
+								`https://ani.gamer.com.tw/animeVideo.php?sn=${interaction.values[0]}`
 							)
-							.setEmoji(PLAY_EMOJI),
+							.setEmoji(PLAY_EMOJI)
 					)
 					.addComponents(
 						await GetTodoButton(
 							episode,
 							interaction.locale,
 							interaction.values[0],
-							interaction.user.id,
-						),
+							interaction.user.id
+						)
 					);
 
 				await interaction.update({
@@ -483,7 +483,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 						interaction.user.id,
 						interaction.message.embeds[0].title!,
 						sn,
-						episode,
+						episode
 					);
 				} else {
 					await RemoveAnimeTodo(interaction.user.id, sn);
@@ -492,16 +492,16 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				const row = new ActionRowBuilder<ButtonBuilder>()
 					.addComponents(
 						new ButtonBuilder(
-							interaction.message.components[0].components[0].data,
-						),
+							interaction.message.components[0].components[0].data
+						)
 					)
 					.addComponents(
 						await GetTodoButton(
 							episode,
 							interaction.locale,
 							sn,
-							interaction.user.id,
-						),
+							interaction.user.id
+						)
 					);
 
 				await interaction.update({
@@ -518,29 +518,29 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 								.setCustomId(
 									JSON.stringify({
 										module: 'anime',
-									}),
+									})
 								)
 								.setLabel(warningtext)
 								.setStyle(TextInputStyle.Paragraph)
 								.setValue(
 									Translate(
 										interaction.locale,
-										'anime.ClearTodoWarning',
-									),
-								),
-						),
+										'anime.ClearTodoWarning'
+									)
+								)
+						)
 					)
 					.setTitle(warningtext)
 					.setCustomId(
 						JSON.stringify({
 							module: 'anime',
 							action: 'ClearTodoConfirm',
-						}),
+						})
 					);
 
 				await interaction.showModal(modal);
 		}
-	},
+	}
 );
 
 async function TodoCommandHandler(interaction: ChatInputCommandInteraction) {
@@ -559,7 +559,7 @@ async function GetTodoButton(episode: string, locale: Locale, sn: string, user: 
 			action: 'todo',
 			sn: sn,
 			episode: episode,
-		}),
+		})
 	);
 	if (await CheckAnimeTodo(user, sn)) {
 		button
@@ -567,7 +567,7 @@ async function GetTodoButton(episode: string, locale: Locale, sn: string, user: 
 			.setLabel(
 				Translate(locale, 'anime.DeleteTodo', {
 					episode,
-				}),
+				})
 			)
 			.setStyle(ButtonStyle.Danger);
 	} else {
@@ -576,7 +576,7 @@ async function GetTodoButton(episode: string, locale: Locale, sn: string, user: 
 			.setLabel(
 				Translate(locale, 'anime.AddTodo', {
 					episode,
-				}),
+				})
 			)
 			.setStyle(ButtonStyle.Primary);
 	}

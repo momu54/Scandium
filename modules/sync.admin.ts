@@ -5,7 +5,7 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand, client, commands } from '../app.js';
+import { CreateCommand, client, commands } from '../app.ts';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -18,15 +18,15 @@ await CreateCommand<ChatInputCommandInteraction>(
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter((command) => !command.isadmincommand)
-				.map((command) => command.data!),
+				.map((command) => command.data!)
 		);
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter(
-					(command) => command.isadmincommand && command.data!.name != 'sync',
+					(command) => command.isadmincommand && command.data!.name != 'sync'
 				)
 				.map((command) => command.data!),
-			process.env.supportguild!,
+			process.env.supportguild!
 		);
 		const embed: APIEmbed = {
 			title: 'Sync',
@@ -35,7 +35,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 		};
 		await interaction.editReply({ embeds: [embed] });
 	},
-	true,
+	true
 );
 
 await client.application?.commands.create(commands.sync.data!, process.env.supportguild!);

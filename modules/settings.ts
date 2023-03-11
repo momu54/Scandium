@@ -16,10 +16,10 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.js';
-import { GetColor, GetConfigs, SetConfig, ALLOWED_TYPES } from '../utils/database.js';
-import { Translate } from '../utils/translate.js';
-import { StringObject } from '../typing.js';
+import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.ts';
+import { GetColor, GetConfigs, SetConfig, ALLOWED_TYPES } from '../utils/database.ts';
+import { Translate } from '../utils/translate.ts';
+import { StringObject } from '../typing.ts';
 
 const ALLOWED_VALUE: Readonly<
 	StringObject<StringObject<Readonly<string[]> | undefined>>
@@ -61,7 +61,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 					}
 					return `${Translate(
 						interaction.locale,
-						`${module}.settings.${valuekey}`,
+						`${module}.settings.${valuekey}`
 					)}**:** ${value}`;
 				})
 				.join('\n');
@@ -72,7 +72,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 			options.push(
 				new StringSelectMenuOptionBuilder()
 					.setLabel(Translate(interaction.locale, `${module}.title`))
-					.setValue(module),
+					.setValue(module)
 			);
 		}
 
@@ -82,13 +82,13 @@ await CreateCommand<ChatInputCommandInteraction>(
 				JSON.stringify({
 					module: interaction.commandName,
 					action: 'keys',
-				}),
+				})
 			)
 			.addOptions(options);
 
 		const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(menu);
 		await interaction.reply({ embeds: [embed], ephemeral: true, components: [row] });
-	},
+	}
 );
 
 CreateComponentHandler<StringSelectMenuInteraction>(
@@ -106,7 +106,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				}
 				return `${Translate(
 					interaction.locale,
-					`${module}.settings.${valuekey}`,
+					`${module}.settings.${valuekey}`
 				)}**:** ${value}`;
 			})
 			.join('\n');
@@ -133,8 +133,8 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 						.setLabel(
 							Translate(
 								interaction.locale,
-								`${module}.settings.${keyinmodule}`,
-							),
+								`${module}.settings.${keyinmodule}`
+							)
 						)
 						.setValue(keyinmodule);
 				});
@@ -147,9 +147,9 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								module: 'settings',
 								action: 'set',
 								settingmodule: module,
-							}),
+							})
 						)
-						.addOptions(options),
+						.addOptions(options)
 				);
 
 				await interaction.update({ embeds: [embed], components: [row] });
@@ -167,7 +167,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 							module: 'settings',
 							settingmodule: componentdata.settingmodule,
 							key,
-						}),
+						})
 					)
 					.addComponents(
 						new ActionRowBuilder<TextInputBuilder>().addComponents(
@@ -175,18 +175,18 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								.setLabel(
 									`${Translate(
 										interaction.locale,
-										`${componentdata.settingmodule}.title`,
+										`${componentdata.settingmodule}.title`
 									)} => ${Translate(
 										interaction.locale,
-										`${componentdata.settingmodule}.settings.${key}`,
+										`${componentdata.settingmodule}.settings.${key}`
 									)}${
 										allowedlist ? ` (${allowedlist.join(', ')})` : ''
-									}`,
+									}`
 								)
 								.setCustomId(
 									JSON.stringify({
 										module: 'settings',
-									}),
+									})
 								)
 								.setStyle(TextInputStyle.Short)
 								.setRequired(true)
@@ -199,15 +199,15 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 											: 'false'
 										: userconfig![
 												`${componentdata.settingmodule}_${key}`
-										  ].toString(),
-								),
-						),
+										  ].toString()
+								)
+						)
 					);
 
 				await interaction.showModal(modal);
 				break;
 		}
-	},
+	}
 );
 
 async function GetParsedConfigs(user: string) {
@@ -227,7 +227,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 		let value: string = interaction.fields.getTextInputValue(
 			JSON.stringify({
 				module: 'settings',
-			}),
+			})
 		);
 		if (componentdata.settingmodule == 'global' && componentdata.key == 'color') {
 			if (!CheckColor(value)) return;
@@ -236,7 +236,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 		if (ALLOWED_VALUE[componentdata.settingmodule]?.[componentdata.key]) {
 			if (
 				!ALLOWED_VALUE[componentdata.settingmodule][componentdata.key]?.includes(
-					value,
+					value
 				)
 			) {
 				return;
@@ -250,11 +250,11 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 				{
 					name: Translate(
 						interaction.locale,
-						`${componentdata.settingmodule}.title`,
+						`${componentdata.settingmodule}.title`
 					),
 					value: `${Translate(
 						interaction.locale,
-						`${componentdata.settingmodule}.settings.${componentdata.key}`,
+						`${componentdata.settingmodule}.settings.${componentdata.key}`
 					)}**:** ${value}`,
 				},
 			],
@@ -268,11 +268,11 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			interaction.user.id,
 			componentdata.settingmodule,
 			componentdata.key,
-			IsBooleanType(componentdata) ? value == 'true' : value,
+			IsBooleanType(componentdata) ? value == 'true' : value
 		);
 
 		await interaction.update({ embeds: [embed], components: [] });
-	},
+	}
 );
 
 function CheckColor(color: string) {
@@ -286,7 +286,7 @@ function CheckColor(color: string) {
 function IsBooleanType(
 	componentdata: StringObject<string>,
 	module?: string,
-	key?: string,
+	key?: string
 ) {
 	const dataALLOWED_VALUE =
 		ALLOWED_VALUE[module ? module : componentdata.settingmodule]?.[

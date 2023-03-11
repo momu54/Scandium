@@ -4,9 +4,9 @@ import {
 	ChatInputCommandInteraction,
 	codeBlock,
 } from 'discord.js';
-import { CreateCommand } from '../app.js';
-import { AsyncExec } from '../utils/exec.js';
-import { database } from '../utils/database.js';
+import { CreateCommand } from '../app.ts';
+import { AsyncExec } from '../utils/exec.ts';
+import { database } from '../utils/database.ts';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -52,7 +52,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				break;
 		}
 	},
-	true,
+	true
 );
 
 async function SQLDotHandler(interaction: ChatInputCommandInteraction) {
@@ -63,7 +63,7 @@ async function SQLDotHandler(interaction: ChatInputCommandInteraction) {
 	};
 
 	const output = await AsyncExec(
-		`sqlite3 data.db "${interaction.options.getString('command', true)}"`,
+		`sqlite3 data.db "${interaction.options.getString('command', true)}"`
 	).catch((stderr) => {
 		embed.color = 0xff0000;
 		return stderr as string;

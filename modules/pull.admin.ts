@@ -4,9 +4,9 @@
  * @see [Github]{@link https://github.com/momu54/me/}
  */
 
-import { CreateCommand } from '../app.js';
+import { CreateCommand } from '../app.ts';
 import { APIEmbed, codeBlock } from 'discord.js';
-import { AsyncExec } from '../utils/exec.js';
+import { AsyncExec } from '../utils/exec.ts';
 
 await CreateCommand(
 	{
@@ -28,5 +28,5 @@ await CreateCommand(
 		embed.description = codeBlock(output);
 		await interaction.editReply({ embeds: [embed] });
 	},
-	true,
+	true
 );
