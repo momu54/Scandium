@@ -48,7 +48,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 				text: Translate(interaction.locale, 'settings.footer'),
 			},
 		};
-		let options: StringSelectMenuOptionBuilder[] = [];
+		const options: StringSelectMenuOptionBuilder[] = [];
 		for (const module of modules) {
 			const thismodulekeys = keys.filter((key) => key.includes(module));
 			const value = thismodulekeys
@@ -227,7 +227,7 @@ async function GetParsedConfigs(user: string) {
 CreateModalHandler<ModalMessageModalSubmitInteraction>(
 	'settings',
 	async (interaction, _, componentdata) => {
-		let value: string = interaction.fields.getTextInputValue(
+		const value: string = interaction.fields.getTextInputValue(
 			JSON.stringify({
 				module: 'settings',
 			})
