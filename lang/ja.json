@@ -59,7 +59,8 @@
 		"DeleteTodo": "",
 		"ClearTodo": "",
 		"TodoEmpty": "",
-		"ClearTodoWarning": ""
+		"ClearTodoWarning": "",
+		"NotInTaiwan": ""
 	},
 	"info": {
 		"title": "情報",
