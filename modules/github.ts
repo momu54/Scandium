@@ -61,7 +61,7 @@ app.get<{
 	reply.header('Content-Type', 'text/html');
 	const resolve = authqueue[state as string];
 	resolve?.(code as string);
-	return html.replace('{status}', `${!!resolve ? 'Success' : 'Timeout'}`);
+	return html.replace('{status}', `${(resolve) ? 'Success' : 'Timeout'}`);
 });
 
 app.get('/style.css', async (_req, reply) => {
