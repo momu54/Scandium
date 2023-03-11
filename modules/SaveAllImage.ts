@@ -34,8 +34,8 @@ await CreateCommand<MessageContextMenuCommandInteraction>(
 			const res = await fetch(Attachment.url);
 			let resimage = Buffer.from(await res.arrayBuffer());
 			const isntwebporjpeg =
-				Attachment.contentType != 'image/webp' &&
-				Attachment.contentType != 'image/jpeg';
+				Attachment.contentType !== 'image/webp' &&
+				Attachment.contentType !== 'image/jpeg';
 			if (isntwebporjpeg && convert) {
 				resimage = await sharp(resimage, { animated: true })
 					.webp({

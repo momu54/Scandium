@@ -142,7 +142,7 @@ async function FetchAndGetAnimeListResponse(
 	mode: AnimeListType
 ): Promise<InteractionReplyOptions | MessagePayload> {
 	let animedata: Animes;
-	if (!recentcache.alive || mode == AnimeListType.Search) {
+	if (!recentcache.alive || mode === AnimeListType.Search) {
 		const res = await fetch(url, {
 			headers: {
 				'User-Agent':
