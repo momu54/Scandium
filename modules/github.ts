@@ -1,3 +1,9 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/me/}
+ */
+
 import fastify from 'fastify';
 import { readFile } from 'fs/promises';
 import { CreateCommand, CreateComponentHandler } from '../app.ts';
