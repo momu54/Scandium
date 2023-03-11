@@ -37,7 +37,6 @@
 		"tsx": "^3.12.3"
 	},
 	"devDependencies": {
-		"@types/express": "^4.17.17",
 		"@types/jsdom": "^20.0.1",
 		"@types/lodash": "^4.14.191",
 		"@types/node": "^18.11.18",
