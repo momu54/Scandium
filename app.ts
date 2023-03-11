@@ -111,6 +111,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				);
 				break;
 			}
+
+			// No Default
 		}
 	} catch (error) {
 		await ErrorHandler(interaction, error as Error);

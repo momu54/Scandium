@@ -56,6 +56,8 @@ await CreateCommand<ChatInputCommandInteraction>(
 			case 'dot':
 				await SQLDotHandler(interaction);
 				break;
+
+			// No Default
 		}
 	},
 	true

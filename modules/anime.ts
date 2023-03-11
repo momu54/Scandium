@@ -106,6 +106,8 @@ await CreateCommand<ChatInputCommandInteraction>(
 				await TodoCommandHandler(interaction);
 				break;
 			}
+
+			// No Default
 		}
 	}
 );
@@ -545,6 +547,8 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				await interaction.showModal(modal);
 				break;
 			}
+
+			// No Default
 		}
 	}
 );
