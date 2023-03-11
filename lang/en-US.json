@@ -59,7 +59,8 @@
 		"DeleteTodo": "Remove EP. {episode} from the todo list.",
 		"ClearTodo": "Clear the todo list.",
 		"TodoEmpty": "Todo list is empty.",
-		"ClearTodoWarning": "The todo list's anime will lost \"A long time\"."
+		"ClearTodoWarning": "The todo list's anime will lost \"A long time\".",
+		"NotInTaiwan": "Since the robot is not hosted in Taiwan\nAll requests are blocked by https://ani.gamer.com.tw/\nSo all `/anime` commands are not available.\nI'm so sorry..."
 	},
 	"info": {
 		"title": "Info",
