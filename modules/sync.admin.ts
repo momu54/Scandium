@@ -23,7 +23,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter(
-					(command) => command.isadmincommand && command.data!.name != 'sync'
+					(command) => command.isadmincommand && command.data!.name !== 'sync'
 				)
 				.map((command) => command.data!),
 			process.env.supportguild!

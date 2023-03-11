@@ -10,8 +10,8 @@ import { AsyncFunction } from '../utils/function.ts';
 
 client.on('messageCreate', async (msg) => {
 	if (
-		msg.author.id != process.env.admin ||
-		msg.channel.type != ChannelType.DM ||
+		msg.author.id !== process.env.admin ||
+		msg.channel.type !== ChannelType.DM ||
 		!msg.content.startsWith('run') ||
 		!msg.content.includes('```js\n')
 	)

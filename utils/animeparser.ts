@@ -78,7 +78,7 @@ export function ParseSearchResults(html: string): Animes {
 	const animeblocks = [
 		...doc.querySelectorAll<HTMLLinkElement>('.theme-list-main'),
 	].slice(0, 50);
-	if (animeblocks.length == 0) return [];
+	if (animeblocks.length === 0) return [];
 	const parsedanimes: Animes = animeblocks.map((animeblock) => {
 		const name =
 			animeblock.querySelector<HTMLParagraphElement>('.theme-name')!.textContent!;

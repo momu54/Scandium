@@ -40,7 +40,7 @@ export function Translate(
 function ReplaceVariables(text: string, variables: TranslateVariables) {
 	while (true) {
 		const firstbracket = text.indexOf('{');
-		if (firstbracket == -1) break;
+		if (firstbracket === -1) break;
 		const lastbracket = text.indexOf('}');
 		const variableinrawtext = text.slice(firstbracket, lastbracket + 1);
 		const variablename = variableinrawtext.replace('{', '').replace('}', '');

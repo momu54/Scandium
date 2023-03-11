@@ -212,7 +212,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 
 async function GetParsedConfigs(user: string) {
 	const userconfig = await GetConfigs(user);
-	const keys = Object.keys(userconfig!).filter((key) => key != 'user');
+	const keys = Object.keys(userconfig!).filter((key) => key !== 'user');
 	const modules = [...new Set(keys.map((key) => key.split('_')[0]))];
 	return {
 		userconfig,
@@ -229,7 +229,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 				module: 'settings',
 			})
 		);
-		if (componentdata.settingmodule == 'global' && componentdata.key == 'color') {
+		if (componentdata.settingmodule === 'global' && componentdata.key === 'color') {
 			if (!CheckColor(value)) return;
 		}
 
@@ -268,7 +268,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 			interaction.user.id,
 			componentdata.settingmodule,
 			componentdata.key,
-			IsBooleanType(componentdata) ? value == 'true' : value
+			IsBooleanType(componentdata) ? value === 'true' : value
 		);
 
 		await interaction.update({ embeds: [embed], components: [] });
@@ -277,7 +277,7 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 
 function CheckColor(color: string) {
 	return (
-		color.length == 7 &&
+		color.length === 7 &&
 		color.startsWith('#') &&
 		!isNaN(parseInt(color.replace('#', ''), 16))
 	);

@@ -151,8 +151,8 @@ async function FetchAndGetAnimeListResponse(
 		});
 		const html = await res.text();
 		animedata =
-			mode == AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
-		if (mode == AnimeListType.Recent) {
+			mode === AnimeListType.Recent ? ParseAnimes(html) : ParseSearchResults(html);
+		if (mode === AnimeListType.Recent) {
 			recentcache.Update(animedata);
 		}
 	} else {
@@ -191,7 +191,7 @@ async function GetAnimeListResponse(
 					anime.agelimit
 						? ` \`${Translate(interaction.locale, 'anime.AgeLimit')}\``
 						: ''
-				}${anime.type == AnimesType.Todo ? ` **[${anime.episode}]**` : ''}`
+				}${anime.type === AnimesType.Todo ? ` **[${anime.episode}]**` : ''}`
 		)
 		.join('\n');
 
@@ -289,7 +289,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 	async (interaction, defer, componentdata) => {
 		switch (componentdata.action) {
 			case 'anime': {
-				if (interaction.componentType != ComponentType.StringSelect) return;
+				if (interaction.componentType !== ComponentType.StringSelect) return;
 				const { sn, issearch, episode } = JSON.parse(
 					interaction.values[0]
 				) as AnimeMenuData;
@@ -437,11 +437,11 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				break;
 			}
 			case 'episode':
-				if (interaction.componentType != ComponentType.StringSelect) return;
+				if (interaction.componentType !== ComponentType.StringSelect) return;
 
 				const episode = (
 					interaction.component.options.findIndex(
-						(option) => option.value == interaction.values[0]
+						(option) => option.value === interaction.values[0]
 					) + 1
 				).toString();
 
@@ -476,9 +476,9 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 			case 'todo': {
 				const { sn, episode } = componentdata;
 
-				if (interaction.componentType != ComponentType.Button) return;
+				if (interaction.componentType !== ComponentType.Button) return;
 
-				if (interaction.component.style == ButtonStyle.Primary) {
+				if (interaction.component.style === ButtonStyle.Primary) {
 					await AddAnimeTodo(
 						interaction.user.id,
 						interaction.message.embeds[0].title!,
@@ -546,7 +546,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 async function TodoCommandHandler(interaction: ChatInputCommandInteraction) {
 	const animes = await GetAnimeTodoList(interaction.user.id);
 	const response: MessagePayload | InteractionReplyOptions =
-		animes.length == 0
+		animes.length === 0
 			? await GetTodoEmptyResponse(interaction)
 			: await GetAnimeListResponse(interaction, animes);
 	await interaction.reply(response);

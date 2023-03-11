@@ -13,7 +13,7 @@ import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.ts';
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
 	console.error(error);
-	if (interaction.type == InteractionType.ApplicationCommandAutocomplete) return;
+	if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return;
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,
 		fields: [

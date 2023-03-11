@@ -118,9 +118,9 @@ export type AnimesFromTodo = AnimeFromTodo[];
 export function IsTodoAnime(
 	animedata: Animes | AnimesFromTodo
 ): animedata is AnimesFromTodo {
-	return animedata[0].type == AnimesType.Todo;
+	return animedata[0].type === AnimesType.Todo;
 }
 
 export interface AuthQueue {
-	[user: string]: (code: string) => void;
+	[user: string]: ((code: string) => void) | undefined;
 }
