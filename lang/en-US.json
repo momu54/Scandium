@@ -92,7 +92,8 @@
 		"settings": {
 			"color": "color"
 		},
-		"warning": "Warning"
+		"warning": "Warning",
+		"PremissionDenied": ""
 	},
 	"warning": {
 		"title": "Warning"
