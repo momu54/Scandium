@@ -1,9 +1,3 @@
-/**
- * @author momu54
- * @license MIT
- * @see [Github]{@link https://github.com/momu54/me/}
- */
-
 import {
 	APIEmbed,
 	ApplicationCommandOptionType,
@@ -13,14 +7,14 @@ import {
 import { CreateCommand } from '../app.ts';
 import { AsyncExec } from '../utils/exec.ts';
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
-		name: 'sql',
-		description: 'Execute SQL query',
+		name: 'shell',
+		description: 'Execute shell command',
 		options: [
 			{
 				name: 'command',
-				description: 'SQL query',
+				description: 'shell command',
 				required: true,
 				type: ApplicationCommandOptionType.String,
 			},
@@ -30,11 +24,11 @@ await CreateCommand<ChatInputCommandInteraction>(
 		await interaction.deferReply({ ephemeral: true });
 
 		const embed: APIEmbed = {
-			title: 'SQL',
+			title: 'Shell',
 		};
 
 		const output = await AsyncExec(
-			`sqlite3 data.db "${interaction.options.getString('command', true)}"`
+			interaction.options.getString('command', true)
 		).catch((stderr) => {
 			embed.color = 0xff0000;
 			return stderr as string;

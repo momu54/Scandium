@@ -93,6 +93,17 @@ await CreateCommand<ChatInputCommandInteraction>(
 		],
 	},
 	async (interaction, defer) => {
+		if (!process.env.intaiwan) {
+			const embed: APIEmbed = {
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'anime.NotInTaiwan'),
+				color: await GetColor(interaction.user.id),
+			};
+
+			await interaction.reply({ embeds: [embed], ephemeral: true });
+			return;
+		}
+
 		switch (interaction.options.getSubcommand()) {
 			case 'recent': {
 				await RecentCommandHandler(interaction, defer);

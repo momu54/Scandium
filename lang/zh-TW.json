@@ -59,7 +59,8 @@
 		"DeleteTodo": "從待辦清單移除第 {episode} 集",
 		"ClearTodo": "清除待辦清單",
 		"TodoEmpty": "待辦清單為空",
-		"ClearTodoWarning": "待辦清單的內容將會完全消失\"非常久!\""
+		"ClearTodoWarning": "待辦清單的內容將會完全消失\"非常久!\"",
+		"NotInTaiwan": "由於機器人並非託管於台灣\n所有請求都被巴哈擋掉了\n所以`/anime`指令全部無法使用\n請見諒"
 	},
 	"info": {
 		"title": "資訊",

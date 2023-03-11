@@ -9,7 +9,7 @@ import { open } from 'sqlite';
 import { AnimesFromTodo, AnimesType, StringObject, TodoAnime } from '../typing.ts';
 import SQL from 'sql-template-strings';
 
-export const database = await open({
+const database = await open({
 	filename: './data.db',
 	driver: sqlite3.Database,
 });

@@ -65,7 +65,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				const savedcommand = commands[interaction.commandName];
 				if (
 					savedcommand.isadmincommand &&
-					interaction.user.id !== process.env.admin
+					interaction.user.id !== client.application?.owner?.id
 				) {
 					const errembed: APIEmbed = {
 						title: Translate(interaction.locale, 'error.title'),
