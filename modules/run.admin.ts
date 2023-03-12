@@ -5,13 +5,13 @@
  */
 
 import { ChannelType, codeBlock } from 'discord.js';
-import { client, ownerid } from '../app.ts';
+import { client } from '../app.ts';
 import { AsyncFunction } from '../utils/function.ts';
 import { RunCodeFunction } from '../typing.ts';
 
 client.on('messageCreate', async (msg) => {
 	if (
-		msg.author.id !== ownerid ||
+		msg.author.id !== msg.client.application.owner?.id ||
 		msg.channel.type !== ChannelType.DM ||
 		!msg.content.startsWith('run') ||
 		!msg.content.includes('```js\n')
