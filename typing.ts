@@ -7,6 +7,7 @@
 import {
 	ApplicationCommandData,
 	CommandInteraction,
+	Message,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
 } from 'discord.js';
@@ -124,3 +125,5 @@ export function IsTodoAnime(
 export interface AuthQueue {
 	[user: string]: ((code: string) => void) | undefined;
 }
+
+export type RunCodeFunction = (msg: Message<boolean>) => unknown;

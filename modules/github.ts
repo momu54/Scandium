@@ -64,11 +64,6 @@ app.get<{
 	return html.replace('{status}', `${resolve ? 'Success' : 'Timeout'}`);
 });
 
-app.get('/style.css', async (_req, reply) => {
-	reply.header('Content-Type', 'text/css');
-	return await readFile('./login/style.css');
-});
-
 await app.listen({
 	port: Number(process.env.callbackport),
 	host: '::',

@@ -32,11 +32,14 @@ export const client = new Client({
 export const commands: InteractionCallBackDatas<CommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
+export let ownerid: string;
 
 client.on(Events.ClientReady, async () => {
 	console.log('[main/info] Ready!');
 	console.log(`[main/info] Logined with ${client.user!.tag} (${client.user!.id})`);
 	await LoadModules();
+	await client.application?.fetch();
+	ownerid = client.application?.owner?.id!;
 });
 
 client.on(Events.Debug, (debugmsg) => {
@@ -63,10 +66,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			case InteractionType.ApplicationCommand: {
 				console.log(`[main/info] Command executed(${interaction.commandName})`);
 				const savedcommand = commands[interaction.commandName];
-				if (
-					savedcommand.isadmincommand &&
-					interaction.user.id !== client.application?.owner?.id
-				) {
+				if (savedcommand.isadmincommand && interaction.user.id !== ownerid) {
 					const errembed: APIEmbed = {
 						title: Translate(interaction.locale, 'error.title'),
 						description: Translate(

@@ -5,12 +5,13 @@
  */
 
 import { ChannelType, codeBlock } from 'discord.js';
-import { client } from '../app.ts';
+import { client, ownerid } from '../app.ts';
 import { AsyncFunction } from '../utils/function.ts';
+import { RunCodeFunction } from '../typing.ts';
 
 client.on('messageCreate', async (msg) => {
 	if (
-		msg.author.id !== process.env.admin ||
+		msg.author.id !== ownerid ||
 		msg.channel.type !== ChannelType.DM ||
 		!msg.content.startsWith('run') ||
 		!msg.content.includes('```js\n')
@@ -18,9 +19,11 @@ client.on('messageCreate', async (msg) => {
 		return;
 	const isasync = msg.content.includes('async');
 	const code = msg.content.split('```js')[1].replace('```', '');
-	const codefn = isasync ? AsyncFunction('msg', code) : new Function('msg', code);
+	const codefn = (
+		isasync ? AsyncFunction('msg', code) : new Function('msg', code)
+	) as RunCodeFunction;
 	try {
-		const execres = isasync ? await codefn() : codefn();
+		const execres = isasync ? await codefn(msg) : codefn(msg);
 		let result: string;
 		if (execres) {
 			switch (typeof execres) {
