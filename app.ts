@@ -152,14 +152,31 @@ export function CreateModalHandler<InteractionType extends ModalSubmitInteractio
 	};
 }
 
-async function LoadModules() {
-	const files = await readdir('./modules/');
-	const importtasks = files.map(async (file) => {
-		const path = `./modules/${file}`;
-		if (!file.endsWith('.ts')) {
-			console.log(`[main/info] ${path} isn't typescript file, skipped`);
-			return;
+async function GetModulesPath(directory = './modules') {
+	const paths = (await readdir(directory)).map((path) => `${directory}/${path}`);
+
+	const resultpaths: string[] = [];
+
+	for (const path of paths) {
+		if (path.endsWith('.sm')) {
+			console.log(`[modules/info] Finded submodule ${path}`);
+			resultpaths.push(...(await GetModulesPath(path)));
+			continue;
 		}
+		if (!path.endsWith('.ts')) {
+			console.log(`[modules/info] ${path} isn't typescript file, skipped`);
+			continue;
+		}
+		console.log(`[main/info] Finded typescript file ${path}`);
+		resultpaths.push(path);
+	}
+
+	return resultpaths;
+}
+
+async function LoadModules() {
+	const paths = await GetModulesPath();
+	const importtasks = paths.map(async (path) => {
 		console.log(`[main/info] Start loading file ${path}`);
 		await import(path);
 		console.log(`[main/info] Success loading file ${path}`);
