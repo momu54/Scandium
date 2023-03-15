@@ -5,7 +5,7 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand, client, commands } from '../app.ts';
+import { CreateCommand, client, commandhandlers } from '../app.ts';
 
 await CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -14,7 +14,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 	},
 	async (interaction, defer) => {
 		await defer();
-		const commandsvalue = Object.values(commands);
+		const commandsvalue = Object.values(commandhandlers);
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter((command) => !command.isadmincommand)
@@ -38,4 +38,7 @@ await CreateCommand<ChatInputCommandInteraction>(
 	true
 );
 
-await client.application?.commands.create(commands.sync.data!, process.env.supportguild!);
+await client.application?.commands.create(
+	commandhandlers.sync.data!,
+	process.env.supportguild!
+);

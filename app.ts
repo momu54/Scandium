@@ -29,7 +29,7 @@ export const client = new Client({
 	partials: [Partials.Channel],
 });
 
-export const commands: InteractionCallBackDatas<CommandInteraction> = {};
+export const commandhandlers: InteractionCallBackDatas<CommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
 
@@ -65,7 +65,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		switch (interaction.type) {
 			case InteractionType.ApplicationCommand: {
 				console.log(`[main/info] Command executed(${interaction.commandName})`);
-				const savedcommand = commands[interaction.commandName];
+				const savedcommand = commandhandlers[interaction.commandName];
 				if (
 					savedcommand.isadmincommand &&
 					interaction.user.id !== interaction.client.application.owner?.id
@@ -128,7 +128,7 @@ export function CreateCommand<InteractionType extends CommandInteraction>(
 	isadmincommand: boolean = false
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
-	commands[command.name] = {
+	commandhandlers[command.name] = {
 		callback: callback as InteractionCallback<CommandInteraction>,
 		isadmincommand,
 		data: command,
