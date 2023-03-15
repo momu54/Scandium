@@ -32,7 +32,7 @@ const ALLOWED_VALUE: Readonly<
 	},
 };
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'settings',
 		description: 'Change the settings.',
