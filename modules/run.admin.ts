@@ -23,7 +23,7 @@ client.on('messageCreate', async (msg) => {
 		isasync ? AsyncFunction('msg', code) : new Function('msg', code)
 	) as RunCodeFunction;
 	try {
-		const execres = isasync ? await codefn(msg) : codefn(msg);
+		const execres = await codefn(msg);
 		let result: string;
 		if (execres) {
 			switch (typeof execres) {

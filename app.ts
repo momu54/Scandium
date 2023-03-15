@@ -164,10 +164,10 @@ async function GetModulesPath(directory = './modules') {
 			continue;
 		}
 		if (!path.endsWith('.ts')) {
-			console.log(`[modules/info] ${path} isn't typescript file, skipped`);
+			console.log(`[modules/warn] ${path} isn't typescript file, skipped`);
 			continue;
 		}
-		console.log(`[main/info] Finded typescript file ${path}`);
+		console.log(`[modules/info] Finded typescript file ${path}`);
 		resultpaths.push(path);
 	}
 
@@ -177,9 +177,9 @@ async function GetModulesPath(directory = './modules') {
 async function LoadModules() {
 	const paths = await GetModulesPath();
 	const importtasks = paths.map(async (path) => {
-		console.log(`[main/info] Start loading file ${path}`);
+		console.log(`[modules/info] Start loading file ${path}`);
 		await import(path);
-		console.log(`[main/info] Success loading file ${path}`);
+		console.log(`[modules/info] Success loading file ${path}`);
 	});
 
 	await Promise.all(importtasks);
