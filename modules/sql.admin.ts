@@ -13,7 +13,7 @@ import {
 import { CreateCommand } from '../app.ts';
 import { AsyncExec } from '../utils/exec.ts';
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'sql',
 		description: 'Execute SQL query',

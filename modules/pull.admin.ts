@@ -8,7 +8,7 @@ import { CreateCommand } from '../app.ts';
 import { APIEmbed, codeBlock } from 'discord.js';
 import { AsyncExec } from '../utils/exec.ts';
 
-await CreateCommand(
+CreateCommand(
 	{
 		name: 'pull',
 		description: 'Pull the code from Github',
