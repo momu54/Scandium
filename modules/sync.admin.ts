@@ -7,7 +7,7 @@
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
 import { CreateCommand, client, commandhandlers } from '../app.ts';
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'sync',
 		description: 'Sync all commands',

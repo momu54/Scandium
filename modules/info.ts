@@ -11,7 +11,7 @@ import { release, version } from 'os';
 import PackageJson from '../package.json' assert { type: 'json' };
 import { GetColor } from '../utils/database.ts';
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'info',
 		description: 'Show information about ME.',
