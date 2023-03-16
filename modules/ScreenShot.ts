@@ -17,7 +17,7 @@ import { GetMessageHtml } from '../utils/getmessagehtml.ts';
 import { launch } from 'puppeteer';
 import { GetColor, GetConfig } from '../utils/database.ts';
 
-await CreateCommand<MessageContextMenuCommandInteraction>(
+CreateCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Take a screenshot',
 		type: ApplicationCommandType.Message,

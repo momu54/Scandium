@@ -58,7 +58,7 @@ import { ADD_EMOJI, DELETE_EMOJI, PLAY_EMOJI } from '../utils/emoji.ts';
 
 const recentcache = new CacheStorer<Animes>(216000000);
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'anime',
 		description: 'Get anime data from https://ani.gamer.com.tw',

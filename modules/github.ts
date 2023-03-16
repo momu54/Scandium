@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 import { AuthHandler, LoginHandler, LogoutHandler } from './github.sm/auth.ts';
 
-await CreateCommand<ChatInputCommandInteraction>(
+CreateCommand<ChatInputCommandInteraction>(
 	{
 		name: 'github',
 		description: 'Github command',

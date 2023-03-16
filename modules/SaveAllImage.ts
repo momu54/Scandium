@@ -16,7 +16,7 @@ import sharp from 'sharp';
 import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { GetColor, GetConfig } from '../utils/database.ts';
 
-await CreateCommand<MessageContextMenuCommandInteraction>(
+CreateCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Save all image',
 		type: ApplicationCommandType.Message,
