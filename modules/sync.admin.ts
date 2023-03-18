@@ -12,8 +12,8 @@ CreateCommand<ChatInputCommandInteraction>(
 		name: 'sync',
 		description: 'Sync all commands',
 	},
-	async (interaction, defer) => {
-		await defer();
+	async (interaction) => {
+		await interaction.deferReply();
 		const commandsvalue = Object.values(commandhandlers);
 		await interaction.client.application.commands.set(
 			commandsvalue
