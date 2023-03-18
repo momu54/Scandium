@@ -106,7 +106,7 @@
 		},
 		"report": {
 			"name": "What am I need to do?",
-			"value": "Please report in the [issue](https://github.com) or to momu54#3937.\nPlease give us error stack."
+			"value": ""
 		},
 		"PossibleLocation": "Possible location"
 	},
