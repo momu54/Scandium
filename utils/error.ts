@@ -35,11 +35,11 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 			(line) =>
 				line.includes('Scandium/modules/') || line.includes('Scandium/utils/')
 		)
-		?.split('me/')
+		?.split('Scandium/')
 		?.at(-1)
 		?.split(':');
 	const rows: ActionRowBuilder<ButtonBuilder>[] = [];
-	if (ErrorPos) {
+	if (ErrorPos && process.env.environment === 'production') {
 		rows.push(
 			new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder()
