@@ -4,6 +4,8 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
+import { CheckEnv } from './utils/env.ts';
+CheckEnv();
 import { CheckUser, AddConfigUser, GetColor } from './utils/database.ts';
 import {
 	Client,
