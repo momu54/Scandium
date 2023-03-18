@@ -10,7 +10,9 @@ import { Anime, Animes, AnimesType } from '../typing.ts';
 export function ParseAnimes(html: string): Animes {
 	const { document: doc } = new JSDOM(html).window;
 	const animeblocks = [
-		...doc.querySelectorAll<HTMLDivElement>('.newanime-date-area'),
+		...doc.querySelectorAll<HTMLDivElement>(
+			'.newanime-date-area:not(.premium-block)'
+		),
 	].slice(0, 50);
 	const parsedanimes: Animes = animeblocks.map((animeblock) => {
 		const name = animeblock.querySelector<HTMLParagraphElement>(
