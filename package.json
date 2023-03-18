@@ -1,5 +1,5 @@
 {
-	"name": "me",
+	"name": "scandium",
 	"version": "1.0.0",
 	"description": "",
 	"main": "app.ts",
@@ -9,14 +9,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/momu54/me.git"
+		"url": "git+https://github.com/momu54/scandium"
 	},
 	"author": "momu54",
 	"license": "AGPL-3.0-or-later",
 	"bugs": {
-		"url": "https://github.com/momu54/me/issues"
+		"url": "https://github.com/momu54/scandium/issues"
 	},
-	"homepage": "https://github.com/momu54/me#readme",
+	"homepage": "https://github.com/momu54/scandium",
 	"dependencies": {
 		"@octokit/oauth-app": "^4.2.0",
 		"@octokit/rest": "^19.0.7",

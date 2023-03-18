@@ -1,43 +1,33 @@
 /**
  * @author momu54
  * @license MIT
- * @see [Github]{@link https://github.com/momu54/me/}
+ * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
 import {
 	ApplicationCommandData,
+	ChatInputCommandInteraction,
 	CommandInteraction,
 	Message,
 	MessageComponentInteraction,
+	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
+	UserContextMenuCommandInteraction,
 } from 'discord.js';
 
 export interface InteractionCallBackDatas<
-	InteractionType extends
-		| CommandInteraction
-		| MessageComponentInteraction
-		| ModalSubmitInteraction
+	InteractionType extends AllowedInteractionType
 > {
 	[key: string]: InteractionCallbackData<InteractionType>;
 }
 
-export interface InteractionCallbackData<
-	InteractionType extends
-		| CommandInteraction
-		| MessageComponentInteraction
-		| ModalSubmitInteraction
-> {
+export interface InteractionCallbackData<InteractionType extends AllowedInteractionType> {
 	callback: InteractionCallback<InteractionType>;
 	isadmincommand?: boolean;
 	data?: ApplicationCommandData;
 }
 
-export type InteractionCallback<
-	InteractionType extends
-		| CommandInteraction
-		| MessageComponentInteraction
-		| ModalSubmitInteraction
-> = (
+export type InteractionCallback<InteractionType extends AllowedInteractionType> = (
 	interaction: InteractionType,
 	defer: DeferReplyMethod,
 	componentdata: InteractionType extends CommandInteraction
@@ -127,3 +117,22 @@ export interface AuthQueue {
 }
 
 export type RunCodeFunction = (msg: Message<boolean>) => unknown;
+
+export type SubCommandHandlers<InteractionType extends AllowedInteractionType> =
+	StringObject<StringObject<InteractionCallBackDatas<InteractionType>>>;
+
+type AllowedInteractionType =
+	| AllCommandInteraction
+	| MessageComponentInteraction
+	| ModalSubmitInteraction;
+
+export type AllCommandInteraction =
+	| ChatInputCommandInteraction
+	| MessageContextMenuCommandInteraction
+	| UserContextMenuCommandInteraction;
+
+export interface SubCommandCallbackPath {
+	module: string;
+	subcommandgroup?: string;
+	subcommand?: string;
+}

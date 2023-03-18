@@ -1,7 +1,7 @@
 /**
  * @author momu54
  * @license MIT
- * @see [Github]{@link https://github.com/momu54/me/}
+ * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
 import { CheckUser, AddConfigUser, GetColor } from './utils/database.ts';
@@ -13,11 +13,19 @@ import {
 	ApplicationCommandData,
 	Partials,
 	IntentsBitField,
-	CommandInteraction,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
+	ChatInputCommandInteraction,
+	ApplicationCommandType,
 } from 'discord.js';
-import { InteractionCallback, InteractionCallBackDatas, StringObject } from './typing.ts';
+import {
+	AllCommandInteraction,
+	InteractionCallback,
+	InteractionCallBackDatas,
+	StringObject,
+	SubCommandCallbackPath,
+	SubCommandHandlers,
+} from './typing.ts';
 import { CommandLocalizations, Translate } from './utils/translate.ts';
 import { readdir } from 'fs/promises';
 import 'dotenv/config';
@@ -29,9 +37,10 @@ export const client = new Client({
 	partials: [Partials.Channel],
 });
 
-export const commandhandlers: InteractionCallBackDatas<CommandInteraction> = {};
+export const commandhandlers: InteractionCallBackDatas<AllCommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
+export const subcommandhandlers: SubCommandHandlers<ChatInputCommandInteraction> = {};
 
 client.on(Events.ClientReady, async (readiedclient) => {
 	console.log('[main/info] Ready!');
@@ -81,6 +90,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
 					await interaction.reply({ embeds: [errembed], ephemeral: true });
 					return;
 				}
+				if (
+					interaction.commandType === ApplicationCommandType.ChatInput &&
+					subcommandhandlers[interaction.commandName]
+				) {
+					const subcommandgroup = interaction.options.getSubcommandGroup(false);
+					const subcommand = interaction.options.getSubcommand(false);
+					if (subcommandgroup || subcommand) {
+						const savedcommand =
+							subcommandhandlers[interaction.commandName][
+								subcommandgroup || subcommand!
+							][subcommand || '$main'];
+						await savedcommand.callback(
+							interaction,
+							async (ephemeral: boolean = true) => {
+								await interaction.reply({ embeds: [embed], ephemeral });
+							},
+							null
+						);
+						return;
+					}
+				}
 				await savedcommand.callback(
 					interaction,
 					async (ephemeral: boolean = true) => {
@@ -122,14 +152,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
-export function CreateCommand<InteractionType extends CommandInteraction>(
+export function CreateCommand<InteractionType extends AllCommandInteraction>(
 	command: ApplicationCommandData,
 	callback: InteractionCallback<InteractionType>,
 	isadmincommand: boolean = false
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
 	commandhandlers[command.name] = {
-		callback: callback as InteractionCallback<CommandInteraction>,
+		callback: callback as InteractionCallback<AllCommandInteraction>,
 		isadmincommand,
 		data: command,
 	};
@@ -149,6 +179,22 @@ export function CreateModalHandler<InteractionType extends ModalSubmitInteractio
 ) {
 	modalhandlers[module] = {
 		callback: callback as InteractionCallback<ModalSubmitInteraction>,
+	};
+}
+
+export function CreateSubCommandHandler<
+	InteractionType extends ChatInputCommandInteraction
+>(
+	{ module, subcommandgroup, subcommand = '$main' }: SubCommandCallbackPath,
+	callback: InteractionCallback<InteractionType>
+) {
+	if (!subcommandhandlers[module]) subcommandhandlers[module] = {};
+	subcommandhandlers[module] = {
+		[subcommandgroup || subcommand]: {
+			[subcommand]: {
+				callback: callback as InteractionCallback<ChatInputCommandInteraction>,
+			},
+		},
 	};
 }
 

@@ -1,7 +1,7 @@
 /**
  * @author momu54
  * @license MIT
- * @see [Github]{@link https://github.com/momu54/me/}
+ * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
 import { JSDOM } from 'jsdom';

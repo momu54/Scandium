@@ -1,7 +1,7 @@
 /**
  * @author momu54
  * @license MIT
- * @see [Github]{@link https://github.com/momu54/me/}
+ * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
 import { CreateCommand, CreateComponentHandler } from '../app.ts';
@@ -10,7 +10,8 @@ import {
 	ButtonInteraction,
 	ChatInputCommandInteraction,
 } from 'discord.js';
-import { AuthHandler, LoginHandler, LogoutHandler } from './github.sm/auth.ts';
+import { /* AuthHandler, */ LoginHandler, LogoutHandler } from './github.sm/auth.ts';
+import { EMPTY_FUNCTION } from '../utils/function.ts';
 
 CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -24,18 +25,7 @@ CreateCommand<ChatInputCommandInteraction>(
 			},
 		],
 	},
-	async (interaction, defer) => {
-		const submodule =
-			interaction.options.getSubcommandGroup() ||
-			interaction.options.getSubcommand();
-		switch (submodule) {
-			case 'auth':
-				await AuthHandler(interaction, defer);
-				break;
-
-			// No Default
-		}
-	}
+	EMPTY_FUNCTION
 );
 
 CreateComponentHandler<ButtonInteraction>('github', async (interaction, defer, data) => {

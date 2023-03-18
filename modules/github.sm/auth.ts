@@ -27,6 +27,7 @@ import fastify from 'fastify';
 import { readFile } from 'fs/promises';
 import { OAuthApp } from '@octokit/oauth-app';
 import { setTimeout } from 'timers/promises';
+import { CreateSubCommandHandler } from '../../app.ts';
 
 const app = fastify({
 	http2: true,
@@ -43,21 +44,24 @@ const oauthapp = new OAuthApp({
 });
 const AUTH_SCOPES = ['repo'].join(' ');
 
-export async function AuthHandler(
-	interaction: ChatInputCommandInteraction,
-	defer: DeferReplyMethod
-) {
-	const token = await GetGithubToken(interaction.user.id);
-	const response = await GetAuthPlayLoad(interaction, defer, token);
-	if (token) {
-		await interaction.editReply(response);
-	} else {
-		await interaction.reply({
-			...response,
-			ephemeral: true,
-		});
+CreateSubCommandHandler(
+	{
+		module: 'github',
+		subcommand: 'auth',
+	},
+	async (interaction: ChatInputCommandInteraction, defer: DeferReplyMethod) => {
+		const token = await GetGithubToken(interaction.user.id);
+		const response = await GetAuthPlayLoad(interaction, defer, token);
+		if (token) {
+			await interaction.editReply(response);
+		} else {
+			await interaction.reply({
+				...response,
+				ephemeral: true,
+			});
+		}
 	}
-}
+);
 
 app.get<{
 	Querystring: {
