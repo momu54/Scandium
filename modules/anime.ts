@@ -93,7 +93,7 @@ CreateCommand<ChatInputCommandInteraction>(
 		],
 	},
 	async (interaction, defer) => {
-		if (!process.env.intaiwan) {
+		if (process.env.intaiwan == '0') {
 			const embed: APIEmbed = {
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'anime.NotInTaiwan'),

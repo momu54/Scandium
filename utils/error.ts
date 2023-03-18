@@ -31,7 +31,10 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 
 	const ErrorPos = (error as Error).stack
 		?.split('\n')
-		.find((line) => line.includes('me/modules/') || line.includes('me/utils/'))
+		.find(
+			(line) =>
+				line.includes('Scandium/modules/') || line.includes('Scandium/utils/')
+		)
 		?.split('me/')
 		?.at(-1)
 		?.split(':');
@@ -44,7 +47,7 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 					.setEmoji(QUESTION_EMOJI)
 					.setStyle(ButtonStyle.Link)
 					.setURL(
-						`https://github.com/momu54/me/blob/main/${ErrorPos[0]}#L${ErrorPos[1]}`
+						`https://github.com/momu54/Scandium/blob/main/${ErrorPos[0]}#L${ErrorPos[1]}`
 					)
 			)
 		);

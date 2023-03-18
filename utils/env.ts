@@ -7,6 +7,8 @@ export function CheckEnv() {
 		callbackurl,
 		callbackport,
 		intaiwan,
+		sentrydsn,
+		environment,
 	} = process.env;
 
 	if (
@@ -16,8 +18,11 @@ export function CheckEnv() {
 		!clientsecret ||
 		!callbackurl ||
 		!callbackport ||
-		!intaiwan
+		!intaiwan ||
+		!sentrydsn ||
+		!environment
 	) {
+		console.clear();
 		console.error('[env/error] Missing environment variables');
 		console.log('[env/info] You can use .env.example as a template');
 		console.log(

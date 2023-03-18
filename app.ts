@@ -4,8 +4,10 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
+import 'dotenv/config';
 import { CheckEnv } from './utils/env.ts';
 CheckEnv();
+
 import { CheckUser, AddConfigUser, GetColor } from './utils/database.ts';
 import {
 	Client,
@@ -30,9 +32,15 @@ import {
 } from './typing.ts';
 import { CommandLocalizations, Translate } from './utils/translate.ts';
 import { readdir } from 'fs/promises';
-import 'dotenv/config';
 import { LOADING_EMOJI_STRING } from './utils/emoji.ts';
 import { ErrorHandler } from './utils/error.ts';
+import { captureException, init } from '@sentry/node';
+
+init({
+	dsn: process.env.sentrydsn!,
+	environment: process.env.environment!,
+	tracesSampleRate: 1.0,
+});
 
 export const client = new Client({
 	intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.DirectMessages],
@@ -150,6 +158,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			// No Default
 		}
 	} catch (error) {
+		const id = captureException(error);
+		console.log(id);
 		await ErrorHandler(interaction, error as Error);
 	}
 });
