@@ -7,5 +7,3 @@
 [![DeepSource](https://deepsource.io/gh/momu54/Scandium.svg/?label=resolved+issues&show_trend=true&token=BoastLc-a-FrxE-ZCaIraL3N)](https://deepsource.io/gh/momu54/Scandium/?ref=repository-badge)
 
 This is a simple discord bot.
-
-[![Localization at Crowdin](https://user-images.githubusercontent.com/96234201/220091601-378a9bcb-288e-451c-a8b7-f630bd155427.png)](https://crowdin.com/project/me-bot)
