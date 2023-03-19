@@ -94,7 +94,8 @@
 			"color": ""
 		},
 		"warning": "",
-		"PremissionDenied": ""
+		"PremissionDenied": "",
+		"page": ""
 	},
 	"warning": {
 		"title": ""
@@ -119,6 +120,10 @@
 		"profile": "",
 		"LoggingIn": "",
 		"timeout": "",
-		"MissingScope": ""
+		"MissingScope": "",
+		"LoginRequest": "",
+		"RepoList": "",
+		"EmptyRepoPageName": "",
+		"EmptyRepoPageValue": ""
 	}
 }
