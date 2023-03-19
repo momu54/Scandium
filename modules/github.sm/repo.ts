@@ -34,9 +34,10 @@ CreateSubCommandHandler(
 			page: 1,
 		});
 
-		await interaction.reply(
-			await GetRepoListResponse(interaction, repos.data, 'list', '1')
-		);
+		await interaction.reply({
+			...(await GetRepoListResponse(interaction, repos.data, 'list', '1')),
+			ephemeral: true,
+		});
 	}
 );
 
