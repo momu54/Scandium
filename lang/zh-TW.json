@@ -94,7 +94,8 @@
 			"color": "顏色"
 		},
 		"warning": "警告",
-		"PremissionDenied": "你沒有權限執行這個指令"
+		"PremissionDenied": "你沒有權限執行這個指令",
+		"page": "頁數: {page}"
 	},
 	"warning": {
 		"title": "警告"
@@ -119,6 +120,10 @@
 		"profile": "個人檔案",
 		"LoggingIn": "請點擊登入並完成登入",
 		"timeout": "已過期",
-		"MissingScope": "缺少必要的權限，請重試"
+		"MissingScope": "缺少必要的權限，請重試",
+		"LoginRequest": "請使用 </github auth:1081886727255375913> 來登入",
+		"RepoList": "儲存庫列表",
+		"EmptyRepoPageName": "你為什麼要看這裡呢？",
+		"EmptyRepoPageValue": "拜託相信我，沒有其他東西了"
 	}
 }
