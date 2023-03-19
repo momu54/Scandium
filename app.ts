@@ -50,7 +50,7 @@ export const client = new Client({
 export const commandhandlers: InteractionCallBackDatas<AllCommandInteraction> = {};
 const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> = {};
 const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
-export const subcommandhandlers: SubCommandHandlers<ChatInputCommandInteraction> = {};
+const subcommandhandlers: SubCommandHandlers<ChatInputCommandInteraction> = {};
 
 client.on(Events.ClientReady, async (readiedclient) => {
 	console.log('[main/info] Ready!');
@@ -194,19 +194,15 @@ export function CreateModalHandler<InteractionType extends ModalSubmitInteractio
 	};
 }
 
-export function CreateSubCommandHandler<
-	InteractionType extends ChatInputCommandInteraction
->(
+export function CreateSubCommandHandler(
 	{ module, subcommandgroup, subcommand = '$main' }: SubCommandCallbackPath,
-	callback: InteractionCallback<InteractionType>
+	callback: InteractionCallback<ChatInputCommandInteraction>
 ) {
 	if (!subcommandhandlers[module]) subcommandhandlers[module] = {};
-	subcommandhandlers[module] = {
-		[subcommandgroup || subcommand]: {
-			[subcommand]: {
-				callback: callback as InteractionCallback<ChatInputCommandInteraction>,
-			},
-		},
+	if (!subcommandhandlers[module][subcommandgroup || subcommand])
+		subcommandhandlers[module][subcommandgroup || subcommand] = {};
+	subcommandhandlers[module][subcommandgroup || subcommand][subcommand] = {
+		callback: callback as InteractionCallback<ChatInputCommandInteraction>,
 	};
 }
 

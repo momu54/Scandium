@@ -4,6 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
+import { RestEndpointMethodTypes } from '@octokit/rest';
 import {
 	ApplicationCommandData,
 	ChatInputCommandInteraction,
@@ -136,3 +137,9 @@ export interface SubCommandCallbackPath {
 	subcommandgroup?: string;
 	subcommand?: string;
 }
+
+export type RepoList =
+	| RestEndpointMethodTypes['repos']['listForAuthenticatedUser']['response']['data']
+	| RestEndpointMethodTypes['search']['repos']['response']['data']['items'];
+
+export type ComponentData = StringObject<string>;

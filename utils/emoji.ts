@@ -52,6 +52,16 @@ export const PERSON_EMOJI: APIMessageComponentEmoji = {
 	name: 'fluent_person',
 };
 
+export const ARROW_RIGHT_EMOJI: APIMessageComponentEmoji = {
+	id: '1086926625410650173',
+	name: 'fluent_arrow_right',
+};
+
+export const ARROW_LEFT_EMOJI: APIMessageComponentEmoji = {
+	id: '1086930464146718771',
+	name: 'fluent_arrow_left',
+};
+
 function ConvertEmojiToString(emoji: APIMessageComponentEmoji) {
 	return `<${emoji.animated ? 'a' : ''}:${emoji.name}:${emoji.id}>`;
 }

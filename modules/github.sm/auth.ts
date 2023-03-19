@@ -27,7 +27,7 @@ import fastify from 'fastify';
 import { readFile } from 'fs/promises';
 import { OAuthApp } from '@octokit/oauth-app';
 import { setTimeout } from 'timers/promises';
-import { CreateSubCommandHandler } from '../../app.ts';
+import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
 
 const app = fastify({
 	http2: true,
@@ -244,3 +244,19 @@ async function GetAuthPlayLoad(
 		components: [row],
 	};
 }
+
+CreateComponentHandler<ButtonInteraction>(
+	'github/auth',
+	async (interaction, defer, componentdata) => {
+		switch (componentdata!.action) {
+			case 'login':
+				await LoginHandler(interaction);
+				break;
+			case 'logout':
+				await LogoutHandler(interaction, defer);
+				break;
+
+			// No Default
+		}
+	}
+);

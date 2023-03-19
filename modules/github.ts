@@ -4,13 +4,8 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
-import { CreateCommand, CreateComponentHandler } from '../app.ts';
-import {
-	ApplicationCommandOptionType,
-	ButtonInteraction,
-	ChatInputCommandInteraction,
-} from 'discord.js';
-import { /* AuthHandler, */ LoginHandler, LogoutHandler } from './github.sm/auth.ts';
+import { CreateCommand } from '../app.ts';
+import { ApplicationCommandOptionType, ChatInputCommandInteraction } from 'discord.js';
 import { EMPTY_FUNCTION } from '../utils/function.ts';
 
 CreateCommand<ChatInputCommandInteraction>(
@@ -23,20 +18,32 @@ CreateCommand<ChatInputCommandInteraction>(
 				description: 'Login to github',
 				type: ApplicationCommandOptionType.Subcommand,
 			},
+			{
+				name: 'repo',
+				description: 'Github repository',
+				type: ApplicationCommandOptionType.SubcommandGroup,
+				options: [
+					{
+						name: 'list',
+						description: 'List repositories',
+						type: ApplicationCommandOptionType.Subcommand,
+					},
+					{
+						name: 'search',
+						description: 'Search repositories',
+						type: ApplicationCommandOptionType.Subcommand,
+						options: [
+							{
+								name: 'query',
+								description: 'Search query',
+								type: ApplicationCommandOptionType.String,
+								required: true,
+							},
+						],
+					},
+				],
+			},
 		],
 	},
 	EMPTY_FUNCTION
 );
-
-CreateComponentHandler<ButtonInteraction>('github', async (interaction, defer, data) => {
-	switch (data!.action) {
-		case 'login':
-			await LoginHandler(interaction);
-			break;
-		case 'logout':
-			await LogoutHandler(interaction, defer);
-			break;
-
-		// No Default
-	}
-});
