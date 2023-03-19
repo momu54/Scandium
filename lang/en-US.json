@@ -94,7 +94,8 @@
 			"color": "color"
 		},
 		"warning": "Warning",
-		"PremissionDenied": "You're not allowed to execute this command!"
+		"PremissionDenied": "You're not allowed to execute this command!",
+		"page": ""
 	},
 	"warning": {
 		"title": "Warning"
@@ -119,6 +120,10 @@
 		"profile": "Profile",
 		"LoggingIn": "Please click \"login\" and login",
 		"timeout": "Expired",
-		"MissingScope": "Missing needed permission\nPlease retry"
+		"MissingScope": "Missing needed permission\nPlease retry",
+		"LoginRequest": "",
+		"RepoList": "",
+		"EmptyRepoPageName": "",
+		"EmptyRepoPageValue": ""
 	}
 }
