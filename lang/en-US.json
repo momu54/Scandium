@@ -95,7 +95,7 @@
 		},
 		"warning": "Warning",
 		"PremissionDenied": "You're not allowed to execute this command!",
-		"page": ""
+		"page": "Page: {page}"
 	},
 	"warning": {
 		"title": "Warning"
@@ -121,9 +121,9 @@
 		"LoggingIn": "Please click \"login\" and login",
 		"timeout": "Expired",
 		"MissingScope": "Missing needed permission\nPlease retry",
-		"LoginRequest": "",
-		"RepoList": "",
-		"EmptyRepoPageName": "",
-		"EmptyRepoPageValue": ""
+		"LoginRequest": "Please use </github auth:1081886727255375913> to log in",
+		"RepoList": "Repository list",
+		"EmptyRepoPageName": "Why are you looking here?",
+		"EmptyRepoPageValue": "Please believe me, there's nothing else"
 	}
 }
