@@ -174,7 +174,7 @@ async function GetAuthPlayLoad(
 				.setStyle(ButtonStyle.Success)
 				.setCustomId(
 					JSON.stringify({
-						module: 'github',
+						module: 'github/auth',
 						action: 'login',
 					})
 				)
@@ -187,7 +187,7 @@ async function GetAuthPlayLoad(
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId(
 					JSON.stringify({
-						module: 'github',
+						module: 'github/auth',
 						action: 'logout',
 					})
 				)
