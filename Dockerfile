@@ -2,6 +2,8 @@ FROM node:current-slim
 
 WORKDIR /usr/src/app
 
+RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
+
 RUN apt-get update \
     && apt-get install -y wget gnupg curl \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -22,8 +24,6 @@ RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
 USER pptruser
 
 COPY package.json ./
-
-RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
 
 RUN pnpm i
 
