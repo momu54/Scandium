@@ -1,4 +1,4 @@
-name: Compile and push
+name: Push
 
 on:
     push:
@@ -26,5 +26,5 @@ jobs:
               uses: docker/build-push-action@v3
               with:
                   push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/:${{ github.sha }},${{ secrets.DOCKERHUB_USERNAME }}/justabot:latest
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/scandium:${{ github.sha }},${{ secrets.DOCKERHUB_USERNAME }}/scandium:latest
                   no-cache: true
