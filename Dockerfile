@@ -2,24 +2,27 @@ FROM node:current-slim
 
 RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
 
-RUN apt-get update && apt-get install -y wget --no-install-recommends \
+WORKDIR /usr/src/app
+
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
       --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge --auto-remove -y curl \
-    && rm -rf /src/*.deb
+    && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r momu54 && useradd -r -g momu54 -G audio,video momu54 \
-    && mkdir -p /home/momu54/Downloads \
-    && chown -R momu54:momu54 /home/momu54 \
-    && chown -R momu54:momu54 /app
+RUN npm init -y &&  \
+    npm i puppeteer \
+    # Add user so we don't need --no-sandbox.
+    # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
+    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    && mkdir -p /home/pptruser/Downloads \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && chown -R pptruser:pptruser /usr/src/app
 
 USER pptruser
-
-WORKDIR /usr/src/app
 
 COPY package.json ./
 
