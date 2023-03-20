@@ -12,6 +12,8 @@ RUN apk add --no-cache \
       nodejs \
       yarn
 
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 WORKDIR /usr/src/app
 
 COPY package.json ./
