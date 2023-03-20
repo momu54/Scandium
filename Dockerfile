@@ -1,7 +1,5 @@
 FROM node:current-slim
 
-RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
-
 WORKDIR /usr/src/app
 
 RUN apt-get update \
@@ -24,6 +22,8 @@ RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
 USER pptruser
 
 COPY package.json ./
+
+RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
 
 RUN pnpm i
 
