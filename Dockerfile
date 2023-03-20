@@ -2,8 +2,6 @@ FROM node:current-slim
 
 WORKDIR /usr/src/app
 
-RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
-
 RUN apt-get update \
     && apt-get install -y wget gnupg curl \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -13,6 +11,7 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
 
     # Add user so we don't need --no-sandbox.
     # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
