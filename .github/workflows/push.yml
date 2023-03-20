@@ -23,8 +23,9 @@ jobs:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
             - name: Build and push
-              uses: docker/build-push-action@v3
+              uses: docker/build-push-action@v4
               with:
                   push: true
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/scandium:${{ github.sha }},${{ secrets.DOCKERHUB_USERNAME }}/scandium:latest
-                  no-cache: true
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
