@@ -109,7 +109,8 @@
 			"name": "What am I need to do?",
 			"value": "You don't need to do anything!\nWe have received this bug, and we will fix it as soon as possible!"
 		},
-		"PossibleLocation": "Possible location"
+		"PossibleLocation": "Possible location",
+		"EventId": ""
 	},
 	"github": {
 		"NotLogedIn": "Not logged in",
