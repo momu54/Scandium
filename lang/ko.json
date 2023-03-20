@@ -109,7 +109,8 @@
 			"name": "",
 			"value": ""
 		},
-		"PossibleLocation": ""
+		"PossibleLocation": "",
+		"EventId": ""
 	},
 	"github": {
 		"NotLogedIn": "",
