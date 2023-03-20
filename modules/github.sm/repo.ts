@@ -154,7 +154,7 @@ async function GotoHandler(
 	await defer();
 
 	const repos =
-		componentdata.method == 'list'
+		componentdata.method === 'list'
 			? (
 					await octokit.repos.listForAuthenticatedUser({
 						per_page: 10,
