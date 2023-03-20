@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "tsx watch app.ts",
 		"preinstall": "npx only-allow pnpm",
-		"docker": "tsx app.ts"
+		"start:docker": "tsx app.ts"
 	},
 	"repository": {
 		"type": "git",
