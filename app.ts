@@ -34,7 +34,7 @@ import { CommandLocalizations, Translate } from './utils/translate.ts';
 import { readdir } from 'fs/promises';
 import { LOADING_EMOJI_STRING } from './utils/emoji.ts';
 import { ErrorHandler } from './utils/error.ts';
-import { captureException, init } from '@sentry/node';
+import { init } from '@sentry/node';
 
 init({
 	dsn: process.env.sentrydsn!,
@@ -158,8 +158,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			// No Default
 		}
 	} catch (error) {
-		const id = captureException(error);
-		console.log(id);
 		await ErrorHandler(interaction, error as Error);
 	}
 });

@@ -10,9 +10,11 @@ import {
 import { Translate } from './translate.ts';
 import { GetColor } from './database.ts';
 import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.ts';
+import { captureException } from '@sentry/node';
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
 	console.error(error);
+	const id = captureException(error);
 	if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return;
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,
@@ -24,6 +26,10 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 			{
 				name: Translate(interaction.locale, 'error.report.name'),
 				value: Translate(interaction.locale, 'error.report.value'),
+			},
+			{
+				name: Translate(interaction.locale, 'error.EventId.name'),
+				value: codeBlock(id),
 			},
 		],
 		color: await GetColor(interaction.user.id),

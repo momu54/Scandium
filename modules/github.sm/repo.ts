@@ -88,6 +88,9 @@ async function GetRepoListResponse(
 			text: Translate(interaction.locale, 'global.page', { page }),
 		},
 		color: await GetColor(interaction.user.id),
+		author: {
+			name: query,
+		},
 	};
 
 	if (repos.length === 0) {
@@ -105,7 +108,6 @@ async function GetRepoListResponse(
 					action: `goto`,
 					method: action,
 					page: `${pagenumber - 1}`,
-					query,
 				}),
 				style: ButtonStyle.Primary,
 				type: ComponentType.Button,
@@ -118,7 +120,6 @@ async function GetRepoListResponse(
 					action: `goto`,
 					method: action,
 					page: `${pagenumber + 1}`,
-					query,
 				}),
 				style: ButtonStyle.Primary,
 				type: ComponentType.Button,
@@ -147,6 +148,9 @@ async function GotoHandler(
 		await interaction.reply(await GetLoginRequestResponse(interaction));
 		return;
 	}
+
+	const query = interaction.message.embeds[0].author?.name;
+
 	await defer();
 
 	const repos =
@@ -161,7 +165,7 @@ async function GotoHandler(
 					await octokit.search.repos({
 						per_page: 10,
 						page: pagenumber,
-						q: componentdata.query,
+						q: query!,
 					})
 			  ).data.items;
 
@@ -171,7 +175,7 @@ async function GotoHandler(
 			repos,
 			componentdata.method,
 			componentdata.page,
-			componentdata.query
+			query
 		)
 	);
 }
