@@ -22,27 +22,27 @@
 		"@octokit/oauth-app": "^4.2.0",
 		"@octokit/rest": "^19.0.7",
 		"@octokit/types": "^9.0.0",
-		"@sentry/node": "^7.43.0",
-		"discord-html-transcripts": "^3.1.3",
-		"discord.js": "^14.7.1",
+		"@sentry/node": "^7.44.2",
+		"discord-html-transcripts": "^3.1.4",
+		"discord.js": "^14.8.0",
 		"dotenv": "^16.0.3",
-		"fastify": "^4.14.1",
-		"jsdom": "^21.1.0",
+		"fastify": "^4.15.0",
+		"jsdom": "^21.1.1",
 		"jszip": "^3.10.1",
 		"lodash": "^4.17.21",
-		"puppeteer": "^19.6.1",
+		"puppeteer": "^19.7.5",
 		"sharp": "^0.31.3",
 		"sql-template-strings": "^2.2.2",
 		"sqlite": "^4.1.2",
-		"sqlite3": "^5.1.4",
-		"tsx": "^3.12.3"
+		"sqlite3": "^5.1.6",
+		"tsx": "^3.12.6"
 	},
 	"devDependencies": {
-		"@types/jsdom": "^20.0.1",
+		"@types/jsdom": "^21.1.0",
 		"@types/lodash": "^4.14.191",
-		"@types/node": "^18.11.18",
+		"@types/node": "^18.15.5",
 		"@types/sharp": "^0.31.1",
-		"typescript": "^4.9.4"
+		"typescript": "^5.0.2"
 	},
 	"type": "module"
 }
