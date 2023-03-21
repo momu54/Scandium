@@ -110,7 +110,7 @@
 			"value": "You don't need to do anything!\nWe have received this bug, and we will fix it as soon as possible!"
 		},
 		"PossibleLocation": "Possible location",
-		"EventId": ""
+		"EventId": "Event ID"
 	},
 	"github": {
 		"NotLogedIn": "Not logged in",
