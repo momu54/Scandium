@@ -17,9 +17,10 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 	const id = captureException(error);
 	if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return;
 	const stacklines = error.stack?.split('\n')!;
-	let stacklinesinmessage = error.stack!.split('\n');
-	while (stacklinesinmessage.length > 1024) {
-		stacklinesinmessage.pop();
+	let length = error.stack!.length;
+	const stacklinesinmessage = error.stack!.split('\n');
+	while (length > 1024) {
+		length -= stacklinesinmessage.pop().length + 1;
 	}
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,
