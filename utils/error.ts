@@ -16,12 +16,17 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 	console.error(error);
 	const id = captureException(error);
 	if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return;
+	const stacklines = error.stack?.split('\n')!;
+	let stacklinesinmessage = error.stack!.split('\n');
+	while (stacklinesinmessage.length > 1024) {
+		stacklinesinmessage.pop();
+	}
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,
 		fields: [
 			{
 				name: Translate(interaction.locale, 'error.stack.name'),
-				value: codeBlock('ts', (error as Error).stack!),
+				value: codeBlock('ts', stacklinesinmessage.join('\n')),
 			},
 			{
 				name: Translate(interaction.locale, 'error.report.name'),
@@ -35,8 +40,7 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 		color: await GetColor(interaction.user.id),
 	};
 
-	const ErrorPos = (error as Error).stack
-		?.split('\n')
+	const ErrorPos = stacklines
 		.find(
 			(line) =>
 				line.includes('Scandium/modules/') || line.includes('Scandium/utils/')
