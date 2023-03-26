@@ -126,12 +126,12 @@
 		"RepoList": "Repository list",
 		"EmptyRepoPageName": "Why are you looking here?",
 		"EmptyRepoPageValue": "Please believe me, there's nothing else",
-		"LastPush": "",
-		"SelectRepo": "",
-		"NoDescription": "",
-		"language": "",
-		"OtherLanguage": "",
-		"license": "",
-		"OtherLicense": ""
+		"LastPush": "Last push at",
+		"SelectRepo": "Choose a repository",
+		"NoDescription": "No description",
+		"language": "Language",
+		"OtherLanguage": "Other languages",
+		"license": "License",
+		"OtherLicense": "Other license"
 	}
 }
