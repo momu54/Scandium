@@ -240,7 +240,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 						{
 							name: Translate(interaction.locale, 'github.language'),
 							value:
-								(await GetLanguageWithIcon(repo.language)) ||
+								GetLanguageWithIcon(repo.language) ||
 								Translate(interaction.locale, 'github.OtherLanguage'),
 							inline: true,
 						},

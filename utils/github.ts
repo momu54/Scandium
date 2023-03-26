@@ -27,7 +27,7 @@ export async function GetLoginRequestResponse(
 	};
 }
 
-export async function GetLanguageWithIcon(language: string | null) {
+export function GetLanguageWithIcon(language: string | null) {
 	if (!language) return null;
 
 	return `${LANGUAGE_EMOJI_MAP[language] ?? ''} ${language}`;
