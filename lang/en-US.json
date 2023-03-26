@@ -125,6 +125,13 @@
 		"LoginRequest": "Please use </github auth:1081886727255375913> to log in",
 		"RepoList": "Repository list",
 		"EmptyRepoPageName": "Why are you looking here?",
-		"EmptyRepoPageValue": "Please believe me, there's nothing else"
+		"EmptyRepoPageValue": "Please believe me, there's nothing else",
+		"LastPush": "",
+		"SelectRepo": "",
+		"NoDescription": "",
+		"language": "",
+		"OtherLanguage": "",
+		"license": "",
+		"OtherLicense": ""
 	}
 }
