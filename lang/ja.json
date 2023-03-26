@@ -125,6 +125,13 @@
 		"LoginRequest": "",
 		"RepoList": "",
 		"EmptyRepoPageName": "",
-		"EmptyRepoPageValue": ""
+		"EmptyRepoPageValue": "",
+		"LastPush": "",
+		"SelectRepo": "",
+		"NoDescription": "",
+		"language": "",
+		"OtherLanguage": "",
+		"license": "",
+		"OtherLicense": ""
 	}
 }
