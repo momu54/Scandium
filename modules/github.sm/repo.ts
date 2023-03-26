@@ -2,17 +2,23 @@ import {
 	APIActionRowComponent,
 	APIButtonComponent,
 	APIEmbed,
+	APISelectMenuComponent,
 	BaseMessageOptions,
 	ButtonInteraction,
 	ButtonStyle,
 	ComponentType,
 	Interaction,
+	StringSelectMenuInteraction,
 } from 'discord.js';
 import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
 import { GetColor } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
-import { GetLoginRequestResponse, GetOctokit } from '../../utils/github.ts';
-import { ComponentData, DeferReplyMethod, RepoList } from '../../typing.ts';
+import {
+	GetLanguageWithIcon,
+	GetLoginRequestResponse,
+	GetOctokit,
+} from '../../utils/github.ts';
+import { RepoList } from '../../typing.ts';
 import { ARROW_LEFT_EMOJI, ARROW_RIGHT_EMOJI } from '../../utils/emoji.ts';
 
 CreateSubCommandHandler(
@@ -82,7 +88,8 @@ async function GetRepoListResponse(
 		title: Translate(interaction.locale, 'github.RepoList'),
 		fields: repos.map((repo) => ({
 			name: repo.full_name,
-			value: repo.description || 'No description',
+			value:
+				repo.description || Translate(interaction.locale, 'github.NoDescription'),
 		})),
 		footer: {
 			text: Translate(interaction.locale, 'global.page', { page }),
@@ -100,95 +107,162 @@ async function GetRepoListResponse(
 		});
 	}
 
-	const row: APIActionRowComponent<APIButtonComponent> = {
-		components: [
-			{
-				custom_id: JSON.stringify({
-					module: 'github/repo',
-					action: `goto`,
-					method: action,
-					page: `${pagenumber - 1}`,
-				}),
-				style: ButtonStyle.Primary,
-				type: ComponentType.Button,
-				emoji: ARROW_LEFT_EMOJI,
-				disabled: page === '1',
-			},
-			{
-				custom_id: JSON.stringify({
-					module: 'github/repo',
-					action: `goto`,
-					method: action,
-					page: `${pagenumber + 1}`,
-				}),
-				style: ButtonStyle.Primary,
-				type: ComponentType.Button,
-				emoji: ARROW_RIGHT_EMOJI,
-				disabled: repos.length < 10,
-			},
-		],
-		type: ComponentType.ActionRow,
-	};
+	const rows: APIActionRowComponent<APIButtonComponent | APISelectMenuComponent>[] = [
+		{
+			components: [
+				{
+					custom_id: JSON.stringify({
+						module: 'github/repo/goto',
+						method: action,
+						page: `${pagenumber - 1}`,
+					}),
+					style: ButtonStyle.Primary,
+					type: ComponentType.Button,
+					emoji: ARROW_LEFT_EMOJI,
+					disabled: page === '1',
+				},
+				{
+					custom_id: JSON.stringify({
+						module: 'github/repo/goto',
+						method: action,
+						page: `${pagenumber + 1}`,
+					}),
+					style: ButtonStyle.Primary,
+					type: ComponentType.Button,
+					emoji: ARROW_RIGHT_EMOJI,
+					disabled: repos.length < 10,
+				},
+			],
+			type: ComponentType.ActionRow,
+		},
+		{
+			components: [
+				{
+					custom_id: JSON.stringify({
+						module: 'github/repo/choose',
+					}),
+					type: ComponentType.StringSelect,
+					options: repos.map((repo) => ({
+						label: repo.full_name,
+						value: JSON.stringify({
+							owner: repo.owner?.login,
+							name: repo.name,
+						}),
+						description: [
+							repo.language,
+							`⭐ ${repo.stargazers_count}`,
+							repo.license?.name,
+						]
+							.filter((info) => info)
+							.join(' | '),
+					})),
+					placeholder: Translate(interaction.locale, 'github.SelectRepo'),
+				},
+			],
+			type: ComponentType.ActionRow,
+		},
+	];
 
 	return {
 		embeds: [embeds],
-		components: [row],
+		components: rows,
 	};
 }
 
-async function GotoHandler(
-	interaction: ButtonInteraction,
-	defer: DeferReplyMethod,
-	componentdata: ComponentData
-) {
-	const octokit = await GetOctokit(interaction.user.id);
-	const pagenumber = Number(componentdata.page);
-
-	if (!octokit) {
-		await interaction.reply(await GetLoginRequestResponse(interaction));
-		return;
-	}
-
-	const query = interaction.message.embeds[0].author?.name;
-
-	await defer();
-
-	const repos =
-		componentdata.method === 'list'
-			? (
-					await octokit.repos.listForAuthenticatedUser({
-						per_page: 10,
-						page: pagenumber,
-					})
-			  ).data
-			: (
-					await octokit.search.repos({
-						per_page: 10,
-						page: pagenumber,
-						q: query!,
-					})
-			  ).data.items;
-
-	await interaction.editReply(
-		await GetRepoListResponse(
-			interaction,
-			repos,
-			componentdata.method,
-			componentdata.page,
-			query
-		)
-	);
-}
-
 CreateComponentHandler<ButtonInteraction>(
-	'github/repo',
+	'github/repo/goto',
 	async (interaction, defer, componentdata) => {
-		switch (componentdata.action) {
-			case 'goto':
-				await GotoHandler(interaction, defer, componentdata);
-				break;
+		const octokit = await GetOctokit(interaction.user.id);
+		const pagenumber = Number(componentdata.page);
 
-			// No Default
+		if (!octokit) {
+			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
 		}
+
+		const query = interaction.message.embeds[0].author?.name;
+
+		await defer();
+
+		const repos =
+			componentdata.method === 'list'
+				? (
+						await octokit.repos.listForAuthenticatedUser({
+							per_page: 10,
+							page: pagenumber,
+						})
+				  ).data
+				: (
+						await octokit.search.repos({
+							per_page: 10,
+							page: pagenumber,
+							q: query!,
+						})
+				  ).data.items;
+
+		await interaction.editReply(
+			await GetRepoListResponse(
+				interaction,
+				repos,
+				componentdata.method,
+				componentdata.page,
+				query
+			)
+		);
+	}
+);
+
+CreateComponentHandler<StringSelectMenuInteraction>(
+	'github/repo/choose',
+	async (interaction, defer) => {
+		const octokit = await GetOctokit(interaction.user.id);
+		const { owner, name } = JSON.parse(interaction.values[0]);
+
+		if (!octokit) {
+			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
+		}
+
+		await defer();
+		const { data: repo } = await octokit.repos.get({
+			owner,
+			repo: name,
+		});
+
+		await interaction.editReply({
+			embeds: [
+				{
+					title: `${repo.owner.login}/${repo.name}`,
+					description:
+						repo.description ||
+						Translate(interaction.locale, 'github.NoDescription'),
+					fields: [
+						{
+							name: Translate(interaction.locale, 'github.language'),
+							value:
+								(await GetLanguageWithIcon(repo.language)) ||
+								Translate(interaction.locale, 'github.OtherLanguage'),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.license'),
+							value:
+								repo.license?.name ||
+								Translate(interaction.locale, 'github.OtherLicense'),
+							inline: true,
+						},
+					],
+					image: {
+						url: `https://opengraph.githubassets.com/eddbb7c789a899c80220d7b2e52832007cfd81362fee54746836c1ceb1b1014e/${repo.owner.login}/${repo.name}`,
+					},
+					author: {
+						name: owner,
+						icon_url: repo.owner.avatar_url,
+					},
+					color: await GetColor(interaction.user.id),
+				},
+			],
+			components: [],
+		});
 	}
 );

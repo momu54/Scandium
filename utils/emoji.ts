@@ -5,6 +5,7 @@
  */
 
 import { APIMessageComponentEmoji } from 'discord.js';
+import { StringObject } from '../typing.ts';
 
 export const PLAY_EMOJI: APIMessageComponentEmoji = {
 	id: '1076096711618986094',
@@ -69,3 +70,8 @@ function ConvertEmojiToString(emoji: APIMessageComponentEmoji) {
 export const ERROR_EMOJI_STRING = ConvertEmojiToString(ERROR_EMOJI);
 
 export const LOADING_EMOJI_STRING = ConvertEmojiToString(LOADING_EMOJI);
+
+export const LANGUAGE_EMOJI_MAP: StringObject<string> = {
+	TypeScript: '<:typescript:1089385498298028152>',
+	Python: '<:python:1089389703175868550>',
+};

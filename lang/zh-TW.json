@@ -125,6 +125,13 @@
 		"LoginRequest": "請使用 </github auth:1081886727255375913> 來登入",
 		"RepoList": "儲存庫列表",
 		"EmptyRepoPageName": "你為什麼要看這裡呢？",
-		"EmptyRepoPageValue": "拜託相信我，沒有其他東西了"
+		"EmptyRepoPageValue": "拜託相信我，沒有其他東西了",
+		"LastPush": "最後推送時間",
+		"SelectRepo": "選擇一個儲存庫",
+		"NoDescription": "沒有描述",
+		"language": "程式語言",
+		"OtherLanguage": "其他語言",
+		"license": "協議",
+		"OtherLicense": "其他協議"
 	}
 }
