@@ -108,7 +108,7 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 	if (code) {
 		const { authentication } = await oauthapp.createToken({
 			code,
-			state: interaction.user.id,
+			state: uuid,
 		});
 		const { token, scopes } = authentication;
 		if (!scopes.includes('repo')) {
@@ -124,7 +124,7 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 		await SetGithubToken(interaction.user.id, authentication.token);
 		const response = await GetAuthPlayLoad(
 			interaction,
-			() => Promise.resolve(),
+			Promise.resolve,
 			token
 		);
 		await interaction.editReply(response);
