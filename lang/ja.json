@@ -132,6 +132,12 @@
 		"language": "",
 		"OtherLanguage": "",
 		"license": "",
-		"OtherLicense": ""
+		"OtherLicense": "",
+		"status": {
+			"public": "",
+			"private": "",
+			"archived": "",
+			"name": ""
+		}
 	}
 }
