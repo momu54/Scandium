@@ -132,6 +132,12 @@
 		"language": "程式語言",
 		"OtherLanguage": "其他語言",
 		"license": "協議",
-		"OtherLicense": "其他協議"
+		"OtherLicense": "其他協議",
+		"status": {
+			"public": "公開",
+			"private": "私人",
+			"archived": "已封存",
+			"name": "狀態"
+		}
 	}
 }

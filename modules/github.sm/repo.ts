@@ -17,6 +17,7 @@ import {
 	GetLanguageWithIcon,
 	GetLoginRequestResponse,
 	GetOctokit,
+	GetStatusWithIcon,
 } from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
 import { ARROW_LEFT_EMOJI, ARROW_RIGHT_EMOJI } from '../../utils/emoji.ts';
@@ -249,6 +250,14 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 							value:
 								repo.license?.name ||
 								Translate(interaction.locale, 'github.OtherLicense'),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.status.name'),
+							value: GetStatusWithIcon(interaction.locale, {
+								archived: repo.archived,
+								private: repo.private,
+							}),
 							inline: true,
 						},
 					],

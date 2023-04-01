@@ -75,3 +75,30 @@ export const LANGUAGE_EMOJI_MAP: StringObject<string> = {
 	TypeScript: '<:typescript:1089385498298028152>',
 	Python: '<:python:1089389703175868550>',
 };
+
+export const GLOBE_EMOJI: APIMessageComponentEmoji = {
+	id: '1091671007800066174',
+	name: 'fluent_globe',
+};
+
+export const GLOBE_EMOJI_STRING = ConvertEmojiToString(GLOBE_EMOJI);
+
+export const LOCK_EMOJI: APIMessageComponentEmoji = {
+	id: '1091674024226078743',
+	name: 'fluent_lock_closed',
+};
+
+export const LOCK_EMOJI_STRING = ConvertEmojiToString(LOCK_EMOJI);
+
+export const ARCHIVED_EMOJI: APIMessageComponentEmoji = {
+	id: '1091675451061182485',
+	name: 'fluent_archived',
+};
+
+export const ARCHIVED_EMOJI_STRING = ConvertEmojiToString(ARCHIVED_EMOJI);
+
+export const STATUS_EMOJI_MAP: StringObject<string> = {
+	public: GLOBE_EMOJI_STRING,
+	private: LOCK_EMOJI_STRING,
+	archived: ARCHIVED_EMOJI_STRING,
+};

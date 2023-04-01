@@ -143,3 +143,8 @@ export type RepoList =
 	| RestEndpointMethodTypes['search']['repos']['response']['data']['items'];
 
 export type ComponentData = StringObject<string>;
+
+export interface RepoStatus {
+	archived: boolean;
+	private: boolean;
+}
