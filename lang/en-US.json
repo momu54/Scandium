@@ -134,10 +134,10 @@
 		"license": "License",
 		"OtherLicense": "Other license",
 		"status": {
-			"public": "",
-			"private": "",
-			"archived": "",
-			"name": ""
+			"public": "Public",
+			"private": "Private",
+			"archived": "Archived",
+			"name": "Status"
 		}
 	}
 }
