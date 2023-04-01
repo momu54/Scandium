@@ -124,7 +124,7 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 		await SetGithubToken(interaction.user.id, authentication.token);
 		const response = await GetAuthPlayLoad(
 			interaction,
-			Promise.resolve,
+			() => Promise.resolve(),
 			token
 		);
 		await interaction.editReply(response);
