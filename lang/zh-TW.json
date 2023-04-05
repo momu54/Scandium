@@ -138,6 +138,10 @@
 			"private": "私人",
 			"archived": "已封存",
 			"name": "狀態"
-		}
+		},
+		"star": "星標",
+		"branch": "分支",
+		"fork": "分叉",
+		"watcher": "監視者"
 	}
 }
