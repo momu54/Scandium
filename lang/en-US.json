@@ -138,6 +138,10 @@
 			"private": "Private",
 			"archived": "Archived",
 			"name": "Status"
-		}
+		},
+		"star": "",
+		"branch": "",
+		"fork": "",
+		"watcher": ""
 	}
 }
