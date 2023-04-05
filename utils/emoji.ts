@@ -102,3 +102,12 @@ export const STATUS_EMOJI_MAP: StringObject<string> = {
 	private: LOCK_EMOJI_STRING,
 	archived: ARCHIVED_EMOJI_STRING,
 };
+
+export const BRANCH_EMOJI: APIMessageComponentEmoji = {
+	id: '1092987408401829990',
+	name: 'fluent_branch',
+};
+
+export const BRANCH_EMOJI_STRING = ConvertEmojiToString(BRANCH_EMOJI);
+
+export const QUESTION_EMOJI_STRING = ConvertEmojiToString(QUESTION_EMOJI);

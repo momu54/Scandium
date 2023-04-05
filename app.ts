@@ -111,7 +111,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 							subcommandhandlers[interaction.commandName][
 								subcommandgroup || subcommand!
 							][subcommand || '$main'];
-						await savedcommand.callback(
+						await savedcommand.callback?.(
 							interaction,
 							async (ephemeral: boolean = true) => {
 								await interaction.reply({ embeds: [embed], ephemeral });
@@ -121,7 +121,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 						return;
 					}
 				}
-				await savedcommand.callback(
+				await savedcommand.callback?.(
 					interaction,
 					async (ephemeral: boolean = true) => {
 						await interaction.reply({ embeds: [embed], ephemeral });
@@ -133,7 +133,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			case InteractionType.MessageComponent: {
 				data = JSON.parse(interaction.customId);
 				console.log(`[main/info] Component emitted(${data.module})`);
-				await componenthandlers[data.module].callback(
+				await componenthandlers[data.module].callback?.(
 					interaction,
 					async () => {
 						await interaction.update({ embeds: [embed], components: [] });
@@ -145,7 +145,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			case InteractionType.ModalSubmit: {
 				data = JSON.parse(interaction.customId);
 				console.log(`[main/info] Modal submitted(${data.module})`);
-				await modalhandlers[data.module].callback(
+				await modalhandlers[data.module].callback?.(
 					interaction,
 					async () => {
 						await interaction.reply({ embeds: [embed], components: [] });
@@ -164,7 +164,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 export function CreateCommand<InteractionType extends AllCommandInteraction>(
 	command: ApplicationCommandData,
-	callback: InteractionCallback<InteractionType>,
+	callback?: InteractionCallback<InteractionType>,
 	isadmincommand: boolean = false
 ) {
 	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);

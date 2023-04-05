@@ -9,6 +9,7 @@ import {
 	ComponentType,
 	Interaction,
 	StringSelectMenuInteraction,
+	inlineCode,
 } from 'discord.js';
 import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
 import { GetColor } from '../../utils/database.ts';
@@ -20,7 +21,11 @@ import {
 	GetStatusWithIcon,
 } from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
-import { ARROW_LEFT_EMOJI, ARROW_RIGHT_EMOJI } from '../../utils/emoji.ts';
+import {
+	ARROW_LEFT_EMOJI,
+	ARROW_RIGHT_EMOJI,
+	BRANCH_EMOJI_STRING,
+} from '../../utils/emoji.ts';
 
 CreateSubCommandHandler(
 	{
@@ -88,7 +93,10 @@ async function GetRepoListResponse(
 	const embeds: APIEmbed = {
 		title: Translate(interaction.locale, 'github.RepoList'),
 		fields: repos.map((repo) => ({
-			name: repo.full_name,
+			name:
+				repo.full_name.length > 100
+					? `${repo.full_name.slice(0, 97)}...`
+					: repo.full_name,
 			value:
 				repo.description || Translate(interaction.locale, 'github.NoDescription'),
 		})),
@@ -101,12 +109,16 @@ async function GetRepoListResponse(
 		},
 	};
 
-	if (repos.length === 0) {
-		embeds.fields!.push({
-			name: Translate(interaction.locale, 'github.EmptyRepoPageName'),
-			value: Translate(interaction.locale, 'github.EmptyRepoPageValue'),
-		});
-	}
+	const repooptions = repos.map((repo) => ({
+		label: repo.full_name,
+		value: JSON.stringify({
+			owner: repo.owner?.login,
+			name: repo.name,
+		}),
+		description: [repo.language, `⭐ ${repo.stargazers_count}`, repo.license?.name]
+			.filter((info) => info)
+			.join(' | '),
+	}));
 
 	const rows: APIActionRowComponent<APIButtonComponent | APISelectMenuComponent>[] = [
 		{
@@ -143,26 +155,30 @@ async function GetRepoListResponse(
 						module: 'github/repo/choose',
 					}),
 					type: ComponentType.StringSelect,
-					options: repos.map((repo) => ({
-						label: repo.full_name,
-						value: JSON.stringify({
-							owner: repo.owner?.login,
-							name: repo.name,
-						}),
-						description: [
-							repo.language,
-							`⭐ ${repo.stargazers_count}`,
-							repo.license?.name,
-						]
-							.filter((info) => info)
-							.join(' | '),
-					})),
+					options:
+						repooptions.length === 0
+							? [
+									{
+										label: 'null',
+										value: 'null',
+									},
+							  ]
+							: repooptions,
 					placeholder: Translate(interaction.locale, 'github.SelectRepo'),
+					disabled: repooptions.length === 0,
 				},
 			],
 			type: ComponentType.ActionRow,
 		},
 	];
+
+	if (repos.length === 0) {
+		embeds.fields!.push({
+			name: Translate(interaction.locale, 'github.EmptyRepoPageName'),
+			value: Translate(interaction.locale, 'github.EmptyRepoPageValue'),
+		});
+		rows.pop();
+	}
 
 	return {
 		embeds: [embeds],
@@ -230,19 +246,23 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			repo: name,
 		});
 
+		const { data: branches } = await octokit.repos.listBranches({
+			owner,
+			repo: name,
+		});
+
 		await interaction.editReply({
 			embeds: [
 				{
 					title: `${repo.owner.login}/${repo.name}`,
+					url: repo.html_url,
 					description:
 						repo.description ||
 						Translate(interaction.locale, 'github.NoDescription'),
 					fields: [
 						{
 							name: Translate(interaction.locale, 'github.language'),
-							value:
-								GetLanguageWithIcon(repo.language) ||
-								Translate(interaction.locale, 'github.OtherLanguage'),
+							value: GetLanguageWithIcon(repo.language, interaction.locale),
 							inline: true,
 						},
 						{
@@ -258,6 +278,33 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 								archived: repo.archived,
 								private: repo.private,
 							}),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.star'),
+							value: repo.stargazers_count.toString(),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.fork'),
+							value: repo.forks_count.toString(),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.watcher'),
+							value: repo.watchers_count.toString(),
+							inline: true,
+						},
+						{
+							name: Translate(interaction.locale, 'github.branch'),
+							value: branches
+								.map(
+									(branch) =>
+										`${BRANCH_EMOJI_STRING} ${inlineCode(
+											branch.commit.sha.slice(0, 7)
+										)} ${branch.name}`
+								)
+								.join('\n'),
 							inline: true,
 						},
 					],

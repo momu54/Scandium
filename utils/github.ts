@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { GetColor, GetGithubToken } from './database.ts';
 import { Interaction, InteractionReplyOptions, Locale, MessagePayload } from 'discord.js';
 import { Translate } from './translate.ts';
-import { LANGUAGE_EMOJI_MAP, STATUS_EMOJI_MAP } from './emoji.ts';
+import { LANGUAGE_EMOJI_MAP, QUESTION_EMOJI_STRING, STATUS_EMOJI_MAP } from './emoji.ts';
 import { RepoStatus } from '../typing.ts';
 
 export async function GetOctokit(user: string) {
@@ -28,10 +28,10 @@ export async function GetLoginRequestResponse(
 	};
 }
 
-export function GetLanguageWithIcon(language: string | null) {
-	if (!language) return null;
+export function GetLanguageWithIcon(language: string | null, locale: Locale) {
+	language ||= Translate(locale, 'github.OtherLanguage');
 
-	return `${LANGUAGE_EMOJI_MAP[language] ?? ''} ${language}`;
+	return `${LANGUAGE_EMOJI_MAP[language] ?? QUESTION_EMOJI_STRING} ${language}`;
 }
 
 export function GetStatusWithIcon(
