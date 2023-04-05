@@ -139,9 +139,9 @@
 			"archived": "Archived",
 			"name": "Status"
 		},
-		"star": "",
-		"branch": "",
-		"fork": "",
-		"watcher": ""
+		"star": "Stars",
+		"branch": "Branches",
+		"fork": "Forks",
+		"watcher": "Watchers"
 	}
 }
