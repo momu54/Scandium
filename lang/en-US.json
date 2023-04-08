@@ -142,6 +142,7 @@
 		"star": "Stars",
 		"branch": "Branches",
 		"fork": "Forks",
-		"watcher": "Watchers"
+		"watcher": "",
+		"commit": ""
 	}
 }
