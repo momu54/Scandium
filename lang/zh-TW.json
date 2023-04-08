@@ -142,6 +142,7 @@
 		"star": "星標",
 		"branch": "分支",
 		"fork": "分叉",
-		"watcher": "監視者"
+		"watcher": "關注人數",
+		"commit": "提交"
 	}
 }
