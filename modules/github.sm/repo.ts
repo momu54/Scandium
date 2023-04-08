@@ -33,8 +33,9 @@ CreateSubCommandHandler(
 		subcommandgroup: 'repo',
 		subcommand: 'list',
 	},
-	async (interaction) => {
+	async (interaction, defer) => {
 		const octokit = await GetOctokit(interaction.user.id);
+		await defer(false);
 
 		if (!octokit) {
 			await interaction.reply(await GetLoginRequestResponse(interaction));
@@ -46,10 +47,9 @@ CreateSubCommandHandler(
 			page: 1,
 		});
 
-		await interaction.reply({
-			...(await GetRepoListResponse(interaction, repos.data, 'list', '1')),
-			ephemeral: true,
-		});
+		await interaction.editReply(
+			await GetRepoListResponse(interaction, repos.data, 'list', '1')
+		);
 	}
 );
 
@@ -60,7 +60,7 @@ CreateSubCommandHandler(
 		subcommand: 'search',
 	},
 	async (interaction, defer) => {
-		await defer(true);
+		await defer(false);
 		const octokit = await GetOctokit(interaction.user.id);
 		const query = interaction.options.getString('query', true);
 
@@ -74,10 +74,15 @@ CreateSubCommandHandler(
 			page: 1,
 			q: query,
 		});
-
-		await interaction.editReply(
-			await GetRepoListResponse(interaction, repos.data.items, 'search', '1', query)
+		const res = await GetRepoListResponse(
+			interaction,
+			repos.data.items,
+			'search',
+			'1',
+			query
 		);
+
+		await interaction.editReply(res);
 	}
 );
 
@@ -246,12 +251,24 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			repo: name,
 		});
 
-		const { data: branches } = await octokit.repos.listBranches({
-			owner,
-			repo: name,
-		});
+		const { data: branches } = await octokit.repos
+			.listBranches({
+				owner,
+				repo: name,
+				per_page: 4,
+			})
+			.catch(() => ({ data: null }));
 
-		await interaction.editReply({
+		const { data: commits } = await octokit.repos
+			.listCommits({
+				per_page: 5,
+				owner,
+				repo: name,
+			})
+			.catch(() => ({ data: null }));
+		console.log(commits);
+
+		const response: BaseMessageOptions = {
 			embeds: [
 				{
 					title: `${repo.owner.login}/${repo.name}`,
@@ -295,18 +312,6 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 							value: repo.watchers_count.toString(),
 							inline: true,
 						},
-						{
-							name: Translate(interaction.locale, 'github.branch'),
-							value: branches
-								.map(
-									(branch) =>
-										`${BRANCH_EMOJI_STRING} ${inlineCode(
-											branch.commit.sha.slice(0, 7)
-										)} ${branch.name}`
-								)
-								.join('\n'),
-							inline: true,
-						},
 					],
 					image: {
 						url: `https://opengraph.githubassets.com/eddbb7c789a899c80220d7b2e52832007cfd81362fee54746836c1ceb1b1014e/${repo.owner.login}/${repo.name}`,
@@ -319,6 +324,43 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 				},
 			],
 			components: [],
-		});
+		};
+
+		if (branches) {
+			(response.embeds?.[0] as APIEmbed).fields?.push({
+				name: Translate(interaction.locale, 'github.branch'),
+				value: branches
+					.map(
+						(branch) =>
+							`${BRANCH_EMOJI_STRING} ${inlineCode(
+								branch.commit.sha.slice(0, 7)
+							)} ${branch.name}`
+					)
+					.join('\n'),
+			});
+		}
+		if (commits) {
+			(response.embeds?.[0] as APIEmbed).fields?.push({
+				name: Translate(interaction.locale, 'github.commit'),
+				value: commits
+					.map(
+						(commit) =>
+							`${inlineCode(commit.sha.slice(0, 7))} ${
+								commit.commit.message.split('\n')[0]
+							}`
+					)
+					.join('\n'),
+			});
+		}
+
+		if (repo.private) {
+			await interaction.deleteReply();
+			await interaction.followUp({
+				...response,
+				ephemeral: true,
+			});
+		} else {
+			await interaction.editReply(response);
+		}
 	}
 );
