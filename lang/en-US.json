@@ -143,8 +143,8 @@
 		"star": "Stars",
 		"branch": "Branches",
 		"fork": "Forks",
-		"watcher": "",
-		"commit": "",
+		"watcher": "Watchers",
+		"commit": "Commits",
 		"subcmds": {
 			"repo": "repository",
 			"repo_list": "List your repositories",
