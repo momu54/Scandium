@@ -17,6 +17,7 @@ import {
 } from './emoji.ts';
 import { RepoStatus } from '../typing.ts';
 import { Endpoints } from '@octokit/types';
+import { InlineLink } from './text.ts';
 
 export async function GetOctokit(user: string) {
 	const token = await GetGithubToken(user);
@@ -121,7 +122,7 @@ export async function GetRepoEmbed(
 			},
 		],
 		image: {
-			url: `https://opengraph.githubassets.com/eddbb7c789a899c80220d7b2e52832007cfd81362fee54746836c1ceb1b1014e/${repo.owner.login}/${repo.name}`,
+			url: `https://opengraph.githubassets.com/eddbb7c789a899c80220d7b2e52832007cfd81362fee54746836c1ceb1b1014e/${repo.full_name}`,
 		},
 		author: {
 			name: repo.owner.login,
@@ -136,8 +137,9 @@ export async function GetRepoEmbed(
 			value: branches
 				.map(
 					(branch) =>
-						`${BRANCH_EMOJI_STRING} ${inlineCode(
-							branch.commit.sha.slice(0, 7)
+						`${BRANCH_EMOJI_STRING} ${InlineLink(
+							inlineCode(branch.commit.sha.slice(0, 7)),
+							`https://github.com/${repo.full_name}/commit/${branch.commit.sha}`
 						)} ${branch.name}`
 				)
 				.join('\n'),
@@ -149,9 +151,10 @@ export async function GetRepoEmbed(
 			value: commits
 				.map(
 					(commit) =>
-						`${inlineCode(commit.sha.slice(0, 7))} ${
-							commit.commit.message.split('\n')[0]
-						}`
+						`${InlineLink(
+							inlineCode(commit.sha.slice(0, 7)),
+							commit.html_url
+						)} ${commit.commit.message.split('\n')[0]}`
 				)
 				.join('\n'),
 		});
