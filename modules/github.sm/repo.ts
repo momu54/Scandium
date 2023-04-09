@@ -9,22 +9,17 @@ import {
 	ComponentType,
 	Interaction,
 	StringSelectMenuInteraction,
-	inlineCode,
 } from 'discord.js';
 import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
 import { GetColor } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
-import {
-	GetLanguageWithIcon,
-	GetLoginRequestResponse,
-	GetOctokit,
-	GetStatusWithIcon,
-} from '../../utils/github.ts';
+import { GetLoginRequestResponse, GetOctokit, GetRepoEmbed } from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
 import {
 	ARROW_LEFT_EMOJI,
 	ARROW_RIGHT_EMOJI,
-	BRANCH_EMOJI_STRING,
+	STAR_EMOJI,
+	STAR_EMOJI_FILLED,
 } from '../../utils/emoji.ts';
 
 CreateSubCommandHandler(
@@ -49,6 +44,32 @@ CreateSubCommandHandler(
 
 		await interaction.editReply(
 			await GetRepoListResponse(interaction, repos.data, 'list', '1')
+		);
+	}
+);
+
+CreateSubCommandHandler(
+	{
+		module: 'github',
+		subcommandgroup: 'repo',
+		subcommand: 'starred',
+	},
+	async (interaction, defer) => {
+		const octokit = await GetOctokit(interaction.user.id);
+		await defer(false);
+
+		if (!octokit) {
+			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
+		}
+
+		const repos = await octokit.activity.listReposStarredByAuthenticatedUser({
+			per_page: 10,
+			page: 1,
+		});
+
+		await interaction.editReply(
+			await GetRepoListResponse(interaction, repos.data, 'starred', '1')
 		);
 	}
 );
@@ -120,7 +141,7 @@ async function GetRepoListResponse(
 			owner: repo.owner?.login,
 			name: repo.name,
 		}),
-		description: [repo.language, `⭐ ${repo.stargazers_count}`, repo.license?.name]
+		description: [`⭐ ${repo.stargazers_count}`, repo.language, repo.license?.name]
 			.filter((info) => info)
 			.join(' | '),
 	}));
@@ -133,6 +154,7 @@ async function GetRepoListResponse(
 						module: 'github/repo/goto',
 						method: action,
 						page: `${pagenumber - 1}`,
+						user: interaction.user.id,
 					}),
 					style: ButtonStyle.Primary,
 					type: ComponentType.Button,
@@ -144,6 +166,7 @@ async function GetRepoListResponse(
 						module: 'github/repo/goto',
 						method: action,
 						page: `${pagenumber + 1}`,
+						user: interaction.user.id,
 					}),
 					style: ButtonStyle.Primary,
 					type: ComponentType.Button,
@@ -158,6 +181,7 @@ async function GetRepoListResponse(
 				{
 					custom_id: JSON.stringify({
 						module: 'github/repo/choose',
+						user: interaction.user.id,
 					}),
 					type: ComponentType.StringSelect,
 					options:
@@ -196,9 +220,22 @@ CreateComponentHandler<ButtonInteraction>(
 	async (interaction, defer, componentdata) => {
 		const octokit = await GetOctokit(interaction.user.id);
 		const pagenumber = Number(componentdata.page);
+		const { user } = componentdata;
 
 		if (!octokit) {
 			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
+		}
+		if (user !== interaction.user.id) {
+			const errembed: APIEmbed = {
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'global.InvalidUser'),
+			};
+
+			await interaction.reply({
+				embeds: [errembed],
+				ephemeral: true,
+			});
 			return;
 		}
 
@@ -206,21 +243,38 @@ CreateComponentHandler<ButtonInteraction>(
 
 		await defer();
 
-		const repos =
-			componentdata.method === 'list'
-				? (
-						await octokit.repos.listForAuthenticatedUser({
-							per_page: 10,
-							page: pagenumber,
-						})
-				  ).data
-				: (
-						await octokit.search.repos({
-							per_page: 10,
-							page: pagenumber,
-							q: query!,
-						})
-				  ).data.items;
+		let repos: RepoList = [];
+		switch (componentdata.method) {
+			case 'list':
+				repos = (
+					await octokit.repos.listForAuthenticatedUser({
+						per_page: 10,
+						page: pagenumber,
+					})
+				).data;
+				break;
+
+			case 'search':
+				repos = (
+					await octokit.search.repos({
+						per_page: 10,
+						page: pagenumber,
+						q: query!,
+					})
+				).data.items;
+				break;
+
+			case 'starred':
+				repos = (
+					await octokit.activity.listReposStarredByAuthenticatedUser({
+						per_page: 10,
+						page: pagenumber,
+					})
+				).data;
+				break;
+
+			// No Default
+		}
 
 		await interaction.editReply(
 			await GetRepoListResponse(
@@ -236,12 +290,25 @@ CreateComponentHandler<ButtonInteraction>(
 
 CreateComponentHandler<StringSelectMenuInteraction>(
 	'github/repo/choose',
-	async (interaction, defer) => {
+	async (interaction, defer, componentdata) => {
 		const octokit = await GetOctokit(interaction.user.id);
 		const { owner, name } = JSON.parse(interaction.values[0]);
+		const { user } = componentdata;
 
 		if (!octokit) {
 			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
+		}
+		if (user !== interaction.user.id) {
+			const errembed: APIEmbed = {
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'global.InvalidUser'),
+			};
+
+			await interaction.reply({
+				embeds: [errembed],
+				ephemeral: true,
+			});
 			return;
 		}
 
@@ -251,107 +318,35 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			repo: name,
 		});
 
-		const { data: branches } = await octokit.repos
-			.listBranches({
+		const starred = await octokit.activity
+			.checkRepoIsStarredByAuthenticatedUser({
 				owner,
 				repo: name,
-				per_page: 4,
 			})
-			.catch(() => ({ data: null }));
+			.then(() => true)
+			.catch(() => false);
 
-		const { data: commits } = await octokit.repos
-			.listCommits({
-				per_page: 5,
-				owner,
-				repo: name,
-			})
-			.catch(() => ({ data: null }));
-		console.log(commits);
+		const rows: APIActionRowComponent<APIButtonComponent>[] = [
+			{
+				components: [
+					{
+						type: ComponentType.Button,
+						emoji: starred ? STAR_EMOJI_FILLED : STAR_EMOJI,
+						custom_id: JSON.stringify({
+							module: 'github/repo/star',
+							user: interaction.user.id,
+						}),
+						style: ButtonStyle.Primary,
+					},
+				],
+				type: ComponentType.ActionRow,
+			},
+		];
 
 		const response: BaseMessageOptions = {
-			embeds: [
-				{
-					title: `${repo.owner.login}/${repo.name}`,
-					url: repo.html_url,
-					description:
-						repo.description ||
-						Translate(interaction.locale, 'github.NoDescription'),
-					fields: [
-						{
-							name: Translate(interaction.locale, 'github.language'),
-							value: GetLanguageWithIcon(repo.language, interaction.locale),
-							inline: true,
-						},
-						{
-							name: Translate(interaction.locale, 'github.license'),
-							value:
-								repo.license?.name ||
-								Translate(interaction.locale, 'github.OtherLicense'),
-							inline: true,
-						},
-						{
-							name: Translate(interaction.locale, 'github.status.name'),
-							value: GetStatusWithIcon(interaction.locale, {
-								archived: repo.archived,
-								private: repo.private,
-							}),
-							inline: true,
-						},
-						{
-							name: Translate(interaction.locale, 'github.star'),
-							value: repo.stargazers_count.toString(),
-							inline: true,
-						},
-						{
-							name: Translate(interaction.locale, 'github.fork'),
-							value: repo.forks_count.toString(),
-							inline: true,
-						},
-						{
-							name: Translate(interaction.locale, 'github.watcher'),
-							value: repo.watchers_count.toString(),
-							inline: true,
-						},
-					],
-					image: {
-						url: `https://opengraph.githubassets.com/eddbb7c789a899c80220d7b2e52832007cfd81362fee54746836c1ceb1b1014e/${repo.owner.login}/${repo.name}`,
-					},
-					author: {
-						name: owner,
-						icon_url: repo.owner.avatar_url,
-					},
-					color: await GetColor(interaction.user.id),
-				},
-			],
-			components: [],
+			embeds: [await GetRepoEmbed(octokit, repo, interaction)],
+			components: rows,
 		};
-
-		if (branches) {
-			(response.embeds?.[0] as APIEmbed).fields?.push({
-				name: Translate(interaction.locale, 'github.branch'),
-				value: branches
-					.map(
-						(branch) =>
-							`${BRANCH_EMOJI_STRING} ${inlineCode(
-								branch.commit.sha.slice(0, 7)
-							)} ${branch.name}`
-					)
-					.join('\n'),
-			});
-		}
-		if (commits) {
-			(response.embeds?.[0] as APIEmbed).fields?.push({
-				name: Translate(interaction.locale, 'github.commit'),
-				value: commits
-					.map(
-						(commit) =>
-							`${inlineCode(commit.sha.slice(0, 7))} ${
-								commit.commit.message.split('\n')[0]
-							}`
-					)
-					.join('\n'),
-			});
-		}
 
 		if (repo.private) {
 			await interaction.deleteReply();
@@ -362,5 +357,79 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 		} else {
 			await interaction.editReply(response);
 		}
+	}
+);
+
+CreateComponentHandler<ButtonInteraction>(
+	'github/repo/star',
+	async (interaction, defer, componentdata) => {
+		const octokit = await GetOctokit(interaction.user.id);
+		const [owner, name] = interaction.message.embeds[0].title!.split('/');
+		const { user } = componentdata;
+
+		if (!octokit) {
+			await interaction.reply(await GetLoginRequestResponse(interaction));
+			return;
+		}
+		if (user !== interaction.user.id) {
+			const errembed: APIEmbed = {
+				title: Translate(interaction.locale, 'error.title'),
+				description: Translate(interaction.locale, 'global.InvalidUser'),
+			};
+
+			await interaction.reply({
+				embeds: [errembed],
+				ephemeral: true,
+			});
+			return;
+		}
+
+		await defer();
+
+		const starred = await octokit.activity
+			.checkRepoIsStarredByAuthenticatedUser({
+				owner,
+				repo: name,
+			})
+			.then(() => true)
+			.catch(() => false);
+
+		await octokit.activity[
+			starred ? 'unstarRepoForAuthenticatedUser' : 'starRepoForAuthenticatedUser'
+		]({
+			owner,
+			repo: name,
+		});
+
+		const { data: repo } = await octokit.repos.get({
+			owner,
+			repo: name,
+		});
+
+		const embed = await GetRepoEmbed(octokit, repo, interaction);
+
+		await interaction.editReply({
+			embeds: [embed],
+			components: [
+				{
+					components: [
+						...(
+							interaction.message.components[0]
+								.components as APIButtonComponent[]
+						).slice(1),
+						{
+							type: ComponentType.Button,
+							emoji: starred ? STAR_EMOJI : STAR_EMOJI_FILLED,
+							custom_id: JSON.stringify({
+								module: 'github/repo/star',
+								user: interaction.user.id,
+							}),
+							style: ButtonStyle.Primary,
+						},
+					],
+					type: ComponentType.ActionRow,
+				},
+			],
+		});
 	}
 );

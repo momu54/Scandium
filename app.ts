@@ -21,6 +21,10 @@ import {
 	ModalSubmitInteraction,
 	ChatInputCommandInteraction,
 	ApplicationCommandType,
+	APIButtonComponent,
+	ComponentType,
+	APIActionRowComponent,
+	APIButtonComponentWithCustomId,
 } from 'discord.js';
 import {
 	AllCommandInteraction,
@@ -32,7 +36,7 @@ import {
 } from './typing.ts';
 import { CommandLocalizations, Translate } from './utils/translate.ts';
 import { readdir } from 'fs/promises';
-import { LOADING_EMOJI_STRING } from './utils/emoji.ts';
+import { LOADING_EMOJI, LOADING_EMOJI_STRING } from './utils/emoji.ts';
 import { ErrorHandler } from './utils/error.ts';
 import { init } from '@sentry/node';
 
@@ -136,7 +140,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				await componenthandlers[data.module].callback?.(
 					interaction,
 					async () => {
-						await interaction.update({ embeds: [embed], components: [] });
+						if (interaction.componentType === ComponentType.Button) {
+							const row: APIActionRowComponent<APIButtonComponent> = {
+								components:
+									interaction.message.components[0].components.map(
+										(component) => ({
+											...(component.data as APIButtonComponent),
+										})
+									),
+								type: ComponentType.ActionRow,
+							};
+							const index = row.components.findIndex(
+								(button) =>
+									(button as APIButtonComponentWithCustomId)
+										.custom_id === interaction.customId
+							);
+							const button = row.components[index];
+							button.disabled = true;
+							delete button.label;
+							button.emoji = LOADING_EMOJI;
+
+							await interaction.update({ components: [row] });
+						} else {
+							await interaction.update({ embeds: [embed], components: [] });
+						}
 					},
 					data
 				);

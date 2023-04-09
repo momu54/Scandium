@@ -6,6 +6,7 @@
 
 import { CreateCommand } from '../app.ts';
 import { ApplicationCommandOptionType, ChatInputCommandInteraction } from 'discord.js';
+import { OptionLocalizations, SubCommandLocalizations } from '../utils/translate.ts';
 
 CreateCommand<ChatInputCommandInteraction>({
 	name: 'github',
@@ -15,6 +16,7 @@ CreateCommand<ChatInputCommandInteraction>({
 			name: 'auth',
 			description: 'Login to github',
 			type: ApplicationCommandOptionType.Subcommand,
+			nameLocalizations: SubCommandLocalizations('github', 'auth'),
 		},
 		{
 			name: 'repo',
@@ -23,8 +25,9 @@ CreateCommand<ChatInputCommandInteraction>({
 			options: [
 				{
 					name: 'list',
-					description: 'List repositories',
+					description: 'List your repositories',
 					type: ApplicationCommandOptionType.Subcommand,
+					nameLocalizations: SubCommandLocalizations('github', 'repo_list'),
 				},
 				{
 					name: 'search',
@@ -36,10 +39,19 @@ CreateCommand<ChatInputCommandInteraction>({
 							description: 'Search query',
 							type: ApplicationCommandOptionType.String,
 							required: true,
+							nameLocalizations: OptionLocalizations('github', 'query'),
 						},
 					],
+					nameLocalizations: SubCommandLocalizations('github', 'repo_search'),
+				},
+				{
+					name: 'starred',
+					description: 'List starred repositories',
+					type: ApplicationCommandOptionType.Subcommand,
+					nameLocalizations: SubCommandLocalizations('github', 'repo_starred'),
 				},
 			],
+			nameLocalizations: SubCommandLocalizations('github', 'repo'),
 		},
 	],
 });

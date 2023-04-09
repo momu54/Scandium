@@ -111,3 +111,13 @@ export const BRANCH_EMOJI: APIMessageComponentEmoji = {
 export const BRANCH_EMOJI_STRING = ConvertEmojiToString(BRANCH_EMOJI);
 
 export const QUESTION_EMOJI_STRING = ConvertEmojiToString(QUESTION_EMOJI);
+
+export const STAR_EMOJI: APIMessageComponentEmoji = {
+	id: '1094401156375130134',
+	name: 'fluent_star',
+};
+
+export const STAR_EMOJI_FILLED: APIMessageComponentEmoji = {
+	id: '1094401074934337586',
+	name: 'fluent_star_filled',
+};
