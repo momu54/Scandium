@@ -95,7 +95,8 @@
 		},
 		"warning": "警告",
 		"PremissionDenied": "你沒有權限執行這個指令",
-		"page": "頁數: {page}"
+		"page": "頁數: {page}",
+		"InvalidUser": "你覺得這是你的嗎？"
 	},
 	"warning": {
 		"title": "警告"
@@ -143,6 +144,16 @@
 		"branch": "分支",
 		"fork": "分叉",
 		"watcher": "關注人數",
-		"commit": "提交"
+		"commit": "提交",
+		"subcmds": {
+			"repo": "儲存庫",
+			"repo_list": "列出你的儲存庫",
+			"repo_search": "搜尋儲存庫",
+			"auth": "登入",
+			"repo_starred": "列出你有加星標的儲存庫"
+		},
+		"options": {
+			"query": "關鍵字"
+		}
 	}
 }
