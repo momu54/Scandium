@@ -95,7 +95,8 @@
 		},
 		"warning": "",
 		"PremissionDenied": "",
-		"page": ""
+		"page": "",
+		"InvalidUser": ""
 	},
 	"warning": {
 		"title": ""
@@ -143,6 +144,16 @@
 		"branch": "",
 		"fork": "",
 		"watcher": "",
-		"commit": ""
+		"commit": "",
+		"subcmds": {
+			"repo": "",
+			"repo_list": "",
+			"repo_search": "",
+			"auth": "",
+			"repo_starred": ""
+		},
+		"options": {
+			"query": ""
+		}
 	}
 }
