@@ -96,7 +96,7 @@
 		"warning": "Warning",
 		"PremissionDenied": "You're not allowed to execute this command!",
 		"page": "Page: {page}",
-		"InvalidUser": ""
+		"InvalidUser": "Did you think that's yours?"
 	},
 	"warning": {
 		"title": "Warning"
@@ -146,14 +146,14 @@
 		"watcher": "",
 		"commit": "",
 		"subcmds": {
-			"repo": "",
-			"repo_list": "",
-			"repo_search": "",
-			"auth": "",
-			"repo_starred": ""
+			"repo": "repository",
+			"repo_list": "List your repositories",
+			"repo_search": "Search repositories",
+			"auth": "auth",
+			"repo_starred": "List your repositories starred by you"
 		},
 		"options": {
-			"query": ""
+			"query": "query"
 		}
 	}
 }
