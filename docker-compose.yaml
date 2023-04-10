@@ -36,5 +36,7 @@ networks:
         external: true
 
 volumes:
-    myapp:
+    ScandiumDatabase:
+        external: true
+    ScandiumLoginRes:
         external: true
