@@ -1,30 +1,32 @@
 version: '3'
 
+# This file is for the server I used to host the bot, you don't need to use this file to host the bot.
+
 services:
-  main:
-    container_name: scandium-main
-    build: 
-      dockerfile: ./Dockerfile
-    environment:
-      token: "<Bot token>"
-      supportguild: "<supportguild id>"
-      clientid: "<Github client id>"
-      clientsecret: "<Github client secret>"
-      callbackurl: "<Github auth callback url>"
-      callbackport: "<Github auth callback port>"
-      intaiwan: "<Is the bot hosted in Taiwan (1/0)>"
-      sentrydsn: "<Sentry DSN>"
-      environment: "<development or production>"
-    label:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      - traefik.http.routers.scandium.entrypoints=websecure
-      - traefik.http.routers.scandium.rule=Host(`"<Github auth callback url>`)
-      - traefik.http.routers.scandium.tls=true
-      - traefik.http.services.scandium.loadbalancer.server.port=<Github auth callback port>
-    networks:
-      proxy:
-      
+    main:
+        container_name: scandium-main
+        build:
+            dockerfile: ./Dockerfile
+        environment:
+            token: '<Bot token>'
+            supportguild: '<supportguild id>'
+            clientid: '<Github client id>'
+            clientsecret: '<Github client secret>'
+            callbackurl: '<Github auth callback url>'
+            callbackport: '<Github auth callback port>'
+            intaiwan: '<Is the bot hosted in Taiwan (1/0)>'
+            sentrydsn: '<Sentry DSN>'
+            environment: '<development or production>'
+        label:
+            - traefik.enable=true
+            - traefik.docker.network=proxy
+            - traefik.http.routers.scandium.entrypoints=websecure
+            - traefik.http.routers.scandium.rule=Host(`"<Github auth callback url>`)
+            - traefik.http.routers.scandium.tls=true
+            - traefik.http.services.scandium.loadbalancer.server.port=<Github auth callback port>
+        networks:
+            proxy:
+
 networks:
-  proxy:
-    external: true
+    proxy:
+        external: true
