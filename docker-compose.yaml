@@ -28,8 +28,8 @@ services:
         networks:
             proxy:
         volumes:
-            - ScandiumDatabase: /usr/src/app/database:rw
-            - ScandiumLoginRes: /usr/src/app/login:rw
+            - ScandiumDatabase:/usr/src/app/database:rw
+            - ScandiumLoginRes:/usr/src/app/login:rw
 
 networks:
     proxy:
