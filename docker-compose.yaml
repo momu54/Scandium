@@ -5,6 +5,7 @@ version: '3'
 services:
     main:
         container_name: scandium-main
+        image: momu54/scandium:latest
         build:
             dockerfile: ./Dockerfile
         environment:
