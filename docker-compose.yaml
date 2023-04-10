@@ -27,7 +27,14 @@ services:
             - traefik.http.services.scandium.loadbalancer.server.port=<Github auth callback port>
         networks:
             proxy:
+        volumes:
+            - ScandiumDatabase: /usr/src/app/database:rw
+            - ScandiumLoginRes: /usr/src/app/login:rw
 
 networks:
     proxy:
+        external: true
+
+volumes:
+    myapp:
         external: true
