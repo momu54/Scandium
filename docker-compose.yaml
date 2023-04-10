@@ -18,7 +18,7 @@ services:
             intaiwan: '<Is the bot hosted in Taiwan (1/0)>'
             sentrydsn: '<Sentry DSN>'
             environment: '<development or production>'
-        label:
+        labels:
             - traefik.enable=true
             - traefik.docker.network=proxy
             - traefik.http.routers.scandium.entrypoints=websecure
