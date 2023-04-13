@@ -147,10 +147,10 @@
 		"commit": "Commits",
 		"subcmds": {
 			"repo": "repository",
-			"repo_list": "List your repositories",
-			"repo_search": "Search repositories",
+			"repo_list": "list",
+			"repo_search": "search",
 			"auth": "auth",
-			"repo_starred": "List your repositories starred by you"
+			"repo_starred": "starred"
 		},
 		"options": {
 			"query": "query"
