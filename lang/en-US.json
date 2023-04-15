@@ -19,7 +19,7 @@
 		"title": "Settings",
 		"desc": "View and configure user settings.",
 		"menu": "Choose a configuration to modify...",
-		"footer": "💡 Hint: Inputs that do not fit the format will be rejected"
+		"footer": ""
 	},
 	"Screenshot": {
 		"title": "Take a screenshot",
@@ -154,6 +154,10 @@
 		},
 		"options": {
 			"query": "query"
+		},
+		"AuthMessage": {
+			"success": "Logged in, you can close this tab and back to Discord.",
+			"failed": "Login failed, please retry."
 		}
 	}
 }
