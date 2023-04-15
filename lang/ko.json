@@ -154,6 +154,10 @@
 		},
 		"options": {
 			"query": ""
+		},
+		"AuthMessage": {
+			"success": "",
+			"failed": ""
 		}
 	}
 }
