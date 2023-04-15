@@ -9,6 +9,7 @@ import {
 	Interaction,
 	BaseMessageOptions,
 	ChatInputCommandInteraction,
+ Locale
 } from 'discord.js';
 import { AuthQueue, DeferReplyMethod } from '../../typing.ts';
 import {
@@ -147,10 +148,10 @@ export async function LogoutHandler(
 	await interaction.update(response);
 }
 
-function WaitAuth(uuid: string): Promise<string | null> {
+function WaitAuth(uuid: string, locale: Locale): Promise<string | null> {
 	// skipcq: JS-0031
 	return new Promise(async (resolve) => {
-		authqueue[uuid] = resolve;
+		authqueue[uuid] = { resolve, locale };
 		await setTimeout(36000000);
 		resolve(null);
 		delete authqueue[uuid];
