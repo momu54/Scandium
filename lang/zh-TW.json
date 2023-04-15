@@ -154,6 +154,10 @@
 		},
 		"options": {
 			"query": "關鍵字"
-		}
+		},
+    "AuthMessage": {
+        "success": "已登入, 你可以放心的關閉這個分頁並返回 Discord",
+        "failed": "登入失敗, 請重試"
+    }
 	}
 }
