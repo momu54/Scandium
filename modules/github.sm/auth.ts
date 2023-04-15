@@ -50,7 +50,7 @@ CreateSubCommandHandler(
 		module: 'github',
 		subcommand: 'auth',
 	},
-	async (interaction: ChatInputCommandInteraction, defer: DeferReplyMethod) => {
+	async (interaction, defer) => {
 		const token = await GetGithubToken(interaction.user.id);
 		const response = await GetAuthPlayLoad(interaction, defer, token);
 		if (token) {
@@ -104,7 +104,7 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 	);
 
 	await interaction.update({ embeds: [embed], components: [row] });
-	const code = await WaitAuth(uuid);
+	const code = await WaitAuth(uuid, interaction.locale);
 
 	if (code) {
 		const { authentication } = await oauthapp.createToken({
