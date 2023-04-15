@@ -75,9 +75,9 @@ app.get<{
 		return 'Bad Request';
 	}
 	reply.header('Content-Type', 'text/html');
-	const resolve = authqueue[state as string];
+	const { resolve, locale } = authqueue[state as string];
 	resolve?.(code as string);
-	return html.replace('{status}', `${resolve ? 'Success' : 'Timeout'}`);
+	return html.replace('{status}', `${resolve ? 'Success' : 'Timeout'}`).replace('{message}', Translate(locale, `github.AuthMessage.${resolve ? 'success' : 'failed'}`);
 });
 
 await app.listen({
