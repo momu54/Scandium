@@ -14,6 +14,7 @@ import {
 	MessageContextMenuCommandInteraction,
 	ModalSubmitInteraction,
 	UserContextMenuCommandInteraction,
+    Locale
 } from 'discord.js';
 
 export interface InteractionCallBackDatas<
@@ -114,7 +115,10 @@ export function IsTodoAnime(
 }
 
 export interface AuthQueue {
-	[user: string]: ((code: string) => void) | undefined;
+	[uuid: string]: {
+        resolve: (code: string) => void;
+        locale: Locale;
+    } | undefined;
 }
 
 export type RunCodeFunction = (msg: Message<boolean>) => unknown;
