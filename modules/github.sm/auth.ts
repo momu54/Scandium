@@ -8,8 +8,7 @@ import {
 	ButtonStyle,
 	Interaction,
 	BaseMessageOptions,
-	ChatInputCommandInteraction,
- Locale
+	Locale,
 } from 'discord.js';
 import { AuthQueue, DeferReplyMethod } from '../../typing.ts';
 import {
@@ -78,7 +77,12 @@ app.get<{
 	reply.header('Content-Type', 'text/html');
 	const { resolve, locale } = authqueue[state as string];
 	resolve?.(code as string);
-	return html.replace('{status}', `${resolve ? 'Success' : 'Timeout'}`).replace('{message}', Translate(locale, `github.AuthMessage.${resolve ? 'success' : 'failed'}`));
+	return html
+		.replace('{status}', `${resolve ? 'Success' : 'Timeout'}`)
+		.replace(
+			'{message}',
+			Translate(locale, `github.AuthMessage.${resolve ? 'success' : 'failed'}`)
+		);
 });
 
 await app.listen({
