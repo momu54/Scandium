@@ -29,11 +29,11 @@ CreateSubCommandHandler(
 		subcommand: 'list',
 	},
 	async (interaction, defer) => {
-		const octokit = await GetOctokit(interaction.user.id);
 		await defer(false);
+		const octokit = await GetOctokit(interaction.user.id);
 
 		if (!octokit) {
-			await interaction.reply(await GetLoginRequestResponse(interaction));
+			await interaction.editReply(await GetLoginRequestResponse(interaction));
 			return;
 		}
 
@@ -55,11 +55,11 @@ CreateSubCommandHandler(
 		subcommand: 'starred',
 	},
 	async (interaction, defer) => {
-		const octokit = await GetOctokit(interaction.user.id);
 		await defer(false);
+		const octokit = await GetOctokit(interaction.user.id);
 
 		if (!octokit) {
-			await interaction.reply(await GetLoginRequestResponse(interaction));
+			await interaction.editReply(await GetLoginRequestResponse(interaction));
 			return;
 		}
 
@@ -86,7 +86,7 @@ CreateSubCommandHandler(
 		const query = interaction.options.getString('query', true);
 
 		if (!octokit) {
-			await interaction.reply(await GetLoginRequestResponse(interaction));
+			await interaction.editReply(await GetLoginRequestResponse(interaction));
 			return;
 		}
 
