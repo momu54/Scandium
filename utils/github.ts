@@ -5,7 +5,7 @@
  */
 
 import { Octokit } from '@octokit/rest';
-import { GetColor, GetGithubToken } from './database.ts';
+import { database } from './database.ts';
 import {
 	APIEmbed,
 	Interaction,
@@ -26,7 +26,7 @@ import { Endpoints } from '@octokit/types';
 import { InlineLink } from './text.ts';
 
 export async function GetOctokit(user: string) {
-	const token = await GetGithubToken(user);
+	const token = await database.GetGithubToken(user);
 	if (!token) return null;
 	return new Octokit({
 		auth: token,
@@ -41,7 +41,7 @@ export async function GetLoginRequestResponse(
 			{
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'github.LoginRequest'),
-				color: await GetColor(interaction.user.id),
+				color: await database.GetColor(interaction.user.id),
 			},
 		],
 		ephemeral: true,
@@ -134,7 +134,7 @@ export async function GetRepoEmbed(
 			name: repo.owner.login,
 			icon_url: repo.owner.avatar_url,
 		},
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 	};
 
 	if (branches) {

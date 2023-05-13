@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import sharp from 'sharp';
 import { CommandLocalizations, Translate } from '../utils/translate.ts';
-import { GetColor, GetConfig } from '../utils/database.ts';
+import { database } from '../utils/database.ts';
 
 CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -27,7 +27,11 @@ CreateCommand<MessageContextMenuCommandInteraction>(
 		const msg = interaction.targetMessage;
 		const zip = new JSZip();
 		const attachments = Array.from(msg.attachments.values());
-		const convert = await GetConfig(interaction.user.id, 'SaveAllImage', 'convert');
+		const convert = await database.GetConfig(
+			interaction.user.id,
+			'SaveAllImage',
+			'convert'
+		);
 		for (let index = 0; index < attachments.length; index++) {
 			const Attachment = attachments[index];
 			if (!Attachment.contentType?.startsWith('image')) continue;
@@ -58,7 +62,7 @@ CreateCommand<MessageContextMenuCommandInteraction>(
 			const errembed: APIEmbed = {
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'SaveAllImage.error.toolarge'),
-				color: await GetColor(interaction.user.id),
+				color: await database.GetColor(interaction.user.id),
 			};
 			await interaction.editReply({ embeds: [errembed] });
 			return;
@@ -80,7 +84,7 @@ CreateCommand<MessageContextMenuCommandInteraction>(
 			footer: {
 				text: Translate(interaction.locale, 'SaveAllImage.footer'),
 			},
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ embeds: [embed], files: [zipAttachment] });
 	}

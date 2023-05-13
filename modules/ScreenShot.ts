@@ -15,7 +15,7 @@ import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { ExportReturnType } from 'discord-html-transcripts';
 import { GetMessageHtml } from '../utils/getmessagehtml.ts';
 import { launch } from 'puppeteer';
-import { GetColor, GetConfig } from '../utils/database.ts';
+import { database } from '../utils/database.ts';
 
 CreateCommand<MessageContextMenuCommandInteraction>(
 	{
@@ -45,7 +45,7 @@ CreateCommand<MessageContextMenuCommandInteraction>(
 		await page.waitForSelector('.discord-message-inner');
 		await page.waitForNetworkIdle();
 		const messageinhtml = await page.$('.discord-message-inner');
-		const format = await GetConfig<string>(
+		const format = await database.GetConfig<string>(
 			interaction.user.id,
 			'Screenshot',
 			'format'
@@ -71,7 +71,7 @@ CreateCommand<MessageContextMenuCommandInteraction>(
 			footer: {
 				text: Translate(interaction.locale, 'Screenshot.footer'),
 			},
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ files: [attachment], embeds: [embed] });
 	}

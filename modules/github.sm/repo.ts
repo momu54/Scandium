@@ -17,7 +17,7 @@ import {
 	StringSelectMenuInteraction,
 } from 'discord.js';
 import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
-import { GetColor } from '../../utils/database.ts';
+import { database } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
 import { GetLoginRequestResponse, GetOctokit, GetRepoEmbed } from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
@@ -135,7 +135,7 @@ async function GetRepoListResponse(
 		footer: {
 			text: Translate(interaction.locale, 'global.page', { page }),
 		},
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 		author: {
 			name: query,
 		},

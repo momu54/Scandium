@@ -16,7 +16,7 @@ import {
 } from 'discord.js';
 import { client } from '../../app.ts';
 import { StringObject } from '../../typing.ts';
-import { CheckUser, AddConfigUser, GetColor } from '../../utils/database.ts';
+import { database } from '../../utils/database.ts';
 import { LOADING_EMOJI_STRING, LOADING_EMOJI } from '../../utils/emoji.ts';
 import { ErrorHandler } from '../../utils/error.ts';
 import {
@@ -30,14 +30,15 @@ import { Logger } from '../../utils/logger.ts';
 const logger = new Logger('events:InteractionCreate');
 
 client.on(Events.InteractionCreate, async (interaction) => {
-	if (!(await CheckUser(interaction.user.id))) await AddConfigUser(interaction.user.id);
+	if (!(await database.CheckUser(interaction.user.id)))
+		await database.AddConfigUser(interaction.user.id);
 	const embed: APIEmbed = {
 		title: `${LOADING_EMOJI_STRING} ${Translate(
 			interaction.locale,
 			'processing.title'
 		)}`,
 		description: Translate(interaction.locale, 'processing.desc'),
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 	};
 	let data: StringObject<string>;
 
@@ -56,7 +57,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 							interaction.locale,
 							'global.PremissionDenied'
 						),
-						color: await GetColor(interaction.user.id),
+						color: await database.GetColor(interaction.user.id),
 					};
 					await interaction.reply({ embeds: [errembed], ephemeral: true });
 					return;
