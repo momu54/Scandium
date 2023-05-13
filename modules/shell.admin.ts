@@ -1,10 +1,16 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/scandium/}
+ */
+
 import {
 	APIEmbed,
 	ApplicationCommandOptionType,
 	ChatInputCommandInteraction,
 	codeBlock,
 } from 'discord.js';
-import { CreateCommand } from '../app.ts';
+import { CreateCommand } from '../utils/register.ts';
 import { AsyncExec } from '../utils/exec.ts';
 
 CreateCommand<ChatInputCommandInteraction>(

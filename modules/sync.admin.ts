@@ -5,7 +5,8 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand, client, commandhandlers } from '../app.ts';
+import { CreateCommand, commandhandlers } from '../utils/register.ts';
+import { client } from '../app.ts';
 
 CreateCommand<ChatInputCommandInteraction>(
 	{

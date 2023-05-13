@@ -10,7 +10,7 @@ import {
 	AttachmentBuilder,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { CreateCommand } from '../app.ts';
+import { CreateCommand } from '../utils/register.ts';
 import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { ExportReturnType } from 'discord-html-transcripts';
 import { GetMessageHtml } from '../utils/getmessagehtml.ts';

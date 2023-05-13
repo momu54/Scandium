@@ -28,7 +28,11 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.ts';
+import {
+	CreateCommand,
+	CreateComponentHandler,
+	CreateModalHandler,
+} from '../utils/register.ts';
 import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.ts';
 import {
 	OptionLocalizations,

@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
-import { CreateCommand } from '../app.ts';
+import { CreateCommand } from '../utils/register.ts';
 import { ApplicationCommandOptionType, ChatInputCommandInteraction } from 'discord.js';
 import { OptionLocalizations, SubCommandLocalizations } from '../utils/translate.ts';
 

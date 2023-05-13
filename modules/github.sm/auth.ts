@@ -1,3 +1,9 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/scandium/}
+ */
+
 import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import { randomUUID } from 'crypto';
 import {
@@ -23,19 +29,12 @@ import {
 	PERSON_EMOJI,
 } from '../../utils/emoji.ts';
 import { Translate } from '../../utils/translate.ts';
-import fastify from 'fastify';
 import { readFile } from 'fs/promises';
 import { OAuthApp } from '@octokit/oauth-app';
 import { setTimeout } from 'timers/promises';
-import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
+import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
+import { Listen, app } from '../server.ts';
 
-const app = fastify({
-	http2: true,
-	https: {
-		key: await readFile('./login/key.pem'),
-		cert: await readFile('./login/cert.pem'),
-	},
-});
 const html = await readFile('./login/index.html', 'utf8');
 const authqueue: AuthQueue = {};
 const oauthapp = new OAuthApp({
@@ -85,11 +84,7 @@ app.get<{
 		);
 });
 
-await app.listen({
-	port: Number(process.env.callbackport),
-	host: '::',
-});
-console.log('[github/login] Server started');
+await Listen();
 
 export async function LoginHandler(interaction: ButtonInteraction) {
 	const embed: APIEmbed = {

@@ -16,7 +16,11 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import { CreateCommand, CreateComponentHandler, CreateModalHandler } from '../app.ts';
+import {
+	CreateCommand,
+	CreateComponentHandler,
+	CreateModalHandler,
+} from '../utils/register.ts';
 import { GetColor, GetConfigs, SetConfig, ALLOWED_TYPES } from '../utils/database.ts';
 import { Translate } from '../utils/translate.ts';
 import { StringObject } from '../typing.ts';

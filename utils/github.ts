@@ -1,3 +1,9 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/scandium/}
+ */
+
 import { Octokit } from '@octokit/rest';
 import { GetColor, GetGithubToken } from './database.ts';
 import {

@@ -1,3 +1,9 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/scandium/}
+ */
+
 import {
 	APIEmbed,
 	ActionRowBuilder,
@@ -11,16 +17,18 @@ import { Translate } from './translate.ts';
 import { GetColor } from './database.ts';
 import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.ts';
 import { captureException } from '@sentry/node';
+import { Logger } from './logger.ts';
+const logger = new Logger('error');
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
-	console.error(error);
+	logger.error(error);
 	const id = captureException(error);
 	if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return;
 	const stacklines = error.stack?.split('\n')!;
 	let length = error.stack!.length;
 	const stacklinesinmessage = error.stack!.split('\n');
 	while (length > 1024) {
-		length -= stacklinesinmessage.pop().length + 1;
+		length -= stacklinesinmessage.pop()?.length || -1 + 1;
 	}
 	const embed: APIEmbed = {
 		title: `${ERROR_EMOJI_STRING} ${Translate(interaction.locale, 'error.title')}`,

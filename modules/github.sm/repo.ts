@@ -1,3 +1,9 @@
+/**
+ * @author momu54
+ * @license MIT
+ * @see [Github]{@link https://github.com/momu54/scandium/}
+ */
+
 import {
 	APIActionRowComponent,
 	APIButtonComponent,
@@ -10,7 +16,7 @@ import {
 	Interaction,
 	StringSelectMenuInteraction,
 } from 'discord.js';
-import { CreateComponentHandler, CreateSubCommandHandler } from '../../app.ts';
+import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
 import { GetColor } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
 import { GetLoginRequestResponse, GetOctokit, GetRepoEmbed } from '../../utils/github.ts';

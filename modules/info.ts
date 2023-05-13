@@ -5,7 +5,7 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction, codeBlock } from 'discord.js';
-import { CreateCommand } from '../app.ts';
+import { CreateCommand } from '../utils/register.ts';
 import { Translate } from '../utils/translate.ts';
 import { release, version } from 'os';
 import PackageJson from '../package.json' assert { type: 'json' };

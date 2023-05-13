@@ -8,6 +8,8 @@ import { Languages, TranslateVariables } from '../typing.ts';
 import _ from 'lodash';
 import { LocalizationMap, Locale } from 'discord.js';
 import { readdir } from 'fs/promises';
+import { Logger } from './logger.ts';
+const logger = new Logger('translate');
 const languages: Languages = {};
 
 async function LoadLanguages() {
@@ -22,7 +24,7 @@ async function LoadLanguages() {
 				},
 			})
 		).default;
-		console.log(`[main/translate] Success loading lang ./modules/${file}`);
+		logger.info(`Success loading lang ./modules/${file}`);
 	}
 }
 
