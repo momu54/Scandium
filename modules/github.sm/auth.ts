@@ -17,12 +17,7 @@ import {
 	Locale,
 } from 'discord.js';
 import { AuthQueue, DeferReplyMethod } from '../../typing.ts';
-import {
-	GetColor,
-	SetGithubToken,
-	RemoveGithubToken,
-	GetGithubToken,
-} from '../../utils/database.ts';
+import { database } from '../../utils/database.ts';
 import {
 	ADD_PERSON_EMOJI,
 	DELETE_PERSON_EMOJI,
@@ -49,7 +44,7 @@ CreateSubCommandHandler(
 		subcommand: 'auth',
 	},
 	async (interaction, defer) => {
-		const token = await GetGithubToken(interaction.user.id);
+		const token = await database.GetGithubToken(interaction.user.id);
 		const response = await GetAuthPlayLoad(interaction, defer, token);
 		if (token) {
 			await interaction.editReply(response);
@@ -89,7 +84,7 @@ await Listen();
 export async function LoginHandler(interaction: ButtonInteraction) {
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'github.login'),
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 		description: Translate(interaction.locale, 'github.LoggingIn'),
 	};
 	const uuid = randomUUID();
@@ -115,13 +110,13 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 			const errembed: APIEmbed = {
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'github.MissingScope'),
-				color: await GetColor(interaction.user.id),
+				color: await database.GetColor(interaction.user.id),
 			};
 			await interaction.editReply({ embeds: [errembed], components: [] });
 			return;
 		}
 
-		await SetGithubToken(interaction.user.id, authentication.token);
+		await database.SetGithubToken(interaction.user.id, authentication.token);
 		const response = await GetAuthPlayLoad(
 			interaction,
 			() => Promise.resolve(),
@@ -132,7 +127,7 @@ export async function LoginHandler(interaction: ButtonInteraction) {
 		const errembed: APIEmbed = {
 			title: Translate(interaction.locale, 'error.title'),
 			description: Translate(interaction.locale, 'github.timeout'),
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 		};
 		await interaction.editReply({ embeds: [errembed], components: [] });
 	}
@@ -142,7 +137,7 @@ export async function LogoutHandler(
 	interaction: ButtonInteraction,
 	defer: DeferReplyMethod
 ) {
-	await RemoveGithubToken(interaction.user.id);
+	await database.RemoveGithubToken(interaction.user.id);
 	const response = await GetAuthPlayLoad(interaction, defer);
 	await interaction.update(response);
 }
@@ -164,7 +159,7 @@ async function GetAuthPlayLoad(
 ): Promise<BaseMessageOptions> {
 	const embed: APIEmbed = {
 		title: Translate(interaction.locale, 'github.NotLogedIn'),
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 	};
 
 	const row = new ActionRowBuilder<ButtonBuilder>()
@@ -235,7 +230,7 @@ async function GetAuthPlayLoad(
 				}
 			});
 
-			await RemoveGithubToken(interaction.user.id);
+			await database.RemoveGithubToken(interaction.user.id);
 		}
 	}
 

@@ -14,10 +14,10 @@ import {
 	codeBlock,
 } from 'discord.js';
 import { Translate } from './translate.ts';
-import { GetColor } from './database.ts';
 import { ERROR_EMOJI_STRING, QUESTION_EMOJI } from './emoji.ts';
 import { captureException } from '@sentry/node';
 import { Logger } from './logger.ts';
+import { database } from './database.ts';
 const logger = new Logger('error');
 
 export async function ErrorHandler(interaction: Interaction, error: Error) {
@@ -46,7 +46,7 @@ export async function ErrorHandler(interaction: Interaction, error: Error) {
 				value: codeBlock(id),
 			},
 		],
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 	};
 
 	const ErrorPos = stacklines

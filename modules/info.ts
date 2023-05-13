@@ -9,7 +9,7 @@ import { CreateCommand } from '../utils/register.ts';
 import { Translate } from '../utils/translate.ts';
 import { release, version } from 'os';
 import PackageJson from '../package.json' assert { type: 'json' };
-import { GetColor } from '../utils/database.ts';
+import { database } from '../utils/database.ts';
 
 CreateCommand<ChatInputCommandInteraction>(
 	{
@@ -74,7 +74,7 @@ CreateCommand<ChatInputCommandInteraction>(
 					value: codeBlock(Object.keys(PackageJson.dependencies).join('\n')),
 				},
 			],
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 		};
 
 		await interaction.reply({ embeds: [embed] });

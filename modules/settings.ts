@@ -21,7 +21,7 @@ import {
 	CreateComponentHandler,
 	CreateModalHandler,
 } from '../utils/register.ts';
-import { GetColor, GetConfigs, SetConfig, ALLOWED_TYPES } from '../utils/database.ts';
+import { database, ALLOWED_TYPES } from '../utils/database.ts';
 import { Translate } from '../utils/translate.ts';
 import { StringObject } from '../typing.ts';
 
@@ -47,7 +47,7 @@ CreateCommand<ChatInputCommandInteraction>(
 			title: Translate(interaction.locale, 'settings.title'),
 			description: Translate(interaction.locale, 'settings.desc'),
 			fields: [],
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 			footer: {
 				text: Translate(interaction.locale, 'settings.footer'),
 			},
@@ -125,7 +125,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 							value,
 						},
 					],
-					color: await GetColor(interaction.user.id),
+					color: await database.GetColor(interaction.user.id),
 					footer: {
 						text: Translate(interaction.locale, 'settings.footer'),
 					},
@@ -218,7 +218,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 );
 
 async function GetParsedConfigs(user: string) {
-	const userconfig = await GetConfigs(user);
+	const userconfig = await database.GetConfigs(user);
 	const keys = Object.keys(userconfig!).filter((key) => key !== 'user');
 	const modules = [...new Set(keys.map((key) => key.split('_')[0]))];
 	return {
@@ -265,13 +265,13 @@ CreateModalHandler<ModalMessageModalSubmitInteraction>(
 					)}**:** ${value}`,
 				},
 			],
-			color: await GetColor(interaction.user.id),
+			color: await database.GetColor(interaction.user.id),
 			footer: {
 				text: Translate(interaction.locale, 'settings.footer'),
 			},
 		};
 
-		await SetConfig(
+		await database.SetConfig(
 			interaction.user.id,
 			componentdata.settingmodule,
 			componentdata.key,

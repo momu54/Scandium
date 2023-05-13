@@ -39,14 +39,7 @@ import {
 	SubCommandLocalizations,
 	Translate,
 } from '../utils/translate.ts';
-import {
-	AddAnimeTodo,
-	CheckAnimeTodo,
-	ClearAnimeTodo,
-	GetAnimeTodoList,
-	GetColor,
-	RemoveAnimeTodo,
-} from '../utils/database.ts';
+import { database } from '../utils/database.ts';
 import {
 	AnimeFromTodo,
 	AnimeListType,
@@ -101,7 +94,7 @@ CreateCommand<ChatInputCommandInteraction>(
 			const embed: APIEmbed = {
 				title: Translate(interaction.locale, 'error.title'),
 				description: Translate(interaction.locale, 'anime.NotInTaiwan'),
-				color: await GetColor(interaction.user.id),
+				color: await database.GetColor(interaction.user.id),
 			};
 
 			await interaction.reply({ embeds: [embed], ephemeral: true });
@@ -200,7 +193,7 @@ async function GetAnimeListResponse(
 		footer: {
 			text: Translate(interaction.locale, 'anime.footer'),
 		},
-		color: await GetColor(interaction.user.id),
+		color: await database.GetColor(interaction.user.id),
 	};
 	const istodo = IsTodoAnime(animedata);
 
@@ -400,7 +393,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 					thumbnail: {
 						url: rating,
 					},
-					color: await GetColor(interaction.user.id),
+					color: await database.GetColor(interaction.user.id),
 				};
 
 				const latestsn = episodes.at(-1)!;
@@ -500,14 +493,14 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 				if (interaction.componentType !== ComponentType.Button) return;
 
 				if (interaction.component.style === ButtonStyle.Primary) {
-					await AddAnimeTodo(
+					await database.AddAnimeTodo(
 						interaction.user.id,
 						interaction.message.embeds[0].title!,
 						sn,
 						episode
 					);
 				} else {
-					await RemoveAnimeTodo(interaction.user.id, sn);
+					await database.RemoveAnimeTodo(interaction.user.id, sn);
 				}
 
 				const row = new ActionRowBuilder<ButtonBuilder>()
@@ -569,7 +562,7 @@ CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 );
 
 async function TodoCommandHandler(interaction: ChatInputCommandInteraction) {
-	const animes = await GetAnimeTodoList(interaction.user.id);
+	const animes = await database.GetAnimeTodoList(interaction.user.id);
 	const response: MessagePayload | InteractionReplyOptions =
 		animes.length === 0
 			? await GetTodoEmptyResponse(interaction)
@@ -586,7 +579,7 @@ async function GetTodoButton(episode: string, locale: Locale, sn: string, user: 
 			episode,
 		})
 	);
-	if (await CheckAnimeTodo(user, sn)) {
+	if (await database.CheckAnimeTodo(user, sn)) {
 		button
 			.setEmoji(DELETE_EMOJI)
 			.setLabel(
@@ -613,7 +606,7 @@ async function GetTodoEmptyResponse(interaction: Interaction) {
 		embeds: [
 			{
 				title: Translate(interaction.locale, 'anime.TodoEmpty'),
-				color: await GetColor(interaction.user.id),
+				color: await database.GetColor(interaction.user.id),
 				footer: {
 					text: Translate(interaction.locale, 'anime.footer'),
 				},
@@ -624,6 +617,6 @@ async function GetTodoEmptyResponse(interaction: Interaction) {
 }
 
 CreateModalHandler<ModalMessageModalSubmitInteraction>('anime', async (interaction) => {
-	await ClearAnimeTodo(interaction.user.id);
+	await database.ClearAnimeTodo(interaction.user.id);
 	await interaction.update(await GetTodoEmptyResponse(interaction));
 });
