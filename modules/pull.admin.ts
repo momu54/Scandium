@@ -4,11 +4,11 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import { APIEmbed, codeBlock } from 'discord.js';
 import { AsyncExec } from '../utils/exec.ts';
 
-CreateCommand(
+new ScandiumCommand(
 	{
 		name: 'pull',
 		description: 'Pull the code from Github',

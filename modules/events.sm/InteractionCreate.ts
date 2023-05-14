@@ -20,7 +20,7 @@ import { database } from '../../utils/database.ts';
 import { LOADING_EMOJI_STRING, LOADING_EMOJI } from '../../utils/emoji.ts';
 import { ErrorHandler } from '../../utils/error.ts';
 import {
-	commandhandlers,
+	commands,
 	componenthandlers,
 	modalhandlers,
 	subcommandhandlers,
@@ -46,7 +46,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		switch (interaction.type) {
 			case InteractionType.ApplicationCommand: {
 				logger.info(`Command executed(${interaction.commandName})`);
-				const savedcommand = commandhandlers[interaction.commandName];
+				const savedcommand = commands[interaction.commandName];
 				if (
 					savedcommand.isadmincommand &&
 					interaction.user.id !== interaction.client.application.owner?.id

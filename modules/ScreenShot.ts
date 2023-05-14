@@ -10,14 +10,14 @@ import {
 	AttachmentBuilder,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { ExportReturnType } from 'discord-html-transcripts';
 import { GetMessageHtml } from '../utils/getmessagehtml.ts';
 import { launch } from 'puppeteer';
 import { database } from '../utils/database.ts';
 
-CreateCommand<MessageContextMenuCommandInteraction>(
+new ScandiumCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Take a screenshot',
 		type: ApplicationCommandType.Message,

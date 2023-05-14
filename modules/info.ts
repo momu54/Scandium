@@ -5,13 +5,13 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction, codeBlock } from 'discord.js';
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import { Translate } from '../utils/translate.ts';
 import { release, version } from 'os';
 import PackageJson from '../package.json' assert { type: 'json' };
 import { database } from '../utils/database.ts';
 
-CreateCommand<ChatInputCommandInteraction>(
+new ScandiumCommand<ChatInputCommandInteraction>(
 	{
 		name: 'info',
 		description: 'Show information about ME.',

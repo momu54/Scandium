@@ -17,9 +17,9 @@ import {
 	TextInputStyle,
 } from 'discord.js';
 import {
-	CreateCommand,
 	CreateComponentHandler,
 	CreateModalHandler,
+	ScandiumCommand,
 } from '../utils/register.ts';
 import { database, ALLOWED_TYPES } from '../utils/database.ts';
 import { Translate } from '../utils/translate.ts';
@@ -36,7 +36,7 @@ const ALLOWED_VALUE: Readonly<
 	},
 };
 
-CreateCommand<ChatInputCommandInteraction>(
+new ScandiumCommand<ChatInputCommandInteraction>(
 	{
 		name: 'settings',
 		description: 'Change the settings.',

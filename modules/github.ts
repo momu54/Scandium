@@ -4,11 +4,11 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import { ApplicationCommandOptionType, ChatInputCommandInteraction } from 'discord.js';
 import { OptionLocalizations, SubCommandLocalizations } from '../utils/translate.ts';
 
-CreateCommand<ChatInputCommandInteraction>({
+new ScandiumCommand<ChatInputCommandInteraction>({
 	name: 'github',
 	description: 'Github command',
 	options: [

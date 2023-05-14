@@ -26,7 +26,7 @@ export interface InteractionCallBackDatas<
 export interface InteractionCallbackData<InteractionType extends AllowedInteractionType> {
 	callback?: InteractionCallback<InteractionType>;
 	isadmincommand?: boolean;
-	data?: ApplicationCommandData;
+	command?: ApplicationCommandData;
 }
 
 export type InteractionCallback<InteractionType extends AllowedInteractionType> = (

@@ -14,28 +14,41 @@ import {
 	AllCommandInteraction,
 	InteractionCallBackDatas,
 	InteractionCallback,
+	StringObject,
 	SubCommandCallbackPath,
 	SubCommandHandlers,
 } from '../typing.ts';
 import { CommandLocalizations } from './translate.ts';
 
-export const commandhandlers: InteractionCallBackDatas<AllCommandInteraction> = {};
+export const commands: StringObject<ScandiumCommand<AllCommandInteraction>> = {};
 export const componenthandlers: InteractionCallBackDatas<MessageComponentInteraction> =
 	{};
 export const modalhandlers: InteractionCallBackDatas<ModalSubmitInteraction> = {};
 export const subcommandhandlers: SubCommandHandlers<ChatInputCommandInteraction> = {};
 
-export function CreateCommand<InteractionType extends AllCommandInteraction>(
-	command: ApplicationCommandData,
-	callback?: InteractionCallback<InteractionType>,
-	isadmincommand: boolean = false
-) {
-	if (!isadmincommand) command.nameLocalizations ||= CommandLocalizations(command.name);
-	commandhandlers[command.name] = {
-		callback: callback as InteractionCallback<AllCommandInteraction>,
-		isadmincommand,
-		data: command,
-	};
+export class ScandiumCommand<InteractionType extends AllCommandInteraction> {
+	constructor(
+		command: ApplicationCommandData,
+		callback?: InteractionCallback<InteractionType>,
+		isadmincommand: boolean = false
+	) {
+		if (!isadmincommand) {
+			command.nameLocalizations ||= CommandLocalizations(command.name);
+		}
+		commands[command.name] = {
+			command,
+			callback: callback as InteractionCallback<AllCommandInteraction>,
+			isadmincommand,
+		};
+
+		this.command = command;
+		this.callback = callback;
+		this.isadmincommand = isadmincommand;
+	}
+
+	public command: ApplicationCommandData;
+	public callback?: InteractionCallback<InteractionType>;
+	public isadmincommand: boolean;
 }
 
 export function CreateComponentHandler<

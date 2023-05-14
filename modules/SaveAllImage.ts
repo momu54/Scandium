@@ -4,7 +4,7 @@
  * @see [Github]{@link https://github.com/momu54/scandium/}
  */
 
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import JSZip from 'jszip';
 import {
 	APIEmbed,
@@ -16,7 +16,7 @@ import sharp from 'sharp';
 import { CommandLocalizations, Translate } from '../utils/translate.ts';
 import { database } from '../utils/database.ts';
 
-CreateCommand<MessageContextMenuCommandInteraction>(
+new ScandiumCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Save all image',
 		type: ApplicationCommandType.Message,

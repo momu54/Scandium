@@ -19,8 +19,11 @@ export class Logger {
 		console.log(chalk.yellow(`[${this.module}/warn] ${message}`), ...params);
 	}
 
-	public error(message: unknown, ...params: unknown[]) {
-		console.log(chalk.red(`[${this.module}/error] ${message}`), ...params);
+	public error(errormessage: Error, ...params: unknown[]) {
+		console.error(
+			chalk.red(`[${this.module}/error] ${errormessage.stack}`),
+			...params
+		);
 	}
 
 	private module: string;

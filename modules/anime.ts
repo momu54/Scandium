@@ -29,9 +29,9 @@ import {
 	TextInputStyle,
 } from 'discord.js';
 import {
-	CreateCommand,
 	CreateComponentHandler,
 	CreateModalHandler,
+	ScandiumCommand,
 } from '../utils/register.ts';
 import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.ts';
 import {
@@ -55,7 +55,7 @@ import { ADD_EMOJI, DELETE_EMOJI, PLAY_EMOJI } from '../utils/emoji.ts';
 
 const recentcache = new CacheStorer<Animes>(216000000);
 
-CreateCommand<ChatInputCommandInteraction>(
+new ScandiumCommand<ChatInputCommandInteraction>(
 	{
 		name: 'anime',
 		description: 'Get anime data from https://ani.gamer.com.tw',

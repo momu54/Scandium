@@ -10,10 +10,10 @@ import {
 	ChatInputCommandInteraction,
 	codeBlock,
 } from 'discord.js';
-import { CreateCommand } from '../utils/register.ts';
+import { ScandiumCommand } from '../utils/register.ts';
 import { AsyncExec } from '../utils/exec.ts';
 
-CreateCommand<ChatInputCommandInteraction>(
+new ScandiumCommand<ChatInputCommandInteraction>(
 	{
 		name: 'sql',
 		description: 'Execute SQL query',

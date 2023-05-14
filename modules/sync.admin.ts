@@ -5,28 +5,29 @@
  */
 
 import { APIEmbed, ChatInputCommandInteraction } from 'discord.js';
-import { CreateCommand, commandhandlers } from '../utils/register.ts';
+import { ScandiumCommand, commands } from '../utils/register.ts';
 import { client } from '../app.ts';
 
-CreateCommand<ChatInputCommandInteraction>(
+new ScandiumCommand<ChatInputCommandInteraction>(
 	{
 		name: 'sync',
 		description: 'Sync all commands',
 	},
 	async (interaction) => {
 		await interaction.deferReply();
-		const commandsvalue = Object.values(commandhandlers);
+		const commandsvalue = Object.values(commands);
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter((command) => !command.isadmincommand)
-				.map((command) => command.data!)
+				.map((command) => command.command!)
 		);
 		await interaction.client.application.commands.set(
 			commandsvalue
 				.filter(
-					(command) => command.isadmincommand && command.data!.name !== 'sync'
+					(command) =>
+						command.isadmincommand && command.command!.name !== 'sync'
 				)
-				.map((command) => command.data!),
+				.map((command) => command.command!),
 			process.env.supportguild!
 		);
 		const embed: APIEmbed = {
@@ -40,6 +41,6 @@ CreateCommand<ChatInputCommandInteraction>(
 );
 
 await client.application?.commands.create(
-	commandhandlers.sync.data!,
+	commands.sync.command!,
 	process.env.supportguild!
 );
