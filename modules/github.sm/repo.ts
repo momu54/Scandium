@@ -19,7 +19,11 @@ import {
 import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
 import { database } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
-import { GetLoginRequestResponse, GetOctokit, GetRepoEmbed } from '../../utils/github.ts';
+import {
+	GetLoginRequestResponse,
+	GetOctokit,
+	GetRepoPlayload,
+} from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
 import {
 	ARROW_LEFT_EMOJI,
@@ -324,35 +328,11 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 			repo: name,
 		});
 
-		const starred = await octokit.activity
-			.checkRepoIsStarredByAuthenticatedUser({
-				owner,
-				repo: name,
-			})
-			.then(() => true)
-			.catch(() => false);
-
-		const rows: APIActionRowComponent<APIButtonComponent>[] = [
-			{
-				components: [
-					{
-						type: ComponentType.Button,
-						emoji: starred ? STAR_EMOJI_FILLED : STAR_EMOJI,
-						custom_id: JSON.stringify({
-							module: 'github/repo/star',
-							user: interaction.user.id,
-						}),
-						style: ButtonStyle.Primary,
-					},
-				],
-				type: ComponentType.ActionRow,
-			},
-		];
-
-		const response: BaseMessageOptions = {
-			embeds: [await GetRepoEmbed(octokit, repo, interaction)],
-			components: rows,
-		};
+		const response: BaseMessageOptions = await GetRepoPlayload(
+			octokit,
+			repo,
+			interaction
+		);
 
 		if (repo.private) {
 			await interaction.deleteReply();
@@ -412,30 +392,8 @@ CreateComponentHandler<ButtonInteraction>(
 			repo: name,
 		});
 
-		const embed = await GetRepoEmbed(octokit, repo, interaction);
-
-		await interaction.editReply({
-			embeds: [embed],
-			components: [
-				{
-					components: [
-						...(
-							interaction.message.components[0]
-								.components as APIButtonComponent[]
-						).slice(1),
-						{
-							type: ComponentType.Button,
-							emoji: starred ? STAR_EMOJI : STAR_EMOJI_FILLED,
-							custom_id: JSON.stringify({
-								module: 'github/repo/star',
-								user: interaction.user.id,
-							}),
-							style: ButtonStyle.Primary,
-						},
-					],
-					type: ComponentType.ActionRow,
-				},
-			],
-		});
+		await interaction.editReply(
+			await GetRepoPlayload(octokit, repo, interaction, starred)
+		);
 	}
 );

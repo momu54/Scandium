@@ -7,7 +7,12 @@
 import { Octokit } from '@octokit/rest';
 import { database } from './database.ts';
 import {
+	APIActionRowComponent,
+	APIButtonComponent,
 	APIEmbed,
+	BaseMessageOptions,
+	ButtonStyle,
+	ComponentType,
 	Interaction,
 	InteractionReplyOptions,
 	Locale,
@@ -19,6 +24,8 @@ import {
 	BRANCH_EMOJI_STRING,
 	LANGUAGE_EMOJI_MAP,
 	QUESTION_EMOJI_STRING,
+	STAR_EMOJI,
+	STAR_EMOJI_FILLED,
 	STATUS_EMOJI_MAP,
 } from './emoji.ts';
 import { RepoStatus } from '../typing.ts';
@@ -64,11 +71,12 @@ export function GetStatusWithIcon(
 	return `${STATUS_EMOJI_MAP[status]} ${translate}`;
 }
 
-export async function GetRepoEmbed(
+export async function GetRepoPlayload(
 	octokit: Octokit,
 	repo: Endpoints['GET /repos/{owner}/{repo}']['response']['data'],
-	interaction: Interaction
-) {
+	interaction: Interaction,
+	starred?: boolean
+): Promise<BaseMessageOptions> {
 	const { data: branches } = await octokit.repos
 		.listBranches({
 			owner: repo.owner.login,
@@ -85,7 +93,15 @@ export async function GetRepoEmbed(
 		})
 		.catch(() => ({ data: null }));
 
-	const response: APIEmbed = {
+	starred ||= await octokit.activity
+		.checkRepoIsStarredByAuthenticatedUser({
+			owner: repo.owner.login,
+			repo: repo.name,
+		})
+		.then(() => true)
+		.catch(() => false);
+
+	const embed: APIEmbed = {
 		title: `${repo.owner.login}/${repo.name}`,
 		url: repo.html_url,
 		description:
@@ -112,11 +128,6 @@ export async function GetRepoEmbed(
 				inline: true,
 			},
 			{
-				name: Translate(interaction.locale, 'github.star'),
-				value: repo.stargazers_count.toString(),
-				inline: true,
-			},
-			{
 				name: Translate(interaction.locale, 'github.fork'),
 				value: repo.forks_count.toString(),
 				inline: true,
@@ -137,8 +148,40 @@ export async function GetRepoEmbed(
 		color: await database.GetColor(interaction.user.id),
 	};
 
+	const rows: APIActionRowComponent<APIButtonComponent>[] = [
+		{
+			components: [
+				{
+					type: ComponentType.Button,
+					emoji: starred ? STAR_EMOJI_FILLED : STAR_EMOJI,
+					custom_id: JSON.stringify({
+						module: 'github/repo/star',
+						user: interaction.user.id,
+					}),
+					style: ButtonStyle.Primary,
+					label: repo.stargazers_count.toString(),
+				},
+			],
+			type: ComponentType.ActionRow,
+		},
+		// {
+		// 	components: [
+		// 		{
+		// 			type: ComponentType.Button,
+		// 			emoji: ,
+		// 			custom_id: JSON.stringify({
+		// 				module: 'github/repo/star',
+		// 				user: interaction.user.id,
+		// 			}),
+		// 			style: ButtonStyle.Primary,
+		// 		},
+		// 	],
+		// 	type: ComponentType.ActionRow,
+		// },
+	];
+
 	if (branches) {
-		response.fields?.push({
+		embed.fields?.push({
 			name: Translate(interaction.locale, 'github.branch'),
 			value: branches
 				.map(
@@ -152,7 +195,7 @@ export async function GetRepoEmbed(
 		});
 	}
 	if (commits) {
-		response.fields?.push({
+		embed.fields?.push({
 			name: Translate(interaction.locale, 'github.commit'),
 			value: commits
 				.map(
@@ -166,5 +209,8 @@ export async function GetRepoEmbed(
 		});
 	}
 
-	return response;
+	return {
+		embeds: [embed],
+		components: rows,
+	};
 }
