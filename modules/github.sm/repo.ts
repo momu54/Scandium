@@ -25,12 +25,7 @@ import {
 	GetRepoPlayload,
 } from '../../utils/github.ts';
 import { RepoList } from '../../typing.ts';
-import {
-	ARROW_LEFT_EMOJI,
-	ARROW_RIGHT_EMOJI,
-	STAR_EMOJI,
-	STAR_EMOJI_FILLED,
-} from '../../utils/emoji.ts';
+import { ARROW_LEFT_EMOJI, ARROW_RIGHT_EMOJI } from '../../utils/emoji.ts';
 
 CreateSubCommandHandler(
 	{
