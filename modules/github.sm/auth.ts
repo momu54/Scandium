@@ -144,11 +144,11 @@ export async function LogoutHandler(
 
 function WaitAuth(uuid: string, locale: Locale): Promise<string | null> {
 	// skipcq: JS-0031
-	// skipcq: JS-0320
 	return new Promise(async (resolve) => {
 		authqueue[uuid] = { resolve, locale };
 		await setTimeout(36000000);
 		resolve(null);
+		// skipcq: JS-0320
 		delete authqueue[uuid];
 	});
 }
