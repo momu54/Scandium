@@ -64,16 +64,16 @@ export class ComponentHandler<InteractionType extends MessageComponentInteractio
 	public callback: InteractionCallback<InteractionType>;
 }
 
-// /**
-//  * @deprecated Use `new ComponentHandler()` instead.
-//  */
-// export function CreateComponentHandler<
-// 	InteractionType extends MessageComponentInteraction
-// >(module: string, callback: InteractionCallback<InteractionType>) {
-// 	componenthandlers[module] = {
-// 		callback: callback as InteractionCallback<MessageComponentInteraction>,
-// 	};
-// }
+/**
+ * @deprecated Use `new ComponentHandler()` instead.
+ */
+export function CreateComponentHandler<
+	InteractionType extends MessageComponentInteraction
+>(module: string, callback: InteractionCallback<InteractionType>) {
+	componenthandlers[module] = {
+		callback: callback as InteractionCallback<MessageComponentInteraction>,
+	};
+}
 
 export class ModalHandler<InteractionType extends ModalSubmitInteraction> {
 	constructor(module: string, callback: InteractionCallback<InteractionType>) {
@@ -87,17 +87,17 @@ export class ModalHandler<InteractionType extends ModalSubmitInteraction> {
 	public callback: InteractionCallback<InteractionType>;
 }
 
-// /**
-//  * @deprecated Use `new ModalHandler()` instead.
-//  */
-// export function CreateModalHandler<InteractionType extends ModalSubmitInteraction>(
-// 	module: string,
-// 	callback: InteractionCallback<InteractionType>
-// ) {
-// 	modalhandlers[module] = {
-// 		callback: callback as InteractionCallback<ModalSubmitInteraction>,
-// 	};
-// }
+/**
+ * @deprecated Use `new ModalHandler()` instead.
+ */
+export function CreateModalHandler<InteractionType extends ModalSubmitInteraction>(
+	module: string,
+	callback: InteractionCallback<InteractionType>
+) {
+	modalhandlers[module] = {
+		callback: callback as InteractionCallback<ModalSubmitInteraction>,
+	};
+}
 
 export class SubCommandHandler {
 	constructor(
@@ -117,18 +117,18 @@ export class SubCommandHandler {
 	public callback: InteractionCallback<ChatInputCommandInteraction>;
 }
 
-// /**
-//  * @deprecated Use `new SubCommandHandler()` instead.
-//  */
+/**
+ * @deprecated Use `new SubCommandHandler()` instead.
+ */
 
-// export function CreateSubCommandHandler(
-// 	{ module, subcommandgroup, subcommand = '$main' }: SubCommandCallbackPath,
-// 	callback: InteractionCallback<ChatInputCommandInteraction>
-// ) {
-// 	if (!subcommandhandlers[module]) subcommandhandlers[module] = {};
-// 	if (!subcommandhandlers[module][subcommandgroup || subcommand])
-// 		subcommandhandlers[module][subcommandgroup || subcommand] = {};
-// 	subcommandhandlers[module][subcommandgroup || subcommand][subcommand] = {
-// 		callback: callback as InteractionCallback<ChatInputCommandInteraction>,
-// 	};
-// }
+export function CreateSubCommandHandler(
+	{ module, subcommandgroup, subcommand = '$main' }: SubCommandCallbackPath,
+	callback: InteractionCallback<ChatInputCommandInteraction>
+) {
+	if (!subcommandhandlers[module]) subcommandhandlers[module] = {};
+	if (!subcommandhandlers[module][subcommandgroup || subcommand])
+		subcommandhandlers[module][subcommandgroup || subcommand] = {};
+	subcommandhandlers[module][subcommandgroup || subcommand][subcommand] = {
+		callback: callback as InteractionCallback<ChatInputCommandInteraction>,
+	};
+}
