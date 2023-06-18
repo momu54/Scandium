@@ -173,14 +173,6 @@ async function FetchAndGetAnimeListResponse(
 
 async function GetAnimeListResponse(
 	interaction: Interaction,
-	animedata: Animes
-): Promise<InteractionReplyOptions | MessagePayload>;
-async function GetAnimeListResponse(
-	interaction: Interaction,
-	animedata: AnimesFromTodo
-): Promise<InteractionReplyOptions | MessagePayload>;
-async function GetAnimeListResponse(
-	interaction: Interaction,
 	animedata: Animes | AnimesFromTodo
 ): Promise<InteractionReplyOptions | MessagePayload> {
 	const embed: APIEmbed = {
