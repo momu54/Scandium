@@ -31,7 +31,7 @@ export class ScandiumCommand<InteractionType extends AllCommandInteraction> {
 	constructor(
 		command: ApplicationCommandData,
 		callback?: InteractionCallback<InteractionType>,
-		isadmincommand: boolean = false
+		isadmincommand = false
 	) {
 		if (!isadmincommand) {
 			command.nameLocalizations ||= CommandLocalizations(command.name);
