@@ -270,7 +270,7 @@ function GetAnimeInRange(
 	interaction: Interaction,
 	max: number,
 	istodo: boolean,
-	min: number = -1
+	min = -1
 ) {
 	return animedata
 		.filter((_, index) => min < index && index < max)
