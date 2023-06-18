@@ -54,7 +54,7 @@ class ScandiumDatabase extends Database {
 		return !!(await super.get(SQL`SELECT user FROM config WHERE user = ${user}`));
 	}
 
-	public async GetConfigs(user: string) {
+	public GetConfigs(user: string) {
 		return super.get<StringObject<number | string>>(
 			SQL`SELECT * FROM config WHERE user = ${user}`
 		)!;
@@ -113,7 +113,7 @@ class ScandiumDatabase extends Database {
 		return dbres?.token;
 	}
 
-	public async SetGithubToken(user: string, token: string) {
+	public SetGithubToken(user: string, token: string) {
 		return super.run(
 			SQL`INSERT INTO GithubToken(user, token, timestamp) VALUES (${user}, ${token}, ${new Date().toJSON()})`
 		);

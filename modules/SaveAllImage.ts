@@ -50,7 +50,7 @@ new ScandiumCommand<MessageContextMenuCommandInteraction>(
 			const spiltedfilename = Attachment.name?.split('.');
 			const filename =
 				isntwebporjpeg && convert
-					? Attachment.name?.replaceAll(spiltedfilename?.pop()!, 'webp')
+					? Attachment.name?.replaceAll(spiltedfilename.pop()!, 'webp')
 					: Attachment.name;
 			zip.file(`${index + 1}.${filename}`, resimage, {
 				binary: true,

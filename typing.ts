@@ -22,7 +22,7 @@ export type InteractionCallback<InteractionType extends AllowedInteractionType> 
 	componentdata: InteractionType extends CommandInteraction
 		? null
 		: StringObject<string>
-) => Promise<any>;
+) => Promise<void>;
 
 export type DeferReplyMethod = (ephemeral?: boolean) => Promise<void>;
 
