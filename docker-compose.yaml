@@ -22,7 +22,7 @@ services:
             - traefik.enable=true
             - traefik.docker.network=proxy
             - traefik.http.routers.scandium.entrypoints=websecure
-            - traefik.http.routers.scandium.rule=Host(`"<Github auth callback url>`)
+            - traefik.http.routers.scandium.rule=Host(`<Github auth callback url>`)
             - traefik.http.routers.scandium.tls=true
             - traefik.http.services.scandium.loadbalancer.server.port=<Github auth callback port>
         networks:

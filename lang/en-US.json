@@ -7,7 +7,7 @@
 		"error": {
 			"toolarge": "The generated zip is too large."
 		},
-		"title": "Save all images",
+		"title": "Save All Images",
 		"desc": "**size**: {size} MB\nAll images not in JPEG or WebP format are converted to WebP at quality 82.",
 		"DescNoConvert": "**size**: {size} MB",
 		"settings": {
@@ -21,8 +21,8 @@
 		"menu": "Choose a configuration to modify...",
 		"footer": "💡 Hint: Inputs that do not fit the format will be rejected"
 	},
-	"Screenshot": {
-		"title": "Take a screenshot",
+	"render": {
+		"title": "Render Message",
 		"desc": "**size**: {size} MB\n**format**: {format}",
 		"footer": "💡 Hint: You can set image format in the settings",
 		"settings": {

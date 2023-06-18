@@ -16,11 +16,7 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import {
-	CreateComponentHandler,
-	CreateModalHandler,
-	ScandiumCommand,
-} from '../utils/register.ts';
+import { ComponentHandler, ModalHandler, ScandiumCommand } from '../utils/register.ts';
 import { database, ALLOWED_TYPES } from '../utils/database.ts';
 import { Translate } from '../utils/translate.ts';
 import { StringObject } from '../typing.ts';
@@ -95,7 +91,7 @@ new ScandiumCommand<ChatInputCommandInteraction>(
 	}
 );
 
-CreateComponentHandler<StringSelectMenuInteraction>(
+new ComponentHandler<StringSelectMenuInteraction>(
 	'settings',
 	async (interaction, _, componentdata) => {
 		const module = interaction.values[0];
@@ -180,7 +176,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 									`${Translate(
 										interaction.locale,
 										`${componentdata.settingmodule}.title`
-									)} => ${Translate(
+									)} 🡒 ${Translate(
 										interaction.locale,
 										`${componentdata.settingmodule}.settings.${key}`
 									)}${
@@ -228,7 +224,7 @@ async function GetParsedConfigs(user: string) {
 	};
 }
 
-CreateModalHandler<ModalMessageModalSubmitInteraction>(
+new ModalHandler<ModalMessageModalSubmitInteraction>(
 	'settings',
 	async (interaction, _, componentdata) => {
 		const value: string = interaction.fields.getTextInputValue(

@@ -27,7 +27,7 @@ import { Translate } from '../../utils/translate.ts';
 import { readFile } from 'fs/promises';
 import { OAuthApp } from '@octokit/oauth-app';
 import { setTimeout } from 'timers/promises';
-import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
+import { ComponentHandler, SubCommandHandler } from '../../utils/register.ts';
 import { Listen, app } from '../server.ts';
 
 const html = await readFile('./login/index.html', 'utf8');
@@ -38,7 +38,7 @@ const oauthapp = new OAuthApp({
 });
 const AUTH_SCOPES = ['repo'].join(' ');
 
-CreateSubCommandHandler(
+new SubCommandHandler(
 	{
 		module: 'github',
 		subcommand: 'auth',
@@ -240,7 +240,7 @@ async function GetAuthPlayLoad(
 	};
 }
 
-CreateComponentHandler<ButtonInteraction>(
+new ComponentHandler<ButtonInteraction>(
 	'github/auth',
 	async (interaction, defer, componentdata) => {
 		switch (componentdata!.action) {

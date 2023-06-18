@@ -16,7 +16,7 @@ import {
 	Interaction,
 	StringSelectMenuInteraction,
 } from 'discord.js';
-import { CreateComponentHandler, CreateSubCommandHandler } from '../../utils/register.ts';
+import { ComponentHandler, SubCommandHandler } from '../../utils/register.ts';
 import { database } from '../../utils/database.ts';
 import { Translate } from '../../utils/translate.ts';
 import {
@@ -27,7 +27,7 @@ import {
 import { RepoList } from '../../typing.ts';
 import { ARROW_LEFT_EMOJI, ARROW_RIGHT_EMOJI } from '../../utils/emoji.ts';
 
-CreateSubCommandHandler(
+new SubCommandHandler(
 	{
 		module: 'github',
 		subcommandgroup: 'repo',
@@ -53,7 +53,7 @@ CreateSubCommandHandler(
 	}
 );
 
-CreateSubCommandHandler(
+new SubCommandHandler(
 	{
 		module: 'github',
 		subcommandgroup: 'repo',
@@ -79,7 +79,7 @@ CreateSubCommandHandler(
 	}
 );
 
-CreateSubCommandHandler(
+new SubCommandHandler(
 	{
 		module: 'github',
 		subcommandgroup: 'repo',
@@ -220,7 +220,7 @@ async function GetRepoListResponse(
 	};
 }
 
-CreateComponentHandler<ButtonInteraction>(
+new ComponentHandler<ButtonInteraction>(
 	'github/repo/goto',
 	async (interaction, defer, componentdata) => {
 		const octokit = await GetOctokit(interaction.user.id);
@@ -293,7 +293,7 @@ CreateComponentHandler<ButtonInteraction>(
 	}
 );
 
-CreateComponentHandler<StringSelectMenuInteraction>(
+new ComponentHandler<StringSelectMenuInteraction>(
 	'github/repo/choose',
 	async (interaction, defer, componentdata) => {
 		const octokit = await GetOctokit(interaction.user.id);
@@ -341,7 +341,7 @@ CreateComponentHandler<StringSelectMenuInteraction>(
 	}
 );
 
-CreateComponentHandler<ButtonInteraction>(
+new ComponentHandler<ButtonInteraction>(
 	'github/repo/star',
 	async (interaction, defer, componentdata) => {
 		const octokit = await GetOctokit(interaction.user.id);

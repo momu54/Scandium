@@ -18,7 +18,7 @@ import { database } from '../utils/database.ts';
 
 new ScandiumCommand<MessageContextMenuCommandInteraction>(
 	{
-		name: 'Save all image',
+		name: 'Save All Images',
 		type: ApplicationCommandType.Message,
 		nameLocalizations: CommandLocalizations('SaveAllImage'),
 	},

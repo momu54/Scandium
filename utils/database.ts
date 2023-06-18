@@ -7,7 +7,7 @@
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite';
 import { AnimesFromTodo, AnimesType, StringObject, TodoAnime } from '../typing.ts';
-import SQL from 'sql-template-strings';
+import { SQL } from 'sql-template-strings';
 
 class ScandiumDatabase extends Database {
 	constructor() {

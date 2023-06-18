@@ -10,16 +10,16 @@ import {
 	AttachmentBuilder,
 	MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import { ScandiumCommand } from '../utils/register.ts';
-import { CommandLocalizations, Translate } from '../utils/translate.ts';
+import { ScandiumCommand } from '../utils/register.js';
+import { CommandLocalizations, Translate } from '../utils/translate.js';
 import { ExportReturnType } from 'discord-html-transcripts';
-import { GetMessageHtml } from '../utils/getmessagehtml.ts';
+import { GetMessageHtml } from '../utils/getmessagehtml.js';
 import { launch } from 'puppeteer';
-import { database } from '../utils/database.ts';
+import { database } from '../utils/database.js';
 
 new ScandiumCommand<MessageContextMenuCommandInteraction>(
 	{
-		name: 'Take a screenshot',
+		name: 'Render Message',
 		type: ApplicationCommandType.Message,
 		nameLocalizations: CommandLocalizations('Screenshot'),
 	},
@@ -37,6 +37,8 @@ new ScandiumCommand<MessageContextMenuCommandInteraction>(
 				height: 1000,
 			},
 			args: ['--no-sandbox'],
+			headless: 'new',
+			waitForInitialPage: false,
 		});
 
 		const page = await browser.newPage();
@@ -58,18 +60,18 @@ new ScandiumCommand<MessageContextMenuCommandInteraction>(
 
 		await browser.close();
 
-		const attachment = new AttachmentBuilder(img, { name: 'message.webp' });
+		const attachment = new AttachmentBuilder(img, { name: `message.${format}` });
 		const embed: APIEmbed = {
-			title: Translate(interaction.locale, 'Screenshot.title'),
-			description: Translate(interaction.locale, 'Screenshot.desc', {
+			title: Translate(interaction.locale, 'render.title'),
+			description: Translate(interaction.locale, 'render.desc', {
 				size: (img.byteLength * 0.000001).toFixed(4),
 				format,
 			}),
 			image: {
-				url: 'attachment://message.webp',
+				url: `attachment://message.${format}`,
 			},
 			footer: {
-				text: Translate(interaction.locale, 'Screenshot.footer'),
+				text: Translate(interaction.locale, 'render.footer'),
 			},
 			color: await database.GetColor(interaction.user.id),
 		};

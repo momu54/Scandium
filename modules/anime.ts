@@ -28,11 +28,7 @@ import {
 	TextInputBuilder,
 	TextInputStyle,
 } from 'discord.js';
-import {
-	CreateComponentHandler,
-	CreateModalHandler,
-	ScandiumCommand,
-} from '../utils/register.ts';
+import { ComponentHandler, ModalHandler, ScandiumCommand } from '../utils/register.ts';
 import { ParseAnime, ParseAnimes, ParseSearchResults } from '../utils/animeparser.ts';
 import {
 	OptionLocalizations,
@@ -297,7 +293,7 @@ function GetAnimeInRange(
 		);
 }
 
-CreateComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
+new ComponentHandler<StringSelectMenuInteraction | ButtonInteraction>(
 	'anime',
 	async (interaction, defer, componentdata) => {
 		switch (componentdata.action) {
@@ -616,7 +612,7 @@ async function GetTodoEmptyResponse(interaction: Interaction) {
 	};
 }
 
-CreateModalHandler<ModalMessageModalSubmitInteraction>('anime', async (interaction) => {
+new ModalHandler<ModalMessageModalSubmitInteraction>('anime', async (interaction) => {
 	await database.ClearAnimeTodo(interaction.user.id);
 	await interaction.update(await GetTodoEmptyResponse(interaction));
 });

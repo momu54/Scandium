@@ -6,7 +6,6 @@
 
 import { RestEndpointMethodTypes } from '@octokit/rest';
 import {
-	ApplicationCommandData,
 	ChatInputCommandInteraction,
 	CommandInteraction,
 	Message,
@@ -16,18 +15,6 @@ import {
 	UserContextMenuCommandInteraction,
 	Locale,
 } from 'discord.js';
-
-export interface InteractionCallBackDatas<
-	InteractionType extends AllowedInteractionType
-> {
-	[key: string]: InteractionCallbackData<InteractionType>;
-}
-
-export interface InteractionCallbackData<InteractionType extends AllowedInteractionType> {
-	callback?: InteractionCallback<InteractionType>;
-	isadmincommand?: boolean;
-	command?: ApplicationCommandData;
-}
 
 export type InteractionCallback<InteractionType extends AllowedInteractionType> = (
 	interaction: InteractionType,
@@ -122,9 +109,6 @@ export interface AuthQueue {
 }
 
 export type RunCodeFunction = (msg: Message<boolean>) => unknown;
-
-export type SubCommandHandlers<InteractionType extends AllowedInteractionType> =
-	StringObject<StringObject<InteractionCallBackDatas<InteractionType>>>;
 
 type AllowedInteractionType =
 	| AllCommandInteraction
