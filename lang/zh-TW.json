@@ -21,8 +21,8 @@
 		"menu": "選擇一個設定以修改...",
 		"footer": "💡 提示: 不符合格式的輸入會直接被拒絕"
 	},
-	"Screenshot": {
-		"title": "截圖",
+	"render": {
+		"title": "渲染訊息",
 		"desc": "**大小**: {size} MB\n**格式**: {format}",
 		"footer": "💡 提示: 你可以在設定中更改輸出圖片格式",
 		"settings": {
@@ -155,9 +155,9 @@
 		"options": {
 			"query": "關鍵字"
 		},
-    "AuthMessage": {
-        "success": "已登入, 你可以放心的關閉這個分頁並返回 Discord",
-        "failed": "登入失敗, 請重試"
-    }
+		"AuthMessage": {
+			"success": "已登入, 你可以放心的關閉這個分頁並返回 Discord",
+			"failed": "登入失敗, 請重試"
+		}
 	}
 }

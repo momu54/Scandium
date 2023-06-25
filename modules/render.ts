@@ -21,7 +21,7 @@ new ScandiumCommand<MessageContextMenuCommandInteraction>(
 	{
 		name: 'Render Message',
 		type: ApplicationCommandType.Message,
-		nameLocalizations: CommandLocalizations('Screenshot'),
+		nameLocalizations: CommandLocalizations('render'),
 	},
 	async (interaction, defer) => {
 		await defer();
@@ -49,7 +49,7 @@ new ScandiumCommand<MessageContextMenuCommandInteraction>(
 		const messageinhtml = await page.$('.discord-message-inner');
 		const format = await database.GetConfig<string>(
 			interaction.user.id,
-			'Screenshot',
+			'render',
 			'format'
 		);
 		const img = (await messageinhtml!.screenshot({

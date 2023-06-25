@@ -27,7 +27,7 @@ const ALLOWED_VALUE: Readonly<
 	SaveAllImage: {
 		convert: ALLOWED_TYPES.boolean,
 	},
-	Screenshot: {
+	render: {
 		format: ['png', 'jpeg', 'webp'],
 	},
 };
@@ -176,7 +176,7 @@ new ComponentHandler<StringSelectMenuInteraction>(
 									`${Translate(
 										interaction.locale,
 										`${componentdata.settingmodule}.title`
-									)} 🡒 ${Translate(
+									)} → ${Translate(
 										interaction.locale,
 										`${componentdata.settingmodule}.settings.${key}`
 									)}${
