@@ -22,11 +22,11 @@
 		"footer": "💡 Hint: Inputs that do not fit the format will be rejected"
 	},
 	"render": {
-		"title": "",
-		"desc": "",
-		"footer": "",
+		"title": "Render Message",
+		"desc": "**size**: {size} MB\n**format**: {format}",
+		"footer": "💡 Hint: You can set image format in the settings",
 		"settings": {
-			"format": ""
+			"format": "format"
 		}
 	},
 	"anime": {
