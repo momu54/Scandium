@@ -21,8 +21,8 @@
 		"menu": "",
 		"footer": ""
 	},
-	"Screenshot": {
-		"title": "スクリーンショット",
+	"render": {
+		"title": "",
 		"desc": "",
 		"footer": "",
 		"settings": {
