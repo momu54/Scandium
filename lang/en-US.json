@@ -21,12 +21,12 @@
 		"menu": "Choose a configuration to modify...",
 		"footer": "💡 Hint: Inputs that do not fit the format will be rejected"
 	},
-	"Screenshot": {
-		"title": "Take a screenshot",
-		"desc": "**size**: {size} MB\n**format**: {format}",
-		"footer": "💡 Hint: You can set image format in the settings",
+	"render": {
+		"title": "",
+		"desc": "",
+		"footer": "",
 		"settings": {
-			"format": "format"
+			"format": ""
 		}
 	},
 	"anime": {
